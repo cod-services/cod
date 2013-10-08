@@ -67,9 +67,10 @@ for line in cod.link.makefile('r'):
             if not cod.bursted:
                 cod.bursted = True
 
-                cod.sendLine(cod.client.join(cod.channels[SNOOPCHAN], True))
-                cod.sendLine(cod.client.join(cod.channels["#cod"], True))
+                for channel in config["me"]["channels"]:
+                    channel = cod.channels[channel]
 
+                    cod.sendLine(cod.client.join(channel, True))
     else:
         source = splitline[0][1:]
 

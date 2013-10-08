@@ -4,7 +4,9 @@
         "desc": "Cod fishy",
         "nick": "Cod",
         "user": "fish",
-        "host": "blub.blub"
+        "host": "blub.blub",
+
+        "channels": ["#services"]
     },
 
     "uplink": {
