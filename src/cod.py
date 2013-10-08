@@ -12,7 +12,6 @@ commands["SJOIN"] = handleSJOIN
 commands["NICK"] = handleNICK
 commands["BMASK"] = handleBMASK
 commands["MODE"] = handleMODE
-commands["PRIVMSG"] = handlePRIVMSG
 
 class Cod():
     def __init__(self, host, port, password, SID, name, realname):

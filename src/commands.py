@@ -47,11 +47,3 @@ def handleMODE(cod, line, splitline, source):
         else:
             cod.clients[sourcd].isOper = False
 
-def handlePRIVMSG(cod, line, splitline, source):
-    extparam = line.split(":")[2]
-
-    client = cod.clients[source]
-
-    if extparam == "AmIOper":
-        cod.sendLine(cod.client.privmsg(cod.channels[splitline[2]].name, "Yes" if client.isOper else "No"))
-
