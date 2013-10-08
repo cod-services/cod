@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import config
 import socket
 from structures import *
 from commands import *
@@ -13,6 +14,8 @@ commands["NICK"] = handleNICK
 commands["BMASK"] = handleBMASK
 commands["MODE"] = handleMODE
 commands["TMODE"] = handleTMODE
+
+config = config.Config("../config.json").config
 
 class Cod():
     def __init__(self, host, port, password, SID, name, realname):
@@ -34,7 +37,8 @@ class Cod():
         self.sendLine("CAPAB :QS EX IE KLN UNKLN ENCAP TB SERVICES EUID EOPMOD MLOCK")
         self.sendLine("SERVER %s 1 :%s" % (name, realname))
 
-        self.client = makeService("Cod", "fish", "blub.blub", "Cod!", SID + "CODFIS")
+        self.client = makeService(config["me"]["nick"], config["me"]["user"],
+                config["me"]["host"], config["me"]["desc"], SID + "CODFIS")
 
         self.clients[SID + "CODFIS"] = self.client
 
@@ -44,7 +48,9 @@ class Cod():
         print ">>> %s" % line
         self.link.send("%s\r\n" % line)
 
-cod = Cod("127.0.0.1", 6667, "dev", "420", "ardreth.shadownet.int", "Cod fishy")
+cod = Cod(config["uplink"]["host"], config["uplink"]["port"],
+        config["uplink"]["pass"], config["uplink"]["sid"], config["me"]["name"],
+        config["me"]["desc"])
 SNOOPCHAN = "#services"
 
 for line in cod.link.makefile('r'):

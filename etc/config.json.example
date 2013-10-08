@@ -1,0 +1,16 @@
+{
+    "me": {
+        "name": "ardreth.shadownet.int",
+        "desc": "Cod fishy",
+        "nick": "Cod",
+        "user": "fish",
+        "host": "blub.blub"
+    },
+
+    "uplink": {
+        "host": "127.0.0.1",
+        "port": 6667,
+        "pass": "dev",
+        "sid": "420"
+    }
+}
