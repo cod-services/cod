@@ -9,6 +9,8 @@ commands = {}
 commands["EUID"] = handleEUID
 commands["QUIT"] = handleQUIT
 commands["SJOIN"] = handleSJOIN
+commands["NICK"] = handleNICK
+commands["BMASK"] = handleBMASK
 
 class Cod():
     def __init__(self, host, port, password, SID, name, realname):
@@ -17,6 +19,8 @@ class Cod():
         self.clients = {}
         self.channels = {}
         self.servers = {}
+
+        self.bursted = False
 
         self.link.connect((host, port))
 
@@ -39,6 +43,7 @@ class Cod():
         self.link.send("%s\r\n" % line)
 
 cod = Cod("127.0.0.1", 6667, "dev", "420", "ardreth.shadownet.int", "Cod fishy")
+SNOOPCHAN = "#services"
 
 for line in cod.link.makefile('r'):
     line = line.strip()
@@ -50,6 +55,11 @@ for line in cod.link.makefile('r'):
         if line.split()[0] == "PING":
             cod.sendLine("PONG %s" % splitline[1:][0])
 
+            if not cod.bursted:
+                cod.bursted = True
+
+                cod.sendLine(cod.client.join(cod.channels[SNOOPCHAN], True))
+
     else:
         source = splitline[0][1:]
 
@@ -57,3 +67,4 @@ for line in cod.link.makefile('r'):
             commands[splitline[1]](cod, line, splitline, source)
         except KeyError as e:
             continue
+

@@ -24,6 +24,14 @@ class Client():
         # Delete user from memory somehow
         return ":%s KILL %s" % (self.uid, target)
 
+    def join(self, channel, op=False):
+        uid = self.uid
+
+        if op:
+            uid = "@" + uid
+
+        return "SJOIN %s %s + %s" % (channel.ts, channel.name, uid)
+
     def burst(self):
         return ":%s UID %s 0 0 %s %s %s 0 %s :%s" % (self.sid, self.nick, self.modes, self.user, self.host, self.uid, self.gecos)
 

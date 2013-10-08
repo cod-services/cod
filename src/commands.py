@@ -1,11 +1,9 @@
 from client import *
 
 def handleEUID(cod, line, splitline, source):
-    print "New client %s on the network" % splitline[2]
     cod.clients[splitline[9]] = Client(splitline[2], splitline[9], splitline[4], splitline[5], splitline[6], splitline[7], splitline[8], splitline[11], splitline[12][1:])
 
 def handleQUIT(cod, line, splitline, source):
-    print "Quit: %s" % clients[source].nick
     cod.clients.pop(source)
 
 def handleSJOIN(cod, line, splitline, source):
@@ -27,5 +25,14 @@ def handleSJOIN(cod, line, splitline, source):
             #I warned you this was shitty
             cod.channels[splitline[3]].clientAdd(client, prefix)
 
-            #print "%s: %s%s" % (splitline[3], prefix, client.nick)
+def handleNICK(cod, line, splitline, source):
+    cod.clients[source].nick = splitline[2]
+
+def handleBMASK(cod, line, splitline, source):
+    list = splitline[4]
+
+    #The channel will be a valid channel
+    channel = cod.channels[splitline[3]]
+
+    channel.lists[list].append([n for n in line.split(":")[2].split(" ")])
 
