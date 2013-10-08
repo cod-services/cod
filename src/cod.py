@@ -12,6 +12,7 @@ commands["SJOIN"] = handleSJOIN
 commands["NICK"] = handleNICK
 commands["BMASK"] = handleBMASK
 commands["MODE"] = handleMODE
+commands["TMODE"] = handleTMODE
 
 class Cod():
     def __init__(self, host, port, password, SID, name, realname):
@@ -60,6 +61,7 @@ for line in cod.link.makefile('r'):
                 cod.bursted = True
 
                 cod.sendLine(cod.client.join(cod.channels[SNOOPCHAN], True))
+                cod.sendLine(cod.client.join(cod.channels["#cod"], True))
 
     else:
         source = splitline[0][1:]

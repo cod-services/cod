@@ -46,6 +46,7 @@ class Channel():
         self.ts = ts
         self.clients = []
         self.lists = {'b': [], 'e': [], 'I': [], 'q': []}
+        self.modes = ""
 
     def __str__(self):
         return "%s: %s" % (self.name, " ".join(["" + name.prefix + name.client.nick for name in self.clients]))
