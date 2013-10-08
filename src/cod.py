@@ -15,6 +15,7 @@ commands["BMASK"] = handleBMASK
 commands["MODE"] = handleMODE
 commands["TMODE"] = handleTMODE
 commands["CHGHOST"] = handleCHGHOST
+commands["WHOIS"] = handleWHOIS
 
 config = config.Config("../config.json").config
 
@@ -45,6 +46,8 @@ class Cod():
 
         self.sendLine(self.client.burst())
 
+        self.config = config
+
     def sendLine(self, line):
         print ">>> %s" % line
         self.link.send("%s\r\n" % line)
@@ -71,6 +74,9 @@ for line in cod.link.makefile('r'):
                     channel = cod.channels[channel]
 
                     cod.sendLine(cod.client.join(channel, True))
+
+                cod.sendLine(":420CODFIS WHOIS 75XAAAAAB :Niichan")
+
     else:
         source = splitline[0][1:]
 
