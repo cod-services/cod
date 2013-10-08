@@ -11,6 +11,8 @@ class Client():
         self.gecos = gecos
         self.sid = self.uid[:3]
 
+        self.isOper = self.modes.find("o") != -1
+
     def __str__(self):
         return "%s!%s@%s :%s" % (self.nick, self.user, self.host, self.gecos)
 

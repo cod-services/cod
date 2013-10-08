@@ -1,7 +1,9 @@
 from client import *
 
 def handleEUID(cod, line, splitline, source):
-    cod.clients[splitline[9]] = Client(splitline[2], splitline[9], splitline[4], splitline[5], splitline[6], splitline[7], splitline[8], splitline[11], splitline[12][1:])
+    client = Client(splitline[2], splitline[9], splitline[4], splitline[5], splitline[6], splitline[7], splitline[8], splitline[11], splitline[12][1:])
+
+    cod.clients[client.uid] = client
 
 def handleQUIT(cod, line, splitline, source):
     cod.clients.pop(source)
@@ -35,4 +37,21 @@ def handleBMASK(cod, line, splitline, source):
     channel = cod.channels[splitline[3]]
 
     channel.lists[list].append([n for n in line.split(":")[2].split(" ")])
+
+def handleMODE(cod, line, splitline, source):
+    extparam = line.split(":")[2]
+
+    if extparam.find("o") != -1:
+        if extparam[0] == "+":
+            cod.clients[source].isOper = True
+        else:
+            cod.clients[sourcd].isOper = False
+
+def handlePRIVMSG(cod, line, splitline, source):
+    extparam = line.split(":")[2]
+
+    client = cod.clients[source]
+
+    if extparam == "AmIOper":
+        cod.sendLine(cod.client.privmsg(cod.channels[splitline[2]].name, "Yes" if client.isOper else "No"))
 
