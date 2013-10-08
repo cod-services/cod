@@ -75,18 +75,18 @@ def handleTMODE(cod, line, splitline, source):
 
         elif mode in CHANMODES[0]:
             #List-like mode
-            subMode(cod, source, plus, " ".join(mode, modechange[index]), channel)
+            subMode(cod, source, plus, " ".join([mode, modechange[index]]), channel)
             index += 1
 
         elif mode in CHANMODES[1]:
             #mode change has a parameter
-            subMode(cod, source, plus, " ".join(mode, modechange[index]), channel)
+            subMode(cod, source, plus, " ".join([mode, modechange[index]]), channel)
             index += 1
 
         elif mode in CHANMODES[2]:
             #mode change has a parameter when set
             if plus:
-                subMode(cod, source, plus, " ".join(mode, modechange[index]), channel)
+                subMode(cod, source, plus, " ".join([mode, modechange[index]]), channel)
                 index += 1
             else:
                 subMode(cod, source, plus, mode, channel)
@@ -97,7 +97,7 @@ def handleTMODE(cod, line, splitline, source):
 
         elif mode in CHANMODES[4]:
             #Prefix mode
-            subMode(cod, source, plus, " ".join(mode, modechange[index]), channel)
+            subMode(cod, source, plus, " ".join([mode, modechange[index]]), channel)
             index += 1
 
 def subMode(cod, source, plus, mode, channel):
