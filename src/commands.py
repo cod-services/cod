@@ -102,3 +102,7 @@ def handleTMODE(cod, line, splitline, source):
 
 def subMode(cod, source, plus, mode, channel):
     pass
+
+def handleCHGHOST(cod, line, splitline, source):
+    cod.clients[splitline[2]].host = splitline[3]
+

@@ -14,6 +14,7 @@ commands["NICK"] = handleNICK
 commands["BMASK"] = handleBMASK
 commands["MODE"] = handleMODE
 commands["TMODE"] = handleTMODE
+commands["CHGHOST"] = handleCHGHOST
 
 config = config.Config("../config.json").config
 
