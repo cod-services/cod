@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import socket
-from client import *
+from structures import *
 from commands import *
 
 commands = {}
