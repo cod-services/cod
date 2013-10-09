@@ -14,7 +14,7 @@ Goals:
  - XMPP MUC linking to an existing IRC channel
  - Web GUI for administration
 
-Strech Goals
+Stretch Goals
 
  - Automated provisioning and linking of temporary overflow IRC daemons
  - Spam filtering (opt-in only)
