@@ -22,6 +22,7 @@ commands["PRIVMSG"] = [handlePRIVMSG, relayHostServToOpers]
 commands["NOTICE"] = [handlePRIVMSG]
 commands["JOIN"] = [handleJOIN]
 commands["SID"] = [handleSID]
+commands["KILL"] = [handleKILL]
 
 commands["AWAY"] = [nullCommand]
 commands["PING"] = [nullCommand]

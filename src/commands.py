@@ -138,3 +138,11 @@ def handleWHOIS(cod, line, splitline, source):
     cod.sendLine(":{0} 318 {1} {2} End of /WHOIS list.".format(
         cod.sid, source, cod.config["me"]["nick"]))
 
+def handleKILL(cod, line, splitline, source):
+    #:1NRAAAAAG KILL 42JAAAAAC :rdash.in!watch.slowly.as.a.tear.falls!~shadow!Caerdwyn (*trollface*)
+    victim = cod.clients[splitline[2]]
+    killer = cod.clients[source]
+
+    if killer.nick != "NickServ":
+        cod.servicesLog("%s: KILL %s" % (killer.nick, victim.nick))
+
