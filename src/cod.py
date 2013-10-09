@@ -17,7 +17,7 @@ commands["MODE"] = [handleMODE]
 commands["TMODE"] = [handleTMODE]
 commands["CHGHOST"] = [handleCHGHOST]
 commands["WHOIS"] = [handleWHOIS]
-commands["PRIVMSG"] = [handlePRIVMSG, relayHostServToOpers]
+commands["PRIVMSG"] = [handlePRIVMSG, relayHostServToOpers, prettyPrintMessages]
 commands["NOTICE"] = [handlePRIVMSG]
 
 config = config.Config("../config.json").config
