@@ -18,7 +18,7 @@ commands["MODE"] = [handleMODE]
 commands["TMODE"] = [handleTMODE]
 commands["CHGHOST"] = [handleCHGHOST]
 commands["WHOIS"] = [handleWHOIS]
-commands["PRIVMSG"] = [handlePRIVMSG, relayHostServToOpers]
+commands["PRIVMSG"] = [handlePRIVMSG]
 commands["NOTICE"] = [handlePRIVMSG]
 commands["JOIN"] = [handleJOIN]
 commands["SID"] = [handleSID]
@@ -66,6 +66,10 @@ class Cod():
 
         if self.config["etc"]["prettyprint"]:
             commands["PRIVMSG"].append(prettyPrintMessages)
+
+        if self.config["etc"]["relayhostserv"]:
+            commands["PRIVMSG"].append(relayHostServToOpers)
+
 
     def sendLine(self, line):
         print ">>> %s" % line

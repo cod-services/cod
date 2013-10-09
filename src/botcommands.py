@@ -1,6 +1,7 @@
 from structures import *
 import rblwatch
 import mpd
+from random import randint
 
 def failIfNotOper(cod, client):
     if not client.isOper:
@@ -92,3 +93,38 @@ def commandMPD(cod, line, splitline, source, destination):
 
         cod.privmsg(destination, "%s -- %s -- %4.2f%%" %
                 (cur["artist"], cur["title"], float(cur["pos"])/float(cur["time"])))
+
+def commandOPNAME(cod, line, splitline, source, destination):
+    #Prepare lists
+    prefixfile = open(cod.config["etc"]["prefixfile"], 'r')
+    suffixfile = open(cod.config["etc"]["suffixfile"], 'r')
+    prefix = prefixfile.readlines()
+    suffix = suffixfile.readlines()
+    prefixfile.close()
+    suffixfile.close()
+
+    phrase = ""
+
+    #Strip the lists
+    for junk in range(len(prefix)-1, -1, -1):
+        prefix[junk] = prefix[junk].strip()
+        if len(prefix[junk]) == 0:
+            prefix.pop(junk)
+    for junk in range(len(suffix)-1, -1, -1):
+        suffix[junk] = suffix[junk].strip()
+        if len(suffix[junk]) == 0:
+            suffix.pop(junk)
+
+    #Format string
+    if (randint(0,9)==0):
+        phrase = "OPERATION %s %s %s" % \
+            (prefix[randint(0, len(prefix) - 1)],
+                prefix[randint(0, len(prefix) - 1)],
+                suffix[randint(0, len(suffix) - 1)]) #3
+    else:
+        phrase = "OPERATION %s %s" % \
+            (prefix[randint(0, len(prefix) - 1)],
+                suffix[randint(0, len(suffix) - 1)]) #2
+
+    cod.privmsg(destination, phrase.upper())
+

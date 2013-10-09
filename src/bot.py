@@ -6,7 +6,8 @@ commands = {}
 def relayHostServToOpers(cod, line, splitline, source):
     if splitline[2] == "#services":
         if cod.clients[source].nick == "HostServ":
-            cod.sendLine(cod.client.privmsg("#opers", "HostServ: " + " ".join (splitline[3:])[1:]))
+            cod.sendLine(cod.client.privmsg(cod.config["etc"]["staffchan"],
+                "HostServ: " + " ".join (splitline[3:])[1:]))
 
 def prettyPrintMessages(cod, line, splitline, source):
     client = cod.clients[source]
@@ -40,4 +41,5 @@ commands["TEST"] = [commandTEST]
 commands["JOIN"] = [commandJOIN]
 commands["RBL"] = [commandRBL]
 commands["MPD"] = [commandMPD]
+commands["OPNAME"] = [commandOPNAME]
 
