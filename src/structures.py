@@ -44,7 +44,7 @@ class Channel():
     def __init__(self, name, ts, snoop = False):
         self.name = name
         self.ts = ts
-        self.clients = []
+        self.clients = {}
         self.lists = {'b': [], 'e': [], 'I': [], 'q': []}
         self.modes = ""
 
@@ -55,7 +55,7 @@ class Channel():
         self.lists[chanlist].append(mask)
 
     def clientAdd(self, client, prefix = ""):
-        self.clients.append(ChanUser(client))
+        self.clients[client.uid] = ChanUser(client)
 
 class ChanUser():
     def __init__(self, client, prefix = ""):

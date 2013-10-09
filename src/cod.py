@@ -19,6 +19,7 @@ commands["CHGHOST"] = [handleCHGHOST]
 commands["WHOIS"] = [handleWHOIS]
 commands["PRIVMSG"] = [handlePRIVMSG, relayHostServToOpers, prettyPrintMessages]
 commands["NOTICE"] = [handlePRIVMSG]
+commands["JOIN"] = [handleJOIN]
 
 config = config.Config("../config.json").config
 
@@ -39,7 +40,7 @@ class Cod():
         self.realname = realname
 
         self.sendLine("PASS %s TS 6 :%s" % (password, SID))
-        self.sendLine("CAPAB :QS EX IE KLN UNKLN ENCAP TB SERVICES EUID EOPMOD MLOCK")
+        self.sendLine("CAPAB :QS EX IE KLN UNKLN ENCAP SERVICES EUID EOPMOD")
         self.sendLine("SERVER %s 1 :%s" % (name, realname))
 
         self.client = makeService(config["me"]["nick"], config["me"]["user"],

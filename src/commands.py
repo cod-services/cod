@@ -8,6 +8,16 @@ def handleEUID(cod, line, splitline, source):
 def handleQUIT(cod, line, splitline, source):
     cod.clients.pop(source)
 
+def handleJOIN(cod, line, splitline, source):
+    channel = cod.channels[splitline[3]]
+
+    channel.clientAdd(cod.clients[source])
+
+def handlePART(cod, line, splitline, source):
+    channel = cod.channels[splitline[3]]
+
+    channel.clients.pop(source)
+
 def handleSJOIN(cod, line, splitline, source):
     try:
         cod.channels[splitline[3]]
