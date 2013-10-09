@@ -61,3 +61,11 @@ class ChanUser():
     def __init__(self, client, prefix = ""):
         self.client = client
         self.prefix = prefix
+
+class Server():
+    def __init__(self, sid, name, hops, realname):
+        self.sid = sid
+        self.name = name
+        self.hops = hops
+        self.realname = realname
+

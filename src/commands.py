@@ -42,6 +42,9 @@ def handleSJOIN(cod, line, splitline, source):
 def handleNICK(cod, line, splitline, source):
     cod.clients[source].nick = splitline[2]
 
+def handleSID(cod, line, splitline, source):
+    cod.servers[source] = Server(source, splitline[2], splitline[3], ":".join(line.split(":")[2:]))
+
 def handleBMASK(cod, line, splitline, source):
     list = splitline[4]
 

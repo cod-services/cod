@@ -20,6 +20,7 @@ commands["WHOIS"] = [handleWHOIS]
 commands["PRIVMSG"] = [handlePRIVMSG, relayHostServToOpers, prettyPrintMessages]
 commands["NOTICE"] = [handlePRIVMSG]
 commands["JOIN"] = [handleJOIN]
+commands["SID"] = [handleSID]
 
 config = config.Config("../config.json").config
 
