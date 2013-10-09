@@ -80,7 +80,7 @@ for line in cod.link.makefile('r'):
     splitline = line.split()
 
     if line[0] != ":":
-        if line.split()[0] == "PING":
+        if splitline == "PING":
             cod.sendLine("PONG %s" % splitline[1:][0])
 
             if not cod.bursted:
@@ -88,6 +88,9 @@ for line in cod.link.makefile('r'):
 
                 for channel in config["me"]["channels"]:
                     cod.join(channel)
+
+        if splitline[0] == "SQUIT":
+            cod.servers[splitline[1]
 
     else:
         source = splitline[0][1:]
