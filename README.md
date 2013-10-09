@@ -15,6 +15,7 @@ Goals:
  - Simple extension
  - XMPP MUC linking to an existing IRC channel
  - Web GUI for administration
+ - MPD playlist manipulation
 
 Strech Goals
 
