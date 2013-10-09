@@ -22,6 +22,10 @@ commands["NOTICE"] = [handlePRIVMSG]
 commands["JOIN"] = [handleJOIN]
 commands["SID"] = [handleSID]
 
+commands["AWAY"] = [nullCommand]
+commands["PING"] = [nullCommand]
+commands["ENCAP"] = [nullCommand]
+
 config = config.Config("../config.json").config
 
 class Cod():
