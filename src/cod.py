@@ -17,7 +17,7 @@ commands["MODE"] = [handleMODE]
 commands["TMODE"] = [handleTMODE]
 commands["CHGHOST"] = [handleCHGHOST]
 commands["WHOIS"] = [handleWHOIS]
-commands["PRIVMSG"] = [handlePRIVMSG, relayHostServToOpers, prettyPrintMessages]
+commands["PRIVMSG"] = [prettyPrintMessages, handlePRIVMSG, relayHostServToOpers]
 commands["NOTICE"] = [handlePRIVMSG]
 commands["JOIN"] = [handleJOIN]
 commands["SID"] = [handleSID]
@@ -59,6 +59,9 @@ class Cod():
 
     def privmsg(self, target, line):
         self.sendLine(":%s PRIVMSG %s :%s" % (self.client.uid, target, line))
+
+    def notice(self, target, line):
+        self.sendLine(":%s NOTICE %s :%s" % (self.client.uid, target, line))
 
     def join(self, channel, op=True):
         channel = self.channels[channel]

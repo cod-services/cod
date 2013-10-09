@@ -6,6 +6,8 @@
         "user": "fish",
         "host": "blub.blub",
 
+        "prefix": "@",
+
         "channels": ["#services"]
     },
 

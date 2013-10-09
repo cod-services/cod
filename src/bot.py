@@ -18,12 +18,23 @@ def handlePRIVMSG(cod, line, splitline, source):
     splitline = line.split()
 
     command = splitline[0].upper()
+    pm = True
+
+    if destination[0] == "#":
+        if line[0] == cod.config["me"]["prefix"]:
+            command = command[1:]
+            pm = False
 
     try:
         for impl in commands[command]:
-            impl(cod, line, splitline, source, destination)
+            if pm:
+                impl(cod, line, splitline, source, source)
+            else:
+                impl(cod, line, splitline, source, destination)
+
     except KeyError as e:
         pass
 
 commands["TEST"] = [commandTEST]
+commands["JOIN"] = [commandJOIN]
 
