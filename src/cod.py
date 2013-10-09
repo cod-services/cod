@@ -4,6 +4,7 @@ import config
 import socket
 from structures import *
 from commands import *
+from bot import *
 
 commands = {}
 
@@ -16,6 +17,8 @@ commands["MODE"] = handleMODE
 commands["TMODE"] = handleTMODE
 commands["CHGHOST"] = handleCHGHOST
 commands["WHOIS"] = handleWHOIS
+commands["PRIVMSG"] = handlePRIVMSG
+commands["NOTICE"] = handlePRIVMSG
 
 config = config.Config("../config.json").config
 
