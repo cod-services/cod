@@ -76,7 +76,6 @@ SNOOPCHAN = "#services"
 for line in cod.link.makefile('r'):
     line = line.strip()
 
-    print "<<< " + line
     splitline = line.split()
 
     if line[0] != ":":
@@ -96,5 +95,5 @@ for line in cod.link.makefile('r'):
             for impl in commands[splitline[1]]:
                 impl(cod, line, splitline, source)
         except KeyError as e:
-            continue
+            print "<<< " + line
 
