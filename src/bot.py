@@ -6,10 +6,19 @@ commands = {}
 def relayHostServToOpers(cod, line, splitline, source):
     if splitline[2] == "#services":
         if cod.clients[source].nick == "HostServ":
-            cod.sendLine(cod.client.privmsg("#opers", "HostServ" + " ".join (splitline[3:])))
+            cod.sendLine(cod.client.privmsg("#opers", "HostServ: " + " ".join (splitline[3:])[1:]))
 
 def handlePRIVMSG(cod, line, splitline, source):
-    pass
+    line = ":".join(line.split(":")[2:])
+    splitline = line.split()
 
-commands["OPER"] = commandOPER
+    command = splitline[0].upper()
+
+    try:
+        for impl in commands[command]:
+            impl(cod, line, splitline, source)
+    except KeyError as e:
+        pass
+
+commands["OPER"] = [commandOPER]
 
