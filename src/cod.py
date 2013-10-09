@@ -8,17 +8,17 @@ from bot import *
 
 commands = {}
 
-commands["EUID"] = handleEUID
-commands["QUIT"] = handleQUIT
-commands["SJOIN"] = handleSJOIN
-commands["NICK"] = handleNICK
-commands["BMASK"] = handleBMASK
-commands["MODE"] = handleMODE
-commands["TMODE"] = handleTMODE
-commands["CHGHOST"] = handleCHGHOST
-commands["WHOIS"] = handleWHOIS
-commands["PRIVMSG"] = handlePRIVMSG
-commands["NOTICE"] = handlePRIVMSG
+commands["EUID"] = [handleEUID]
+commands["QUIT"] = [handleQUIT]
+commands["SJOIN"] = [handleSJOIN]
+commands["NICK"] = [handleNICK]
+commands["BMASK"] = [handleBMASK]
+commands["MODE"] = [handleMODE]
+commands["TMODE"] = [handleTMODE]
+commands["CHGHOST"] = [handleCHGHOST]
+commands["WHOIS"] = [handleWHOIS]
+commands["PRIVMSG"] = [handlePRIVMSG]
+commands["NOTICE"] = [handlePRIVMSG]
 
 config = config.Config("../config.json").config
 
@@ -82,7 +82,8 @@ for line in cod.link.makefile('r'):
         source = splitline[0][1:]
 
         try:
-            commands[splitline[1]](cod, line, splitline, source)
+            for impl in commands[splitline[1]]:
+                impl(cod, line, splitline, source)
         except KeyError as e:
             continue
 
