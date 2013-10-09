@@ -75,8 +75,6 @@ for line in cod.link.makefile('r'):
 
                     cod.sendLine(cod.client.join(channel, True))
 
-                cod.sendLine(":420CODFIS WHOIS 75XAAAAAB :Niichan")
-
     else:
         source = splitline[0][1:]
 
