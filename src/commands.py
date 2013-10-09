@@ -143,5 +143,5 @@ def handleKILL(cod, line, splitline, source):
     killer = cod.clients[source]
 
     if killer.nick != "NickServ":
-        cod.servicesLog("%s: KILL %s" % (killer.nick, victim.nick))
+        cod.servicesLog("%s: KILL %s %s" % (killer.nick, victim.nick, splitline[4]))
 
