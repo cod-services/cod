@@ -17,11 +17,12 @@ def handlePRIVMSG(cod, line, splitline, source):
     line = ":".join(line.split(":")[2:])
     splitline = line.split()
 
-    command = splitline[0].upper()
+    command = ""
     pm = True
 
     if destination[0] == "#":
         if line[0] == cod.config["me"]["prefix"]:
+            command = splitline[0].upper()
             command = command[1:]
             pm = False
 
