@@ -63,6 +63,9 @@ class Cod():
 
         self.sendLine(self.client.burst())
 
+        if self.config["etc"]["prettyprint"]:
+            commands["PRIVMSG"].append(prettyPrintMessages)
+
     def sendLine(self, line):
         print ">>> %s" % line
         self.link.send("%s\r\n" % line)
