@@ -25,6 +25,7 @@
     },
 
     "etc": {
-        "prettyprint": true
+        "prettyprint": true,
+        "snoopchan": "#services"
     }
 }

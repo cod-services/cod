@@ -83,7 +83,7 @@ class Cod():
         self.sendLine(self.client.join(channel, op))
 
     def servicesLog(self, line):
-        self.privmsg("#services", line)
+        self.privmsg(self.config["etc"]["snoopchan"], line)
 
 cod = Cod(config["uplink"]["host"], config["uplink"]["port"],
         config["uplink"]["pass"], config["uplink"]["sid"], config["me"]["name"],
