@@ -139,7 +139,6 @@ def handleWHOIS(cod, line, splitline, source):
         cod.sid, source, cod.config["me"]["nick"]))
 
 def handleKILL(cod, line, splitline, source):
-    #:1NRAAAAAG KILL 42JAAAAAC :rdash.in!watch.slowly.as.a.tear.falls!~shadow!Caerdwyn (*trollface*)
     victim = cod.clients[splitline[2]]
     killer = cod.clients[source]
 
