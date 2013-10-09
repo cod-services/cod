@@ -1,5 +1,5 @@
 from structures import *
 
-def commandOPER(cod, line, splitline, source):
-    print "Hello!"
+def commandTEST(cod, line, splitline, source, destination):
+    cod.privmsg(destination, "Hello!")
 

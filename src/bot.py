@@ -13,6 +13,7 @@ def prettyPrintMessages(cod, line, splitline, source):
     print "{0}: <{1}> {2}".format(splitline[2], client.nick, " ".join (splitline[3:])[1:])
 
 def handlePRIVMSG(cod, line, splitline, source):
+    destination = splitline[2]
     line = ":".join(line.split(":")[2:])
     splitline = line.split()
 
@@ -20,9 +21,9 @@ def handlePRIVMSG(cod, line, splitline, source):
 
     try:
         for impl in commands[command]:
-            impl(cod, line, splitline, source)
+            impl(cod, line, splitline, source, destination)
     except KeyError as e:
         pass
 
-commands["OPER"] = [commandOPER]
+commands["TEST"] = [commandTEST]
 
