@@ -112,7 +112,8 @@ class Lookup(Thread):
 
 
 class RBLSearch(object):
-    def __init__(self, lookup_host):
+    def __init__(self, cod, lookup_host):
+        self.cod = cod
         self.lookup_host = lookup_host
         self._listed = None
         self.resolver = Resolver()
@@ -139,19 +140,18 @@ class RBLSearch(object):
 
     def print_results(self):
         listed = self.listed
-        print ""
-        print "--- DNSBL Report for %s ---" % listed['SEARCH_HOST']
+        self.cod.servicesLog("--- DNSBL Report for %s ---" % listed['SEARCH_HOST'])
         for key in listed:
             if key == 'SEARCH_HOST':
                 continue
             if not listed[key].get('ERROR'):
                 if listed[key]['LISTED']:
-                    print "Results for %s: %s" % (key, listed[key]['LISTED'])
-                    print "  + Host information: %s" % \
-                          (listed[key]['HOST'][0])
+                    self.cod.servicesLog("Results for %s: %s" % (key, listed[key]['LISTED']))
+                    self.cod.servicesLog("  + Host information: %s" % \
+                          (listed[key]['HOST'][0]))
                 if 'TEXT' in listed[key].keys():
-                    print "    + Additional information: %s" % \
-                          (listed[key]['TEXT'])
+                    self.cod.servicesLog("    + Additional information: %s" % \
+                          (listed[key]['TEXT']))
             else:
                 #print "*** Error contacting %s ***" % key
                 pass
