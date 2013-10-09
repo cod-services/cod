@@ -42,4 +42,5 @@ commands["JOIN"] = [commandJOIN]
 commands["RBL"] = [commandRBL]
 commands["MPD"] = [commandMPD]
 commands["OPNAME"] = [commandOPNAME]
+commands["REHASH"] = [commandREHASH]
 

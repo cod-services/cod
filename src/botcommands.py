@@ -94,6 +94,15 @@ def commandMPD(cod, line, splitline, source, destination):
         cod.privmsg(destination, "%s -- %s -- %4.2f%%" %
                 (cur["artist"], cur["title"], float(cur["pos"])/float(cur["time"])))
 
+def commandREHASH(cod, line, splitline, source, destination):
+    if failIfNotOper(cod, cod.clients[source]):
+        return
+
+    cod.rehash()
+
+    client = cod.clients[source]
+    cod.servicesLog("%s: REHASH" % client.nick)
+
 def commandOPNAME(cod, line, splitline, source, destination):
     #Prepare lists
     prefixfile = open(cod.config["etc"]["prefixfile"], 'r')

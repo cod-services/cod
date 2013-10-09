@@ -28,10 +28,8 @@ commands["AWAY"] = [nullCommand]
 commands["PING"] = [nullCommand]
 commands["ENCAP"] = [nullCommand]
 
-config = config.Config("../config.json").config
-
 class Cod():
-    def __init__(self, host, port, password, SID, name, realname):
+    def __init__(self):
         self.link = socket.socket()
 
         self.clients = {}
@@ -40,27 +38,26 @@ class Cod():
 
         self.bursted = False
 
-        self.link.connect((host, port))
+        self.config = config.Config("../config.json").config
 
-        self.sid = SID
-        self.name = name
-        self.realname = realname
-
-        self.config = config
+        self.link.connect((self.config["uplink"]["host"], self.config["uplink"]["port"]))
 
         self.mpd = MPDClient()
         self.mpd.timeout = 10
         self.mpd.idletimeout = None
         self.mpd.connect(self.config["mpd"]["host"], self.config["mpd"]["port"])
 
-        self.sendLine("PASS %s TS 6 :%s" % (password, SID))
+        self.sendLine("PASS %s TS 6 :%s" %
+                (self.config["uplink"]["pass"], self.config["uplink"]["sid"]))
         self.sendLine("CAPAB :QS EX IE KLN UNKLN ENCAP SERVICES EUID EOPMOD")
-        self.sendLine("SERVER %s 1 :%s" % (name, realname))
+        self.sendLine("SERVER %s 1 :%s" %
+                (self.config["me"]["name"], self.config["me"]["desc"]))
 
-        self.client = makeService(config["me"]["nick"], config["me"]["user"],
-                config["me"]["host"], config["me"]["desc"], SID + "CODFIS")
+        self.client = makeService(self.config["me"]["nick"],
+                self.config["me"]["user"], self.config["me"]["host"],
+                self.config["me"]["desc"], self.config["uplink"]["sid"] + "CODFIS")
 
-        self.clients[SID + "CODFIS"] = self.client
+        self.clients[self.config["uplink"]["sid"] + "CODFIS"] = self.client
 
         self.sendLine(self.client.burst())
 
@@ -69,6 +66,17 @@ class Cod():
 
         if self.config["etc"]["relayhostserv"]:
             commands["PRIVMSG"].append(relayHostServToOpers)
+
+    def rehash(self):
+        self.config = config.Config("../config.json").config
+
+        self.mpd = MPDClient()
+        self.mpd.timeout = 10
+        self.mpd.idletimeout = None
+        self.mpd.connect(self.config["mpd"]["host"], self.config["mpd"]["port"])
+
+        for channel in cod.config["me"]["channels"]:
+            cod.join(channel)
 
 
     def sendLine(self, line):
@@ -89,10 +97,7 @@ class Cod():
     def servicesLog(self, line):
         self.privmsg(self.config["etc"]["snoopchan"], line)
 
-cod = Cod(config["uplink"]["host"], config["uplink"]["port"],
-        config["uplink"]["pass"], config["uplink"]["sid"], config["me"]["name"],
-        config["me"]["desc"])
-SNOOPCHAN = "#services"
+cod = Cod()
 
 for line in cod.link.makefile('r'):
     line = line.strip()
@@ -106,7 +111,7 @@ for line in cod.link.makefile('r'):
             if not cod.bursted:
                 cod.bursted = True
 
-                for channel in config["me"]["channels"]:
+                for channel in cod.config["me"]["channels"]:
                     cod.join(channel)
 
     else:
