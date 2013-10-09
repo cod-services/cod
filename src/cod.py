@@ -55,6 +55,17 @@ class Cod():
         print ">>> %s" % line
         self.link.send("%s\r\n" % line)
 
+    def privmsg(self, target, line):
+        self.sendLine(":%s PRIVMSG %s :%s" % (self.client.uid, target, line))
+
+    def join(self, channel, op=True):
+        channel = self.channels[channel]
+
+        self.sendLine(self.client.join(channel, op))
+
+    def servicesLog(self, line):
+        self.privmsg("#services", line)
+
 cod = Cod(config["uplink"]["host"], config["uplink"]["port"],
         config["uplink"]["pass"], config["uplink"]["sid"], config["me"]["name"],
         config["me"]["desc"])
@@ -74,9 +85,7 @@ for line in cod.link.makefile('r'):
                 cod.bursted = True
 
                 for channel in config["me"]["channels"]:
-                    channel = cod.channels[channel]
-
-                    cod.sendLine(cod.client.join(channel, True))
+                    cod.join(channel)
 
     else:
         source = splitline[0][1:]
