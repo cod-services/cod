@@ -1,5 +1,6 @@
 from structures import *
 import rblwatch
+import mpd
 
 def failIfNotOper(cod, client):
     if not client.isOper:
@@ -72,4 +73,22 @@ def commandRBL(cod, line, splitline, source, destination):
 
     search.print_results()
 
+def commandMPD(cod, line, splitline, source, destination):
+    if splitline[1].upper() == "FIND":
+        query = " ".join(splitline[2:])
 
+        cod.privmsg(destination, "Searching for %s" % query)
+
+        results = cod.mpd.find("any", query)
+
+        client = cod.clients[source]
+
+        for result in results:
+            cod.privmsg(destination, "%s: %s -- %s" %
+                    (client.nick, result["artist"], result["title"]))
+
+    elif splitline[1].upper() == "STATUS":
+        cur = cod.mpd.currentsong()
+
+        cod.privmsg(destination, "%s -- %s -- %4.2f%%" %
+                (cur["artist"], cur["title"], float(cur["pos"])/float(cur["time"])))

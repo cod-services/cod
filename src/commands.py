@@ -1,5 +1,8 @@
 from structures import *
 
+def nullCommand(cod, line, splitline, source):
+    pass
+
 def handleEUID(cod, line, splitline, source):
     client = Client(splitline[2], splitline[9], splitline[4], splitline[5], splitline[6], splitline[7], splitline[8], splitline[11], splitline[12][1:])
 

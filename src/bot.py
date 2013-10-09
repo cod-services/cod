@@ -39,4 +39,5 @@ def handlePRIVMSG(cod, line, splitline, source):
 commands["TEST"] = [commandTEST]
 commands["JOIN"] = [commandJOIN]
 commands["RBL"] = [commandRBL]
+commands["MPD"] = [commandMPD]
 

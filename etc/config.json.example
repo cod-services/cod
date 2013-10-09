@@ -16,5 +16,11 @@
         "port": 6667,
         "pass": "dev",
         "sid": "420"
+    },
+
+    "mpd": {
+        "host": "127.0.0.1",
+        "port": 6600,
+        "channel": "#sparkleradio"
     }
 }

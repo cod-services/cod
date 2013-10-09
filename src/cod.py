@@ -5,6 +5,7 @@ import socket
 from structures import *
 from commands import *
 from bot import *
+from mpd import MPDClient
 
 commands = {}
 
@@ -44,6 +45,13 @@ class Cod():
         self.name = name
         self.realname = realname
 
+        self.config = config
+
+        self.mpd = MPDClient()
+        self.mpd.timeout = 10
+        self.mpd.idletimeout = None
+        self.mpd.connect(self.config["mpd"]["host"], self.config["mpd"]["port"])
+
         self.sendLine("PASS %s TS 6 :%s" % (password, SID))
         self.sendLine("CAPAB :QS EX IE KLN UNKLN ENCAP SERVICES EUID EOPMOD")
         self.sendLine("SERVER %s 1 :%s" % (name, realname))
@@ -54,8 +62,6 @@ class Cod():
         self.clients[SID + "CODFIS"] = self.client
 
         self.sendLine(self.client.burst())
-
-        self.config = config
 
     def sendLine(self, line):
         print ">>> %s" % line
