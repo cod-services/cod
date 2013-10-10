@@ -128,15 +128,15 @@ def handleWHOIS(cod, line, splitline, source):
     client = cod.clients[service]
 
     cod.sendLine(":{0} 311 {1} {2} {3} {4} * :{5}".format(
-        cod.sid, source, cod.config["me"]["nick"], cod.config["me"]["user"],
+        cod.config["uplink"]["sid"], source, cod.config["me"]["nick"], cod.config["me"]["user"],
                 cod.config["me"]["host"], cod.config["me"]["desc"]))
     cod.sendLine(":{0} 312 {1} {2} {3} :{4}".format(
-        cod.sid, source, cod.config["me"]["nick"], cod.config["me"]["name"],
+        cod.config["uplink"]["sid"], source, cod.config["me"]["nick"], cod.config["me"]["name"],
         cod.config["me"]["desc"]))
     cod.sendLine(":{0} 313 {1} {2} :is a Network Service".format(
-        cod.sid, source, cod.config["me"]["nick"]))
+        cod.config["uplink"]["sid"], source, cod.config["me"]["nick"]))
     cod.sendLine(":{0} 318 {1} {2} End of /WHOIS list.".format(
-        cod.sid, source, cod.config["me"]["nick"]))
+        cod.config["uplink"]["sid"], source, cod.config["me"]["nick"]))
 
 def handleKILL(cod, line, splitline, source):
     victim = cod.clients[splitline[2]]
