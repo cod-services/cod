@@ -78,7 +78,6 @@ class Cod():
         for channel in cod.config["me"]["channels"]:
             cod.join(channel)
 
-
     def sendLine(self, line):
         if self.config["etc"]["debug"]:
             print ">>> %s" % line
@@ -99,6 +98,7 @@ class Cod():
     def servicesLog(self, line):
         self.privmsg(self.config["etc"]["snoopchan"], line)
 
+print "Cod 0.1 starting up"
 cod = Cod()
 
 for line in cod.link.makefile('r'):
