@@ -23,7 +23,6 @@ def handlePRIVMSG(cod, line, splitline, source):
 
     if destination[0] == "#":
         if line[0] == cod.config["me"]["prefix"]:
-            print "Channel command!"
             command = splitline[0].upper()
             command = command[1:]
             pm = False
@@ -33,7 +32,6 @@ def handlePRIVMSG(cod, line, splitline, source):
     try:
         for impl in commands[command]:
             if pm:
-                print "PM command!"
                 impl(cod, line, splitline, source, source)
             else:
                 impl(cod, line, splitline, source, destination)
