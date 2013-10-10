@@ -40,20 +40,20 @@ class Cod():
 
         self.config = config.Config("../config.json").config
 
-        print "--- Establishing connection to uplink"
+        self.log("Establishing connection to uplink")
 
         self.link.connect((self.config["uplink"]["host"], self.config["uplink"]["port"]))
 
-        print "--- done"
-        print "--- Establishing connection to MPD server"
+        self.log("done")
+        self.log("Establishing connection to MPD server")
 
         self.mpd = MPDClient()
         self.mpd.timeout = 10
         self.mpd.idletimeout = None
         self.mpd.connect(self.config["mpd"]["host"], self.config["mpd"]["port"])
 
-        print "--- done"
-        print "--- Sending credentials to remote IRC server"
+        self.log("done")
+        self.log("Sending credentials to remote IRC server")
 
         self.sendLine("PASS %s TS 6 :%s" %
                 (self.config["uplink"]["pass"], self.config["uplink"]["sid"]))
@@ -61,8 +61,8 @@ class Cod():
         self.sendLine("SERVER %s 1 :%s" %
                 (self.config["me"]["name"], self.config["me"]["desc"]))
 
-        print "--- done"
-        print "--- Creating and bursting client"
+        self.log("done")
+        self.log("Creating and bursting client")
 
         self.client = makeService(self.config["me"]["nick"],
                 self.config["me"]["user"], self.config["me"]["host"],
@@ -72,7 +72,7 @@ class Cod():
 
         self.sendLine(self.client.burst())
 
-        print "--- done"
+        self.log("done")
 
         if self.config["etc"]["prettyprint"]:
             commands["PRIVMSG"].append(prettyPrintMessages)
@@ -80,9 +80,11 @@ class Cod():
         if self.config["etc"]["relayhostserv"]:
             commands["PRIVMSG"].append(relayHostServToOpers)
 
-        print "!!! Cod initialized"
+        self.log("Cod initialized", "!!!")
 
     def rehash(self):
+        self.log("Rehashing...", "!!!")
+
         self.config = config.Config("../config.json").config
 
         self.mpd = MPDClient()
@@ -93,9 +95,11 @@ class Cod():
         for channel in cod.config["me"]["channels"]:
             cod.join(channel)
 
+        self.log("done")
+
     def sendLine(self, line):
         if self.config["etc"]["debug"]:
-            print ">>> %s" % line
+            self.log(line, ">>>")
 
         self.link.send("%s\r\n" % line)
 
@@ -110,6 +114,9 @@ class Cod():
 
         self.sendLine(self.client.join(channel, op))
 
+    def log(self, message, prefix="---"):
+        print prefix, message
+
     def servicesLog(self, line):
         self.privmsg(self.config["etc"]["snoopchan"], line)
 
@@ -120,7 +127,7 @@ for line in cod.link.makefile('r'):
     line = line.strip()
 
     if cod.config["etc"]["debug"]:
-        print "<<< %s" % line
+        cod.log(line, "<<<")
 
     splitline = line.split()
 
