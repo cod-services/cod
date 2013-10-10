@@ -11,7 +11,11 @@ def failIfNotOper(cod, client):
         return False
 
 def commandTEST(cod, line, splitline, source, destination):
-    cod.privmsg(destination, "Hello!")
+    if destination == source:
+        #In a PM, the destination will anways be the source
+        cod.notice(destination, "Hello!")
+    else:
+        cod.privmsg(destination, "Hello!")
 
 def commandJOIN(cod, line, splitline, source, destination):
     if failIfNotOper(cod, cod.clients[source]):
