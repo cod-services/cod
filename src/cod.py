@@ -40,18 +40,29 @@ class Cod():
 
         self.config = config.Config("../config.json").config
 
+        print "--- Establishing connection to uplink"
+
         self.link.connect((self.config["uplink"]["host"], self.config["uplink"]["port"]))
+
+        print "--- done"
+        print "--- Establishing connection to MPD server"
 
         self.mpd = MPDClient()
         self.mpd.timeout = 10
         self.mpd.idletimeout = None
         self.mpd.connect(self.config["mpd"]["host"], self.config["mpd"]["port"])
 
+        print "--- done"
+        print "--- Sending credentials to remote IRC server"
+
         self.sendLine("PASS %s TS 6 :%s" %
                 (self.config["uplink"]["pass"], self.config["uplink"]["sid"]))
         self.sendLine("CAPAB :QS EX IE KLN UNKLN ENCAP SERVICES EUID EOPMOD")
         self.sendLine("SERVER %s 1 :%s" %
                 (self.config["me"]["name"], self.config["me"]["desc"]))
+
+        print "--- done"
+        print "--- Creating and bursting client"
 
         self.client = makeService(self.config["me"]["nick"],
                 self.config["me"]["user"], self.config["me"]["host"],
@@ -61,11 +72,15 @@ class Cod():
 
         self.sendLine(self.client.burst())
 
+        print "--- done"
+
         if self.config["etc"]["prettyprint"]:
             commands["PRIVMSG"].append(prettyPrintMessages)
 
         if self.config["etc"]["relayhostserv"]:
             commands["PRIVMSG"].append(relayHostServToOpers)
+
+        print "!!! Cod initialized"
 
     def rehash(self):
         self.config = config.Config("../config.json").config
@@ -98,7 +113,7 @@ class Cod():
     def servicesLog(self, line):
         self.privmsg(self.config["etc"]["snoopchan"], line)
 
-print "Cod 0.1 starting up"
+print "!!! Cod 0.1 starting up"
 cod = Cod()
 
 for line in cod.link.makefile('r'):
