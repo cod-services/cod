@@ -80,7 +80,9 @@ class Cod():
 
 
     def sendLine(self, line):
-        print ">>> %s" % line
+        if self.config["etc"]["debug"]:
+            print ">>> %s" % line
+
         self.link.send("%s\r\n" % line)
 
     def privmsg(self, target, line):
@@ -102,6 +104,9 @@ cod = Cod()
 for line in cod.link.makefile('r'):
     line = line.strip()
 
+    if cod.config["etc"]["debug"]:
+        print "<<< %s" % line
+
     splitline = line.split()
 
     if line[0] != ":":
@@ -121,5 +126,5 @@ for line in cod.link.makefile('r'):
             for impl in commands[splitline[1]]:
                 impl(cod, line, splitline, source)
         except KeyError as e:
-            print "<<< " + line
+            pass
 

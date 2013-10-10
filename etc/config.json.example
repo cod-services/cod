@@ -27,6 +27,7 @@
     "etc": {
         "prettyprint": true,
         "relayhostserv": true,
+        "debug": false,
         "snoopchan": "#services",
         "staffchan": "#opers",
         "prefixfile": "../etc/prefix.txt",
