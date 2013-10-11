@@ -8,7 +8,10 @@ def initModule(cod):
     cod.s2scommands["PRIVMSG"].append(prettyPrintMessages)
 
 def destroyModule(cod):
-    pass
+    if cod.config["etc"]["relayhostserv"]:
+        cod.s2scommands.pop(relayHostServToOpers)
+
+    cod.s2scommands.pop(prettyPrintMessages)
 
 def relayHostServToOpers(cod, line, splitline, source):
     if splitline[2] == "#services":
