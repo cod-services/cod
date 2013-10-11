@@ -8,5 +8,5 @@ def destroyModule(cod):
     del cod.botcommands["TEST"]
 
 def test(cod, line, splitline, source, destination):
-    reply(cod, source, destination, "Hello!")
+    cod.reply(source, destination, "Hello!")
 

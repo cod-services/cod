@@ -165,6 +165,14 @@ class Cod():
             if cod.clients[client].nick == nick:
                 return cod.clients[client]
 
+    def reply(self, source, destination, line):
+        if source == destination:
+            #PM
+            cod.notice(destination, line)
+        else:
+            #Channel message
+            cod.privmsg(destination, line)
+
 print "!!! Cod %s starting up" % VERSION
 
 cod = Cod()

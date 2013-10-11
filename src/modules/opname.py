@@ -39,5 +39,5 @@ def commandOPNAME(cod, line, splitline, source, destination):
     phrase = "OPERATION %s %s %s" % \
                 (choice(prefix), choice(prefix), choice(suffix))
 
-    reply(cod, source, destination, phrase.upper())
+    cod.reply(source, destination, phrase.upper())
 

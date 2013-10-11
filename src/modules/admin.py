@@ -26,10 +26,10 @@ def commandJOIN(cod, line, splitline, source, destination):
 
         client = cod.clients[source]
         cod.servicesLog("JOIN %s: %s" % (channel, client.nick))
-        reply(cod, source, destination, "I have joined to %s", channel)
+        cod.reply(source, destination, "I have joined to %s", channel)
 
     else:
-        reply(cod, source, destination, "USAGE: JOIN #channel")
+        cod.reply(source, destination, "USAGE: JOIN #channel")
 
 def commandREHASH(cod, line, splitline, source, destination):
     if failIfNotOper(cod, cod.clients[source]):
@@ -59,7 +59,7 @@ def commandMODLOAD(cod, line, splitline, source, destination):
     try:
         cod.loadmod(target)
     except ImportError as e:
-        reply(cod, source, destination, "Module %s failed load: %s" % (target, e))
+        cod.reply(source, destination, "Module %s failed load: %s" % (target, e))
 
     cod.servicesLog("MODLOAD:%s: %s" % (target, cod.clients[source].nick))
 
@@ -72,6 +72,7 @@ def commandMODUNLOAD(cod, line, splitline, source, destination):
     try:
         cod.unloadmod(target)
     except:
-        reply(cod, source, destination, "Module %s failed unload" % target)
+        cod.reply(source, destination, "Module %s failed unload" % target)
 
     cod.servicesLog("MODUNLOAD:%s: %s" % (target, cod.clients[source].nick))
+

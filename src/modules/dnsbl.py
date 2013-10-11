@@ -23,7 +23,7 @@ def commandRBL(cod, line, splitline, source, destination):
         client = cod.findClientByNick(target)
 
         if client.ip == "0":
-            reply(cod, source, destination, "Error: target %s is a network service" % client.nick)
+            cod.reply(source, destination, "Error: target %s is a network service" % client.nick)
             return
 
         target = client.ip

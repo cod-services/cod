@@ -24,25 +24,25 @@ def destroyModule(cod):
 
 def commandMPD(cod, line, splitline, source, destination):
     if len(splitline) < 2:
-        reply(cod, source, destination, "Not enough arguments")
+        cod.reply(source, destination, "Not enough arguments")
         return
 
     if splitline[1].upper() == "FIND":
         query = " ".join(splitline[2:])
 
-        reply(cod, source, destination, "Searching for %s" % query)
+        cod.reply(source, destination, "Searching for %s" % query)
 
         results = mpd.find("any", query)
 
         client = cod.clients[source]
 
         for result in results:
-            reply(cod, destination, source, "%s: %s -- %s" % \
+            cod.reply(destination, source, "%s: %s -- %s" % \
                     (client.nick, result["artist"], result["title"]))
     elif splitline[1].upper() == "STATUS":
         mpd.update()
         cur = mpd.currentsong()
 
-        reply(cod, destination, source, "%s -- %s -- %4.2f%%" % \
+        cod.reply(destination, source, "%s -- %s -- %4.2f%%" % \
                 (cur["artist"], cur["title"], float(cur["pos"])/float(cur["time"])))
 
