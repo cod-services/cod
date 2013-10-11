@@ -44,7 +44,7 @@ class Cod():
 
         self.bursted = False
 
-        self.config = config.Config("../config.json").config
+        self.config = config.Config("config.json").config
 
         if self.config["etc"]["production"]:
             print "--- Forking to background"

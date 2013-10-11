@@ -1,4 +1,3 @@
 #!/bin/sh
 
-cd src
-python cod.py
+python src/cod.py
