@@ -1,5 +1,15 @@
 class Client():
+    """
+    Client data structure. Manages data for a client.
+    """
     def __init__(self, nick, uid, ts, modes, user, host, ip, login, gecos):
+        """
+        Inputs: nickname, TS6 UID, Timestamp, user modes, user name, hostname,
+        IP address, account the user is logged into with services, real name of
+        user
+
+        Creates client data structure
+        """
         self.nick = nick
         self.uid = uid
         self.ts = ts
@@ -14,22 +24,34 @@ class Client():
         self.isOper = self.modes.find("o") != -1
 
     def __str__(self):
+        """
+        Output : nick!user@host: real name
+        """
         return "%s!%s@%s :%s" % (self.nick, self.user, self.host, self.gecos)
 
     def privmsg(self, target, message):
+        """
+        Input: destination of message, message to send
+        """
         return ":%s PRIVMSG %s :%s" % (self.uid, target, message)
 
     def notice(self, target, message):
+        """
+        Input: destination of message, message to send
+        """
         return ":%s NOTICE %s :%s" % (self.uid, target, message)
 
-    def kill(self, target, msg):
-        # Delete user from memory somehow
-        return ":%s KILL %s" % (self.uid, target)
-
     def quit(self):
+        """
+        Output: Quit message
+        """
         return ":%s QUIT :Service unloaded" % self.uid
 
     def join(self, channel, op=False):
+        """
+        Input:  channel data structure, channel op status
+        Output: valid s2s command for joining the channel
+        """
         uid = self.uid
 
         if op:
@@ -38,21 +60,34 @@ class Client():
         return "SJOIN %s %s + %s" % (channel.ts, channel.name, uid)
 
     def burst(self):
+        """
+        Output: valid UID string to burst client onto the network
+        """
         return ":%s UID %s 0 0 %s %s %s 0 %s :%s" % (self.sid, self.nick, self.modes, self.user, self.host, self.uid, self.gecos)
 
 def makeService(nick, user, host, name, uid):
-    return Client(nick, uid, "0", "+Sio", user, host, "*", "*", name)
+    """
+    Inputs: nick, user, host, real name, TS6 UID
+
+    Creates a services client.
+    """
+    return Client(nick, uid, "0", "+Sio", user, host, "*", nick, name)
 
 class Channel():
-    def __init__(self, name, ts, snoop = False):
+    """
+    Channel data structure
+    """
+    def __init__(self, name, ts):
+        """
+        Inputs: Name of channel, channel timestamp
+
+        Creates a new channel structure.
+        """
         self.name = name
         self.ts = ts
         self.clients = {}
         self.lists = {'b': [], 'e': [], 'I': [], 'q': []}
         self.modes = ""
-
-    def __str__(self):
-        return "%s: %s" % (self.name, " ".join(["" + name.prefix + name.client.nick for name in self.clients]))
 
     def listAdd(self, chanlist, mask):
         self.lists[chanlist].append(mask)
@@ -61,11 +96,17 @@ class Channel():
         self.clients[client.uid] = ChanUser(client)
 
 class ChanUser():
+    """
+    Stub channel user structure for prefix tracking
+    """
     def __init__(self, client, prefix = ""):
         self.client = client
         self.prefix = prefix
 
 class Server():
+    """
+    Information on servers goes here
+    """
     def __init__(self, sid, name, hops, realname):
         self.sid = sid
         self.name = name
