@@ -3,6 +3,11 @@ import rblwatch
 import mpd
 from random import randint
 
+#Initialization for military operation name generator
+
+prefix = []
+suffix = []
+
 def failIfNotOper(cod, client):
     if not client.isOper:
         cod.notice(client.uid, "Insufficient permissions")
@@ -79,6 +84,9 @@ def commandRBL(cod, line, splitline, source, destination):
     search.print_results()
 
 def commandMPD(cod, line, splitline, source, destination):
+    if not cod.config["mpd"]["enable"]:
+        return
+
     if splitline[1].upper() == "FIND":
         query = " ".join(splitline[2:])
 
@@ -107,7 +115,10 @@ def commandREHASH(cod, line, splitline, source, destination):
     client = cod.clients[source]
     cod.servicesLog("%s: REHASH" % client.nick)
 
-def commandOPNAME(cod, line, splitline, source, destination):
+def commandOPNAMEinit(cod, line, splitline, source, destination):
+    if prefix != []:
+        return
+
     #Prepare lists
     prefixfile = open(cod.config["etc"]["prefixfile"], 'r')
     suffixfile = open(cod.config["etc"]["suffixfile"], 'r')
@@ -115,8 +126,6 @@ def commandOPNAME(cod, line, splitline, source, destination):
     suffix = suffixfile.readlines()
     prefixfile.close()
     suffixfile.close()
-
-    phrase = ""
 
     #Strip the lists
     for junk in range(len(prefix)-1, -1, -1):
@@ -128,6 +137,7 @@ def commandOPNAME(cod, line, splitline, source, destination):
         if len(suffix[junk]) == 0:
             suffix.pop(junk)
 
+def commandOPNAME(cod, line, splitline, source, destination):
     #Format string
     if (randint(0,9)==0):
         phrase = "OPERATION %s %s %s" % \
