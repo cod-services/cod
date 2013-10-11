@@ -141,3 +141,11 @@ def commandOPNAME(cod, line, splitline, source, destination):
 
     cod.privmsg(destination, phrase.upper())
 
+def commandDIE(cod, line, splitline, source, destination):
+    if failIfNotOper(cod, cod.clients[source]):
+        return
+
+    cod.servicesLog("%s: DIE" % cod.clients[source].nick)
+
+    cod.sendLine("SQUIT")
+

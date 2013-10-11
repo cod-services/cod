@@ -45,4 +45,5 @@ commands["RBL"] = [commandRBL]
 commands["MPD"] = [commandMPD]
 commands["OPNAME"] = [commandOPNAME]
 commands["REHASH"] = [commandREHASH]
+commands["DIE"] = [commandDIE]
 

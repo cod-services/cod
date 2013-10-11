@@ -47,14 +47,17 @@ class Cod():
         self.link.connect((self.config["uplink"]["host"], self.config["uplink"]["port"]))
 
         self.log("done")
-        self.log("Establishing connection to MPD server")
 
-        self.mpd = MPDClient()
-        self.mpd.timeout = 10
-        self.mpd.idletimeout = None
-        self.mpd.connect(self.config["mpd"]["host"], self.config["mpd"]["port"])
+        if self.config["mpd"]["enable"]:
+            self.log("Establishing connection to MPD server")
 
-        self.log("done")
+            self.mpd = MPDClient()
+            self.mpd.timeout = 10
+            self.mpd.idletimeout = None
+            self.mpd.connect(self.config["mpd"]["host"], self.config["mpd"]["port"])
+
+            self.log("done")
+
         self.log("Sending credentials to remote IRC server")
 
         self.sendLine("PASS %s TS 6 :%s" %
@@ -89,10 +92,11 @@ class Cod():
 
         self.config = config.Config("../config.json").config
 
-        self.mpd = MPDClient()
-        self.mpd.timeout = 10
-        self.mpd.idletimeout = None
-        self.mpd.connect(self.config["mpd"]["host"], self.config["mpd"]["port"])
+        if self.config["mpd"]["enable"]:
+            self.mpd = MPDClient()
+            self.mpd.timeout = 10
+            self.mpd.idletimeout = None
+            self.mpd.connect(self.config["mpd"]["host"], self.config["mpd"]["port"])
 
         for channel in cod.config["me"]["channels"]:
             cod.join(channel)
