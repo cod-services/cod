@@ -56,6 +56,10 @@ def commandMODLOAD(cod, line, splitline, source, destination):
 
     target = splitline[1].lower()
 
+    if target in cod.modules:
+        cod.notice(source, "Module %s is loaded" % target)
+        return
+
     try:
         cod.loadmod(target)
     except ImportError as e:
@@ -69,10 +73,14 @@ def commandMODUNLOAD(cod, line, splitline, source, destination):
 
     target = splitline[1].lower()
 
+    if target not in cod.modules:
+        cod.notice(source, "Module %s is not loaded" % target)
+        return
+
     try:
         cod.unloadmod(target)
-    except:
-        cod.reply(source, destination, "Module %s failed unload" % target)
+    except Exception as e:
+        cod.reply(source, destination, "Module %s failed unload: %s" % (target, e))
 
     cod.servicesLog("MODUNLOAD:%s: %s" % (target, cod.clients[source].nick))
 
