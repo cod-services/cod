@@ -8,13 +8,6 @@ from random import randint
 prefix = []
 suffix = []
 
-def failIfNotOper(cod, client):
-    if not client.isOper:
-        cod.notice(client.uid, "Insufficient permissions")
-        return True
-    else:
-        return False
-
 def commandTEST(cod, line, splitline, source, destination):
     if destination == source:
         #In a PM, the destination will anways be the source

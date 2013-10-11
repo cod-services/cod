@@ -15,7 +15,8 @@
     },
 
     "modules": {
-        "list": ["s2scommands"]
+        "coremods": ["s2scommands", "bot"],
+        "optionalmods": ["mpdclient"]
     };
 
     "uplink": {

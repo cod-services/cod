@@ -7,7 +7,6 @@ import socket
 import os
 import sys
 from structures import *
-from bot import *
 from mpd import MPDClient
 
 class Cod():
@@ -46,7 +45,10 @@ class Cod():
             else:
                 os._exit(0)
 
-        for module in self.config["modules"]["list"]:
+        for module in self.config["modules"]["coremods"]:
+            self.loadmod(module)
+
+        for module in self.config["modules"]["optionalmods"]:
             self.loadmod(module)
 
         self.log("Establishing connection to uplink")
@@ -54,16 +56,6 @@ class Cod():
         self.link.connect((self.config["uplink"]["host"], self.config["uplink"]["port"]))
 
         self.log("done")
-
-        if self.config["mpd"]["enable"]:
-            self.log("Establishing connection to MPD server")
-
-            self.mpd = MPDClient()
-            self.mpd.timeout = 10
-            self.mpd.idletimeout = None
-            self.mpd.connect(self.config["mpd"]["host"], self.config["mpd"]["port"])
-
-            self.log("done")
 
         self.log("Sending credentials to remote IRC server")
 
@@ -86,11 +78,6 @@ class Cod():
 
         self.log("done")
 
-        self.s2scommands["PRIVMSG"].append(prettyPrintMessages)
-
-        if self.config["etc"]["relayhostserv"]:
-            self.s2scommands["PRIVMSG"].append(relayHostServToOpers)
-
         self.privmsg("NickServ", "ID %s %s" % \
                 (self.config["me"]["acctname"], self.config["me"]["nspass"]))
 
@@ -98,21 +85,33 @@ class Cod():
         self.log("Cod initialized", "!!!")
 
     def loadmod(self, modname):
+        self.log("Trying to load module %s" % modname)
         oldpath = list(sys.path)
         sys.path.insert(0, "src/modules/")
+        sys.path.insert(1, "src/modules/core")
 
         self.modules["modules/"+modname] = __import__(modname)
         self.modules["modules/"+modname].initModule(self)
 
-        self.log("Modues %s loaded" % modname)
+        self.log("Module %s loaded" % modname)
 
         sys.path[:] = oldpath
 
     def unloadmod(self, modname):
+        self.log("Trying to unload module %s" % modname)
+
         self.modules["modules/"+modname].destroyModule(self)
+        del self.modules["modules/"+modname]
+
+        self.log("Module %s unloaded" % modname)
 
     def rehash(self):
         self.log("Rehashing...")
+
+        for module in self.modules:
+            name = module.split("/")[1]
+            self.unloadmod(name)
+            self.loadmod(name)
 
         self.config = config.Config("config.json").config
 
@@ -164,8 +163,6 @@ class Cod():
 print "!!! Cod %s starting up" % VERSION
 
 cod = Cod()
-
-cod.s2scommands["PRIVMSG"].append(handlePRIVMSG)
 
 #start up
 
