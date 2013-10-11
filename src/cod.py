@@ -105,8 +105,8 @@ class Cod():
         sys.path.insert(0, "src/modules/")
         sys.path.insert(1, "src/modules/core")
 
-        self.modules["modules/"+modname] = __import__(modname)
-        self.modules["modules/"+modname].initModule(self)
+        self.modules[modname] = __import__(modname)
+        self.modules[modname].initModule(self)
 
         self.log("Module %s loaded" % modname)
 
@@ -122,8 +122,8 @@ class Cod():
         """
         self.log("Trying to unload module %s" % modname)
 
-        self.modules["modules/"+modname].destroyModule(self)
-        del self.modules["modules/"+modname]
+        self.modules[modname].destroyModule(self)
+        del self.modules[modname]
 
         self.log("Module %s unloaded" % modname)
 
@@ -136,15 +136,6 @@ class Cod():
         joined while running.
         """
         self.log("Rehashing...")
-
-        for module in self.modules:
-            if module in self.config["modules"]["coremods"]:
-                #Never unload a core module
-                continue
-
-            name = module.split("/")[1]
-            self.unloadmod(name)
-            self.loadmod(name)
 
         self.config = config.Config("config.json").config
 
