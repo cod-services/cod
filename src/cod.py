@@ -158,7 +158,7 @@ class Cod():
             print prefix, message
 
         if self.bursted and prefix == "---":
-            self.snote("%s %s" % (prefix, message))
+            self.snote("%s" % (message))
 
     def servicesLog(self, line):
         self.privmsg(self.config["etc"]["snoopchan"], line)
