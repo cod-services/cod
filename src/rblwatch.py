@@ -141,17 +141,13 @@ class RBLSearch(object):
 
     def print_results(self):
         listed = self.listed
-        self.cod.servicesLog("--- DNSBL Report for %s ---" % listed['SEARCH_HOST'])
+
         for key in listed:
             if key == 'SEARCH_HOST':
                 continue
             if not listed[key].get('ERROR'):
-                if listed[key]['LISTED']:
-                    self.cod.servicesLog("Results for %s: %s" % (key, listed[key]['LISTED']))
-                    self.cod.servicesLog("  + Host information: %s" % \
-                          (listed[key]['HOST'][0]))
                 if 'TEXT' in listed[key].keys():
-                    self.cod.servicesLog("    + Additional information: %s" % \
+                    self.cod.servicesLog(" + Additional information: %s" % \
                           (listed[key]['TEXT']))
             else:
                 #print "*** Error contacting %s ***" % key
