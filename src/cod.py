@@ -11,27 +11,6 @@ from commands import *
 from bot import *
 from mpd import MPDClient
 
-commands = {}
-
-commands["EUID"] = [handleEUID]
-commands["QUIT"] = [handleQUIT]
-commands["SJOIN"] = [handleSJOIN]
-commands["NICK"] = [handleNICK]
-commands["BMASK"] = [handleBMASK]
-commands["MODE"] = [handleMODE]
-commands["TMODE"] = [handleTMODE]
-commands["CHGHOST"] = [handleCHGHOST]
-commands["WHOIS"] = [handleWHOIS]
-commands["PRIVMSG"] = [handlePRIVMSG]
-commands["NOTICE"] = [handlePRIVMSG]
-commands["JOIN"] = [handleJOIN]
-commands["SID"] = [handleSID]
-commands["KILL"] = [handleKILL]
-
-commands["AWAY"] = [nullCommand]
-commands["PING"] = [nullCommand]
-commands["ENCAP"] = [handleENCAP]
-
 class Cod():
     def __init__(self):
         self.version = VERSION
@@ -41,6 +20,9 @@ class Cod():
         self.clients = {}
         self.channels = {}
         self.servers = {}
+
+        self.s2scommands = {}
+        self.botcommands = {}
 
         self.bursted = False
 
@@ -102,10 +84,10 @@ class Cod():
 
         self.log("done")
 
-        commands["PRIVMSG"].append(prettyPrintMessages)
+        self.s2scommands["PRIVMSG"]= [prettyPrintMessages]
 
         if self.config["etc"]["relayhostserv"]:
-            commands["PRIVMSG"].append(relayHostServToOpers)
+            self.s2scommands["PRIVMSG"].append(relayHostServToOpers)
 
         self.privmsg("NickServ", "ID %s %s" % \
                 (self.config["me"]["acctname"], self.config["me"]["nspass"]))
@@ -167,6 +149,26 @@ print "!!! Cod %s starting up" % VERSION
 
 cod = Cod()
 
+cod.s2scommands["EUID"] = [handleEUID]
+cod.s2scommands["QUIT"] = [handleQUIT]
+cod.s2scommands["SJOIN"] = [handleSJOIN]
+cod.s2scommands["NICK"] = [handleNICK]
+cod.s2scommands["BMASK"] = [handleBMASK]
+cod.s2scommands["MODE"] = [handleMODE]
+cod.s2scommands["TMODE"] = [handleTMODE]
+cod.s2scommands["CHGHOST"] = [handleCHGHOST]
+cod.s2scommands["WHOIS"] = [handleWHOIS]
+cod.s2scommands["PRIVMSG"].append(handlePRIVMSG)
+cod.s2scommands["NOTICE"] = [handlePRIVMSG]
+cod.s2scommands["JOIN"] = [handleJOIN]
+cod.s2scommands["SID"] = [handleSID]
+cod.s2scommands["KILL"] = [handleKILL]
+
+cod.s2scommands["AWAY"] = [nullCommand]
+cod.s2scommands["PING"] = [nullCommand]
+cod.s2scommands["ENCAP"] = [handleENCAP]
+
+
 #start up
 
 for line in cod.link.makefile('r'):
@@ -191,7 +193,7 @@ for line in cod.link.makefile('r'):
         source = splitline[0][1:]
 
         try:
-            for impl in commands[splitline[1]]:
+            for impl in cod.s2scommands[splitline[1]]:
                 impl(cod, line, splitline, source)
         except KeyError as e:
             pass
