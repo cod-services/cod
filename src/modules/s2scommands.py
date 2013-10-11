@@ -1,5 +1,42 @@
 from structures import *
 
+def initModule(cod):
+    cod.s2scommands["EUID"] = [handleEUID]
+    cod.s2scommands["QUIT"] = [handleQUIT]
+    cod.s2scommands["SJOIN"] = [handleSJOIN]
+    cod.s2scommands["NICK"] = [handleNICK]
+    cod.s2scommands["BMASK"] = [handleBMASK]
+    cod.s2scommands["MODE"] = [handleMODE]
+    cod.s2scommands["TMODE"] = [handleTMODE]
+    cod.s2scommands["CHGHOST"] = [handleCHGHOST]
+    cod.s2scommands["WHOIS"] = [handleWHOIS]
+    cod.s2scommands["JOIN"] = [handleJOIN]
+    cod.s2scommands["SID"] = [handleSID]
+    cod.s2scommands["KILL"] = [handleKILL]
+    cod.s2scommands["ENCAP"] = [handleENCAP]
+
+    cod.s2scommands["AWAY"] = [nullCommand]
+    cod.s2scommands["PING"] = [nullCommand]
+
+def destroyModule(cod):
+    del cod.s2scommands["EUID"]
+    del cod.s2scommands["QUIT"]
+    del cod.s2scommands["SJOIN"]
+    del cod.s2scommands["NICK"]
+    del cod.s2scommands["BMASK"]
+    del cod.s2scommands["MODE"]
+    del cod.s2scommands["TMODE"]
+    del cod.s2scommands["CHGHOST"]
+    del cod.s2scommands["WHOIS"]
+    del cod.s2scommands["NOTICE"]
+    del cod.s2scommands["JOIN"]
+    del cod.s2scommands["SID"]
+    del cod.s2scommands["KILL"]
+    del cod.s2scommands["ENCAP"]
+
+    del cod.s2scommands["AWAY"]
+    del cod.s2scommands["PING"]
+
 def nullCommand(cod, line, splitline, source):
     pass
 

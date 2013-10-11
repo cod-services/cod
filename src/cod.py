@@ -7,7 +7,6 @@ import socket
 import os
 import sys
 from structures import *
-from commands import *
 from bot import *
 from mpd import MPDClient
 
@@ -20,8 +19,9 @@ class Cod():
         self.clients = {}
         self.channels = {}
         self.servers = {}
+        self.modules = {}
 
-        self.s2scommands = {}
+        self.s2scommands = {"PRIVMSG": []}
         self.botcommands = {}
 
         self.bursted = False
@@ -46,6 +46,8 @@ class Cod():
             else:
                 os._exit(0)
 
+        for module in self.config["modules"]["list"]:
+            self.loadmod(module)
 
         self.log("Establishing connection to uplink")
 
@@ -84,7 +86,7 @@ class Cod():
 
         self.log("done")
 
-        self.s2scommands["PRIVMSG"]= [prettyPrintMessages]
+        self.s2scommands["PRIVMSG"].append(prettyPrintMessages)
 
         if self.config["etc"]["relayhostserv"]:
             self.s2scommands["PRIVMSG"].append(relayHostServToOpers)
@@ -94,6 +96,20 @@ class Cod():
 
         self.sendLine(":%s ENCAP * SNOTE s :Cod initialized" % self.config["uplink"]["sid"])
         self.log("Cod initialized", "!!!")
+
+    def loadmod(self, modname):
+        oldpath = list(sys.path)
+        sys.path.insert(0, "src/modules/")
+
+        self.modules["modules/"+modname] = __import__(modname)
+        self.modules["modules/"+modname].initModule(self)
+
+        self.log("Modues %s loaded" % modname)
+
+        sys.path[:] = oldpath
+
+    def unloadmod(self, modname):
+        self.modules["modules/"+modname].destroyModule(self)
 
     def rehash(self):
         self.log("Rehashing...")
@@ -149,25 +165,7 @@ print "!!! Cod %s starting up" % VERSION
 
 cod = Cod()
 
-cod.s2scommands["EUID"] = [handleEUID]
-cod.s2scommands["QUIT"] = [handleQUIT]
-cod.s2scommands["SJOIN"] = [handleSJOIN]
-cod.s2scommands["NICK"] = [handleNICK]
-cod.s2scommands["BMASK"] = [handleBMASK]
-cod.s2scommands["MODE"] = [handleMODE]
-cod.s2scommands["TMODE"] = [handleTMODE]
-cod.s2scommands["CHGHOST"] = [handleCHGHOST]
-cod.s2scommands["WHOIS"] = [handleWHOIS]
 cod.s2scommands["PRIVMSG"].append(handlePRIVMSG)
-cod.s2scommands["NOTICE"] = [handlePRIVMSG]
-cod.s2scommands["JOIN"] = [handleJOIN]
-cod.s2scommands["SID"] = [handleSID]
-cod.s2scommands["KILL"] = [handleKILL]
-
-cod.s2scommands["AWAY"] = [nullCommand]
-cod.s2scommands["PING"] = [nullCommand]
-cod.s2scommands["ENCAP"] = [handleENCAP]
-
 
 #start up
 
