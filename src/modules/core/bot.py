@@ -7,22 +7,8 @@ def initModule(cod):
 
     cod.s2scommands["PRIVMSG"].append(prettyPrintMessages)
 
-    cod.botcommands["TEST"] = [commandTEST]
-    cod.botcommands["JOIN"] = [commandJOIN]
-    cod.botcommands["RBL"] = [commandRBL]
-    cod.botcommands["MPD"] = [commandMPD]
-    cod.botcommands["OPNAME"] = [commandOPNAMEinit, commandOPNAME]
-    cod.botcommands["REHASH"] = [commandREHASH]
-    cod.botcommands["DIE"] = [commandDIE]
-
 def destroyModule(cod):
-    del cod.botcommands["TEST"]
-    del cod.botcommands["JOIN"]
-    del cod.botcommands["RBL"]
-    del cod.botcommands["MPD"]
-    del cod.botcommands["OPNAME"]
-    del cod.botcommands["REHASH"]
-    del cod.botcommands["DIE"]
+    pass
 
 def relayHostServToOpers(cod, line, splitline, source):
     if splitline[2] == "#services":
