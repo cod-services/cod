@@ -12,6 +12,12 @@ Extended IRC services and TS6 bot framework in Python
  - Dynamic channel joins
  - Military operation name generation
  - MPD searching and status printing
+ - Stress testing via the Orbital Friendship Cannon
+ - Announcing and full RBL lookups of DNSBL hits
+ - Modular loading and unloading
+ - Pretty printing of channel messages to the screen
+ - Relaying of `HostServ` messages from snoop channel to staff channel
+ - Documented core
 
 ### Goals:
  - DNS record editing (Tortoise Labs)
