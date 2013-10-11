@@ -85,7 +85,8 @@ class Cod():
         if self.config["etc"]["relayhostserv"]:
             commands["PRIVMSG"].append(relayHostServToOpers)
 
-        self.privmsg("NickServ", "ID ShadowNET %s" % self.config["me"]["nspass"])
+        self.privmsg("NickServ", "ID %s %s" % \
+                (self.config["me"]["acctname"], self.config["me"]["nspass"]))
 
         self.log("Cod initialized", "!!!")
 

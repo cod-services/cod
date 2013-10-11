@@ -10,7 +10,8 @@
 
         "channels": ["#services"],
 
-        "nspass": "hunter2"
+        "nspass": "hunter2",
+        "acctname": "Cod"
     },
 
     "uplink": {
