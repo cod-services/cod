@@ -8,7 +8,9 @@
 
         "prefix": "@",
 
-        "channels": ["#services"]
+        "channels": ["#services"],
+
+        "nspass": "hunter2"
     },
 
     "uplink": {
