@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+VERSION = "0.2"
+
 import config
 import socket
 import os
@@ -32,6 +34,8 @@ commands["ENCAP"] = [nullCommand]
 
 class Cod():
     def __init__(self):
+        self.version = VERSION
+
         self.link = socket.socket()
 
         self.clients = {}
@@ -151,7 +155,7 @@ class Cod():
     def servicesLog(self, line):
         self.privmsg(self.config["etc"]["snoopchan"], line)
 
-print "!!! Cod 0.1 starting up"
+print "!!! Cod %s starting up" % VERSION
 
 cod = Cod()
 
