@@ -145,3 +145,8 @@ def handleKILL(cod, line, splitline, source):
     if killer.nick != "NickServ":
         cod.servicesLog("%s: KILL %s %s" % (killer.nick, victim.nick, splitline[4]))
 
+def handleENCAP(cod, line, splitline, source):
+    if splitline[3] == "SNOTE":
+        if splitline[4] == "r":
+            cod.servicesLog("DNSBL:HIT: %s" % line.split(":")[2])
+

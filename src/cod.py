@@ -30,7 +30,7 @@ commands["KILL"] = [handleKILL]
 
 commands["AWAY"] = [nullCommand]
 commands["PING"] = [nullCommand]
-commands["ENCAP"] = [nullCommand]
+commands["ENCAP"] = [handleENCAP]
 
 class Cod():
     def __init__(self):
@@ -110,12 +110,13 @@ class Cod():
         self.privmsg("NickServ", "ID %s %s" % \
                 (self.config["me"]["acctname"], self.config["me"]["nspass"]))
 
+        self.sendLine(":%s ENCAP * SNOTE s :Cod initialized" % self.config["uplink"]["sid"])
         self.log("Cod initialized", "!!!")
 
     def rehash(self):
-        self.log("Rehashing...", "!!!")
+        self.log("Rehashing...")
 
-        self.config = config.Config("../config.json").config
+        self.config = config.Config("config.json").config
 
         if self.config["mpd"]["enable"]:
             self.mpd = MPDClient()
@@ -129,7 +130,7 @@ class Cod():
         for channel in cod.config["me"]["channels"]:
             cod.join(channel, False)
 
-        self.log("done")
+        self.log("Rehash complete")
 
     def sendLine(self, line):
         if self.config["etc"]["debug"]:
@@ -148,9 +149,16 @@ class Cod():
 
         self.sendLine(self.client.join(channel, op))
 
+    def snote(self, line, mask="d"):
+        self.sendLine(":%s ENCAP * SNOTE %s :%s" % \
+                (self.config["uplink"]["sid"], mask, line))
+
     def log(self, message, prefix="---"):
         if not self.config["etc"]["production"]:
             print prefix, message
+
+        if self.bursted and prefix == "---":
+            self.snote("%s %s" % (prefix, message))
 
     def servicesLog(self, line):
         self.privmsg(self.config["etc"]["snoopchan"], line)
