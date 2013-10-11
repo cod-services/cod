@@ -16,7 +16,7 @@
 
     "modules": {
         "coremods": ["s2scommands", "bot"],
-        "optionalmods": ["mpdclient"]
+        "optionalmods": ["mpdclient", "test"]
     };
 
     "uplink": {
