@@ -42,6 +42,25 @@ class Cod():
 
         self.config = config.Config("../config.json").config
 
+        if self.config["etc"]["production"]:
+            print "--- Forking to background"
+
+            try:
+                pid = os.fork()
+            except OSError, e:
+                raise Exception, "%s [%d]" % (e.strerror, e.errno)
+
+            if (hasattr(os, "devnull")):
+                REDIRECT_TO = os.devnull
+            else:
+                REDIRECT_TO = "/dev/null"
+
+            if (pid == 0):
+                os.setsid()
+            else:
+                os._exit(0)
+
+
         self.log("Establishing connection to uplink")
 
         self.link.connect((self.config["uplink"]["host"], self.config["uplink"]["port"]))
@@ -79,8 +98,7 @@ class Cod():
 
         self.log("done")
 
-        if self.config["etc"]["prettyprint"]:
-            commands["PRIVMSG"].append(prettyPrintMessages)
+        commands["PRIVMSG"].append(prettyPrintMessages)
 
         if self.config["etc"]["relayhostserv"]:
             commands["PRIVMSG"].append(relayHostServToOpers)
@@ -134,23 +152,6 @@ class Cod():
         self.privmsg(self.config["etc"]["snoopchan"], line)
 
 print "!!! Cod 0.1 starting up"
-
-#daemonize
-
-try:
-    pid = os.fork()
-except OSError, e:
-    raise Exception, "%s [%d]" % (e.strerror, e.errno)
-
-if (hasattr(os, "devnull")):
-    REDIRECT_TO = os.devnull
-else:
-    REDIRECT_TO = "/dev/null"
-
-if (pid == 0):
-    os.setsid()
-else:
-    os._exit(0)
 
 cod = Cod()
 
