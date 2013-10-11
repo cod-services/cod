@@ -10,8 +10,8 @@ def failIfNotOper(cod, client):
 def reply(cod, source, destination, line):
     if source == destination:
         #PM
-        cod.notice(source, line)
+        cod.notice(destination, line)
     else:
         #Channel message
-        cod.privmsg(source, line)
+        cod.privmsg(destination, line)
 
