@@ -2,6 +2,8 @@
 
 import config
 import socket
+import os
+import sys
 from structures import *
 from commands import *
 from bot import *
@@ -115,12 +117,31 @@ class Cod():
         self.sendLine(self.client.join(channel, op))
 
     def log(self, message, prefix="---"):
-        print prefix, message
+        if not self.config["etc"]["production"]:
+            print prefix, message
 
     def servicesLog(self, line):
         self.privmsg(self.config["etc"]["snoopchan"], line)
 
 print "!!! Cod 0.1 starting up"
+
+#daemonize
+
+try:
+    pid = os.fork()
+except OSError, e:
+    raise Exception, "%s [%d]" % (e.strerror, e.errno)
+
+if (hasattr(os, "devnull")):
+    REDIRECT_TO = os.devnull
+else:
+    REDIRECT_TO = "/dev/null"
+
+if (pid == 0):
+    os.setsid()
+else:
+    os._exit(0)
+
 cod = Cod()
 
 for line in cod.link.makefile('r'):
