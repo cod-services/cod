@@ -24,13 +24,13 @@ def destroyModule(cod):
 
 def commandMPD(cod, line, splitline, source, destination):
     if len(splitline) < 2:
-        reply(cod, destination, source, "Not enough arguments")
+        reply(cod, source, destination, "Not enough arguments")
         return
 
     if splitline[1].upper() == "FIND":
         query = " ".join(splitline[2:])
 
-        reply(cod, destination, source, "Searching for %s" % query)
+        reply(cod, source, destination, "Searching for %s" % query)
 
         results = mpd.find("any", query)
 
