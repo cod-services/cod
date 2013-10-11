@@ -6,6 +6,7 @@ def initModule(cod):
     cod.botcommands["REHASH"] = [commandREHASH]
     cod.botcommands["DIE"] = [commandDIE]
     cod.botcommands["MODLOAD"] = [commandMODLOAD]
+    cod.botcommands["MODLIST"] = [commandMODLIST]
     cod.botcommands["MODUNLOAD"] = [commandMODUNLOAD]
 
 def destroyModule(cod):
@@ -49,6 +50,15 @@ def commandDIE(cod, line, splitline, source, destination):
     cod.sendLine(cod.client.quit())
 
     cod.sendLine("SQUIT")
+
+def commandMODLIST(cod, line, splitline, source, destination):
+    if failIfNotOper(cod, cod.clients[source]):
+        return
+
+    for module in cod.modules():
+        cod.notice(source, module)
+
+    cod.notice(source, "End of module list")
 
 def commandMODLOAD(cod, line, splitline, source, destination):
     if failIfNotOper(cod, cod.clients[source]):
