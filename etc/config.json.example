@@ -12,8 +12,8 @@
     },
 
     "modules": {
-        "coremods": ["s2scommands", "bot"],
-        "optionalmods": ["test", "admin"]
+        "coremods": ["s2scommands"],
+        "optionalmods": ["test", "admin", "relayhostserv", "killannounce", "dnsblannounce"]
     };
 
     "uplink": {
@@ -31,7 +31,6 @@
     },
 
     "etc": {
-        "relayhostserv": true,
         "debug": false,
         "production": true,
         "snoopchan": "#services",

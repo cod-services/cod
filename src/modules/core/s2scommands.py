@@ -12,10 +12,10 @@ def initModule(cod):
     cod.s2scommands["WHOIS"] = [handleWHOIS]
     cod.s2scommands["JOIN"] = [handleJOIN]
     cod.s2scommands["SID"] = [handleSID]
-    cod.s2scommands["KILL"] = [handleKILL]
-    cod.s2scommands["ENCAP"] = [handleENCAP]
     cod.s2scommands["PRIVMSG"] = [handlePRIVMSG]
+    cod.s2scommands["KILL"] = [handleKILL]
 
+    cod.s2scommands["ENCAP"] = [nullCommand]
     cod.s2scommands["AWAY"] = [nullCommand]
     cod.s2scommands["PING"] = [nullCommand]
 
@@ -32,11 +32,13 @@ def destroyModule(cod):
     del cod.s2scommands["NOTICE"]
     del cod.s2scommands["JOIN"]
     del cod.s2scommands["SID"]
-    del cod.s2scommands["KILL"]
     del cod.s2scommands["ENCAP"]
+    del cod.s2scommands["KILL"]
 
     del cod.s2scommands["AWAY"]
     del cod.s2scommands["PING"]
+    del cod.s2scommands["ENCAP"]
+
 
 def nullCommand(cod, line, splitline, source):
     pass
@@ -176,18 +178,6 @@ def handleWHOIS(cod, line, splitline, source):
     cod.sendLine(":{0} 318 {1} {2} End of /WHOIS list.".format(
         cod.config["uplink"]["sid"], source, cod.config["me"]["nick"]))
 
-def handleKILL(cod, line, splitline, source):
-    victim = cod.clients[splitline[2]]
-    killer = cod.clients[source]
-
-    if killer.nick != "NickServ":
-        cod.servicesLog("%s: KILL %s %s" % (killer.nick, victim.nick, splitline[4]))
-
-def handleENCAP(cod, line, splitline, source):
-    if splitline[3] == "SNOTE":
-        if splitline[4] == "r":
-            cod.servicesLog("DNSBL:HIT: %s" % line.split(":")[2])
-
 def handlePRIVMSG(cod, line, splitline, source):
     destination = splitline[2]
     line = ":".join(line.split(":")[2:])
@@ -212,4 +202,15 @@ def handlePRIVMSG(cod, line, splitline, source):
                 impl(cod, line, splitline, source, destination)
     except KeyError as e:
         pass
+
+def handleKILL(cod, line, splitline, source):
+    if splitline[2] != cod.client.uid:
+        return
+
+    cod.sendLine(cod.client.burst())
+
+    for channel in cod.config["me"]["channels"]:
+        cod.join(channel)
+
+    cod.servicesLog("KILL'd by %s " % cod.clients[source].nick)
 
