@@ -102,8 +102,7 @@ class Cod():
 
         self.log("Trying to load module %s" % modname)
         oldpath = list(sys.path)
-        sys.path.insert(0, "src/modules/")
-        sys.path.insert(1, "src/modules/core")
+        sys.path.insert(0, "modules/")
 
         self.modules[modname] = __import__(modname)
         self.modules[modname].initModule(self)

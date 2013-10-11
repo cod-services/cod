@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import sys
-from dns.resolver import Resolver, NXDOMAIN, NoNameservers, Timeout
+from dns.resolver import Resolver, NXDOMAIN, NoNameservers, Timeout, NoAnswer
 from threading import Thread
 
 RBLS = [
@@ -108,7 +108,7 @@ class Lookup(Thread):
                 if len(text_record) > 0:
                     self.listed[self.dnslist]['TEXT'] = "\n".join(text_record[0].strings)
             self.listed[self.dnslist]['ERROR'] = False
-        except (NXDOMAIN, NoNameservers, Timeout, NameError):
+        except (NXDOMAIN, NoNameservers, Timeout, NameError, NoAnswer):
             self.listed[self.dnslist]['ERROR'] = True
 
 
