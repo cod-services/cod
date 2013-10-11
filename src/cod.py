@@ -87,10 +87,6 @@ class Cod():
 
         self.log("done")
 
-        #login to services
-        self.privmsg("NickServ", "ID %s %s" % \
-                (self.config["me"]["acctname"], self.config["me"]["nspass"]))
-
         #Inform operators that Cod is initialized
         self.snote("Cod initialized", "s")
         self.log("Cod initialized", "!!!")

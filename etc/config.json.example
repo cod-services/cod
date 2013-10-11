@@ -8,10 +8,7 @@
 
         "prefix": "@",
 
-        "channels": ["#services"],
-
-        "nspass": "hunter2",
-        "acctname": "Cod"
+        "channels": ["#services"]
     },
 
     "modules": {
