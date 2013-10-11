@@ -32,17 +32,18 @@ def commandJOIN(cod, line, splitline, source, destination):
         cod.join(channel, False)
 
         client = cod.clients[source]
-        cod.servicesLog("%s: JOIN %s" % (client.nick, channel))
+        cod.servicesLog("JOIN %s: %s" % (channel, client.nick))
+        cod.notice(source, "I have joined to %s", channel)
 
     else:
-        cod.notice(source, "USAGE: JOIN #channel <@ or nothing>")
+        cod.notice(source, "USAGE: JOIN #channel")
 
 def commandRBL(cod, line, splitline, source, destination):
     if failIfNotOper(cod, cod.clients[source]):
         return
 
-    if destination != "#services":
-        cod.notice(source, "Command may not be used outside #services")
+    if destination != cod.config["etc"]["snoopchan"]:
+        cod.notice(source, "Command may not be used outside %s" % cod.config["etc"]["snoopchan"])
         return
 
     search = None
@@ -66,12 +67,12 @@ def commandRBL(cod, line, splitline, source, destination):
             cod.notice(source, "Target is a network service")
             return
 
-        cod.servicesLog("%s: RBL: %s" % (cod.clients[source].nick, target))
+        cod.servicesLog("RBL: %s: %s" % (target, cod.clients[source].nick))
 
         search = rblwatch.RBLSearch(cod, mark.ip)
 
     else:
-        cod.servicesLog("%s: RBL: %s" % (cod.clients[source].nick, target))
+        cod.servicesLog("RBL: %s: %s" % (target, cod.clients[source].nick))
 
         search = rblwatch.RBLSearch(cod, target)
 
@@ -107,10 +108,12 @@ def commandREHASH(cod, line, splitline, source, destination):
     cod.rehash()
 
     client = cod.clients[source]
-    cod.servicesLog("%s: REHASH" % client.nick)
+    cod.servicesLog("REHASH: %s" % client.nick)
 
 def commandOPNAMEinit(cod, line, splitline, source, destination):
-    if prefix != []:
+    global prefix, suffix
+
+    if not prefix == []:
         return
 
     #Prepare lists
@@ -149,7 +152,9 @@ def commandDIE(cod, line, splitline, source, destination):
     if failIfNotOper(cod, cod.clients[source]):
         return
 
-    cod.servicesLog("%s: DIE" % cod.clients[source].nick)
+    cod.servicesLog("DIE: %s" % cod.clients[source].nick)
+
+    cod.sendLine(cod.client.quit())
 
     cod.sendLine("SQUIT")
 

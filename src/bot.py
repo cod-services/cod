@@ -43,7 +43,7 @@ commands["TEST"] = [commandTEST]
 commands["JOIN"] = [commandJOIN]
 commands["RBL"] = [commandRBL]
 commands["MPD"] = [commandMPD]
-commands["OPNAME"] = [commandOPNAME]
+commands["OPNAME"] = [commandOPNAMEinit, commandOPNAME]
 commands["REHASH"] = [commandREHASH]
 commands["DIE"] = [commandDIE]
 
