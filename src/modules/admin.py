@@ -26,7 +26,7 @@ def commandJOIN(cod, line, splitline, source, destination):
 
         client = cod.clients[source]
         cod.servicesLog("JOIN %s: %s" % (channel, client.nick))
-        cod.reply(source, destination, "I have joined to %s", channel)
+        cod.reply(source, destination, "I have joined to %s" % channel)
 
     else:
         cod.reply(source, destination, "USAGE: JOIN #channel")
