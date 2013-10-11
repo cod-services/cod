@@ -29,13 +29,7 @@ def commandJOIN(cod, line, splitline, source, destination):
     if splitline[1][0] == "#":
         channel = splitline[1]
 
-        try:
-            if splitline[2] == "@":
-                cod.join(channel)
-                channel = "@" + channel
-
-        except IndexError as e:
-            cod.join(channel, False)
+        cod.join(channel, False)
 
         client = cod.clients[source]
         cod.servicesLog("%s: JOIN %s" % (client.nick, channel))

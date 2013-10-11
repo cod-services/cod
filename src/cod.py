@@ -98,8 +98,11 @@ class Cod():
             self.mpd.idletimeout = None
             self.mpd.connect(self.config["mpd"]["host"], self.config["mpd"]["port"])
 
+        self.sendLine(self.client.quit())
+        self.sendLine(self.client.burst())
+
         for channel in cod.config["me"]["channels"]:
-            cod.join(channel)
+            cod.join(channel, False)
 
         self.log("done")
 
@@ -115,7 +118,7 @@ class Cod():
     def notice(self, target, line):
         self.sendLine(":%s NOTICE %s :%s" % (self.client.uid, target, line))
 
-    def join(self, channel, op=True):
+    def join(self, channel, op=False):
         channel = self.channels[channel]
 
         self.sendLine(self.client.join(channel, op))
@@ -147,6 +150,8 @@ else:
     os._exit(0)
 
 cod = Cod()
+
+#start up
 
 for line in cod.link.makefile('r'):
     line = line.strip()

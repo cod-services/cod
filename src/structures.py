@@ -26,6 +26,9 @@ class Client():
         # Delete user from memory somehow
         return ":%s KILL %s" % (self.uid, target)
 
+    def quit(self):
+        return ":%s QUIT :Service unloaded" % self.uid
+
     def join(self, channel, op=False):
         uid = self.uid
 
