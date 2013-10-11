@@ -55,6 +55,7 @@ RBLS = [
     'proxy.block.transip.nl',
     'psbl.surriel.com',
     'rbl.interserver.net',
+    'rbl.efnet.org',
     'rdts.dnsbl.net.au',
     'relays.bl.gweep.ca',
     'relays.bl.kundenserver.de',
@@ -117,8 +118,8 @@ class RBLSearch(object):
         self.lookup_host = lookup_host
         self._listed = None
         self.resolver = Resolver()
-        self.resolver.timeout = 0.2
-        self.resolver.lifetime = 1.0
+        self.resolver.timeout = 1.0
+        self.resolver.lifetime = 5.0
 
     def search(self):
         if self._listed is not None:
