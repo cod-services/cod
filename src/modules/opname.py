@@ -8,6 +8,7 @@ suffix = []
 
 def initModule(cod):
     global prefix, suffix
+
     #Read prefix and suffix lines in
     with open(cod.config["etc"]["prefixfile"], 'r') as prefixfile:
         cod.log("Reading in prefixes from %s" % cod.config["etc"]["prefixfile"], "===")
