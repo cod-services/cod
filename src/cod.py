@@ -160,6 +160,11 @@ class Cod():
     def servicesLog(self, line):
         self.privmsg(self.config["etc"]["snoopchan"], line)
 
+    def findClientByNick(self, nick):
+        for client in self.clients:
+            if cod.clients[client].nick == nick:
+                return cod.clients[client]
+
 print "!!! Cod %s starting up" % VERSION
 
 cod = Cod()
