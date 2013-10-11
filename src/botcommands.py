@@ -1,22 +1,6 @@
 from structures import *
 import rblwatch
 
-def commandJOIN(cod, line, splitline, source, destination):
-    if failIfNotOper(cod, cod.clients[source]):
-        return
-
-    if splitline[1][0] == "#":
-        channel = splitline[1]
-
-        cod.join(channel, False)
-
-        client = cod.clients[source]
-        cod.servicesLog("JOIN %s: %s" % (channel, client.nick))
-        cod.notice(source, "I have joined to %s", channel)
-
-    else:
-        cod.notice(source, "USAGE: JOIN #channel")
-
 def commandRBL(cod, line, splitline, source, destination):
     if failIfNotOper(cod, cod.clients[source]):
         return
@@ -56,23 +40,4 @@ def commandRBL(cod, line, splitline, source, destination):
         search = rblwatch.RBLSearch(cod, target)
 
     search.print_results()
-
-def commandREHASH(cod, line, splitline, source, destination):
-    if failIfNotOper(cod, cod.clients[source]):
-        return
-
-    cod.rehash()
-
-    client = cod.clients[source]
-    cod.servicesLog("REHASH: %s" % client.nick)
-
-def commandDIE(cod, line, splitline, source, destination):
-    if failIfNotOper(cod, cod.clients[source]):
-        return
-
-    cod.servicesLog("DIE: %s" % cod.clients[source].nick)
-
-    cod.sendLine(cod.client.quit())
-
-    cod.sendLine("SQUIT")
 
