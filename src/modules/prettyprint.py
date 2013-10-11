@@ -2,7 +2,8 @@ def initModule(cod):
     cod.s2scommands["PRIVMSG"].append(prettyPrintMessages)
 
 def destroyModule(cod):
-    cod.s2scommands.pop(prettyPrintMessages)
+    idx = cod.s2scommands.index(prettyPrintMessages)
+    cod.s2scommands.pop(idx)
 
 def prettyPrintMessages(cod, line, splitline, source):
     if not cod.config["etc"]["production"]:

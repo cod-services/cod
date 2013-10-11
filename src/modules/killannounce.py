@@ -2,7 +2,8 @@ def initModule(cod):
     cod.s2scommands["KILL"].append(logKills)
 
 def destroyModule(cod):
-    cod.s2scommands.pop(logKills)
+    idx = cod.s2scommands["KILL"].index(logKills)
+    cod.s2scommands.pop(idx)
 
 def logKills(cod, line, splitline, source):
     victim = cod.clients[splitline[2]]
