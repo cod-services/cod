@@ -13,6 +13,7 @@ def initModule(cod):
     global prefix, suffix
 
     prefix = []
+
     suffix = []
 
     #Read prefix and suffix lines in
