@@ -19,6 +19,16 @@ def initModule(cod):
     suffix = []
     slaves = []
 
+    #Initialize Database table
+    cur = cod.db.cursor()
+    cur.execute("PRAGMA table_info(OFCStats);")
+
+    pragma = cur.fetchall()
+
+    if pragma == []:
+        cur.execute("CREATE TABLE OFCStats(Id INTEGER PRIMARY KEY, Clients INTEGER);")
+        cod.db.commit()
+
     #Read prefix and suffix lines in
     with open(cod.config["etc"]["prefixfile"], 'r') as prefixfile:
         cod.log("Reading in prefixes from %s" % cod.config["etc"]["prefixfile"], "===")
@@ -55,6 +65,8 @@ def help(cod, source):
     cod.notice(source, " - Has each client spam #channel")
     cod.notice(source, "OFC KILL CLIENTS")
     cod.notice(source, " - Kills off the bots")
+    cod.notice(source, "OFC STATS LIST")
+    cod.notice(source, " - Displays statistics about Orbital Friendship Cannon runs")
 
 def ofc(cod, line, splitline, source, destination):
     global slaves
@@ -69,16 +81,20 @@ def ofc(cod, line, splitline, source, destination):
     if splitline[1].upper() == "CLIENTJOIN":
         joinclients(cod, splitline[2], source)
     elif splitline[1].upper() == "SPAM":
-        decimate(cod, splitline[2])
+        decimate(cod, source, splitline[2])
     elif splitline[1].upper() == "KILL":
         depart(cod, source)
+    elif splitline[1].upper() == "STATS":
+        stats(cod, source)
     else:
         help(cod, source)
 
 def joinclients(cod, channel, source):
     global slaves
 
-    for n in range(500):
+    number = 500
+
+    for n in range(number):
         nick = prefix[randint(0, len(prefix) - 1)].upper() + prefix[randint(0, len(prefix) - 1)].upper()
         user = "~lel~"
         host = "%s.%s.%s" %(prefix[randint(0, len(prefix) - 1)].upper(),
@@ -102,9 +118,12 @@ def joinclients(cod, channel, source):
         cod.sendLine(slave.burst())
         cod.sendLine(slave.join(cod.channels[channel]))
 
-    cod.notice(source, "500 clients joined to %s" % channel)
+    cod.notice(source, "%d clients joined to %s" % (number, channel))
 
-def decimate(cod, channel):
+    cod.servicesLog("OFC:CLIENTJOIN: %d clients to %s requested by %s" %
+            (number, channel, cod.clients[source].nick))
+
+def decimate(cod, source, channel):
     global slaves
 
     for slave in slaves:
@@ -115,6 +134,14 @@ def decimate(cod, channel):
 
         cod.sendLine(slave.privmsg(channel, "OPERATION %s" % phrase.upper()))
 
+    num = len(slaves)
+
+    cur = cod.db.cursor()
+    cur.execute("INSERT INTO OFCStats(Clients) VALUES ('%d');" % num)
+
+    cod.servicesLog("OFC:DECIMATE: %d messages to %s requested by %s" %
+            (len(slaves), channel, cod.clients[source].nick))
+
 def depart(cod, source):
     global slaves
 
@@ -124,4 +151,34 @@ def depart(cod, source):
         cod.sendLine(slave.quit())
 
     cod.notice(source, "%d slaves deleted" % num)
+
+    cod.servicesLog("OFC:DEPART: requested by %s" % cod.clients[source].nick)
+
+def stats(cod, source):
+    cur = cod.db.cursor()
+
+    cur.execute("SELECT * FROM OFCStats")
+
+    rows = cur.fetchall()
+
+    if rows == []:
+        cod.notice(source, "The cannon has not been run yet. Please run the cannon and try again.")
+        return
+
+    maxclients = 0
+    avgclients = 0
+    totalclients = 0
+
+    for row in rows:
+        if row[1] > maxclients:
+            maxclients = row[1]
+
+        totalclients = totalclients + row[1]
+
+    avgclients = float(totalclients)/len(rows)
+
+    cod.notice(source, "STATS for Orbital Friendship Cannon:")
+    cod.notice(source, " - %d runs, average of %4.2f clients per run" % (len(rows), avgclients))
+    cod.notice(source, " - Maximum of %d clients in a single run" % maxclients)
+    cod.notice(source, "END OF STATS")
 
