@@ -18,6 +18,7 @@ Extended IRC services and TS6 bot framework in Python
  - Pretty printing of channel messages to the screen
  - Relaying of `HostServ` messages from snoop channel to staff channel
  - Documented core
+ - SQLite database
 
 ### Goals:
  - DNS record editing (Tortoise Labs)
