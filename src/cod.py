@@ -179,7 +179,7 @@ class Cod():
         self.sendLine(self.client.burst())
 
         for channel in cod.client.channels:
-            cod.join(channel, False)
+            cod.join(cod.channels[channel], False)
 
         self.log("Rehash complete")
 
