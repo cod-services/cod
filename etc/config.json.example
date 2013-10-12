@@ -8,8 +8,6 @@
 
         "prefix": "@",
 
-        "channels": ["#services"],
-
         "motd": "etc/cod.motd",
         "dbpath": "var/cod.db"
     },

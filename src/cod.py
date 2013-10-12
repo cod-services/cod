@@ -329,8 +329,9 @@ for line in cod.link.makefile('r'):
             cod.sendLine("PONG %s" % splitline[1:][0])
 
             if not cod.bursted:
-                for channel in cod.config["me"]["channels"]:
-                    cod.join(channel)
+                #Join staff and snoop channels
+                cod.join(cod.config["etc"]["staffchan"])
+                cod.join(cod.config["etc"]["snoopchan"])
 
                 #Load remainder of modules
                 for module in cod.config["modules"]["optionalmods"]:

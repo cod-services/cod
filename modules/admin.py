@@ -12,6 +12,7 @@ def initModule(cod):
     cod.botcommands["MODLOAD"] = [commandMODLOAD]
     cod.botcommands["MODLIST"] = [commandMODLIST]
     cod.botcommands["MODUNLOAD"] = [commandMODUNLOAD]
+    cod.botcommands["LISTCHANS"] = [commandLISTCHANS]
 
     cur = cod.db.cursor()
 
@@ -40,6 +41,7 @@ def destroyModule(cod):
     del cod.botcommands["DIE"]
     del cod.botcommands["MODLOAD"]
     del cod.botcommands["MODUNLOAD"]
+    del cod.botcommands["LISTCHANS"]
 
 def commandJOIN(cod, line, splitline, source, destination):
     if failIfNotOper(cod, cod.clients[source]):
@@ -157,4 +159,22 @@ def commandMODUNLOAD(cod, line, splitline, source, destination):
         return
 
     cod.servicesLog("MODUNLOAD:%s: %s" % (target, cod.clients[source].nick))
+
+def commandLISTCHANS(cod, line, splitline, source, destination):
+    if failIfNotOper(cod, cod.clients[source]):
+        return
+
+    cur = cod.db.cursor()
+    cur.execute("SELECT * FROM Joins;")
+
+    rows = cur.fetchall()
+
+    if rows == []:
+        cod.notice(source, "No channel joins in database")
+        return
+
+    for row in rows:
+        cod.notice(source, "AUTOJOIN: %d - %s" % (row[0], row[1]))
+
+    cod.notice(source, "End of channel list")
 
