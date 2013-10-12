@@ -8,7 +8,9 @@
 
         "prefix": "@",
 
-        "channels": ["#services"]
+        "channels": ["#services"],
+
+        "motd": "etc/cod.motd"
     },
 
     "modules": {
