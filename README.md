@@ -19,10 +19,11 @@ Extended IRC services and TS6 bot framework in Python
  - Relaying of `HostServ` messages from snoop channel to staff channel
  - Documented core
  - SQLite database
+ - Forwarding of `KILL`s not made by services to snoop channel (`#services`)
+ - DNS pool displaying (Via Tortoise Labs API)
 
 ### Goals:
  - DNS record editing (Tortoise Labs)
- - Forwarding of `KILL`s not made by services to snoop channel (`#services`)
  - MPD playlist manipulation
  - XMPP MUC linking to an existing IRC channel
  - Web GUI for administration
@@ -30,3 +31,4 @@ Extended IRC services and TS6 bot framework in Python
 ### Stretch Goals:
  - Automated provisioning and linking of temporary overflow IRC daemons
  - Spam filtering (opt-in only)
+
