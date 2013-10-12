@@ -20,6 +20,15 @@
         "protocol": "ponychat-ircd"
     },
 
+    "dns": {
+        "pool": "irc.example.com",
+        "name": "example.com",
+        "nick": "DNSServ",
+        "user": "DNSServ",
+        "host": "services.example.com",
+        "gecos": "DNS Services"
+    },
+
     "mpd": {
         "host": "127.0.0.1",
         "port": 6600,
