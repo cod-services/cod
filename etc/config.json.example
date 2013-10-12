@@ -13,7 +13,8 @@
 
     "modules": {
         "coremods": ["s2scommands"],
-        "optionalmods": ["test", "admin", "relayhostserv", "killannounce", "dnsblannounce"]
+        "optionalmods": ["test", "admin", "relayhostserv", "killannounce",
+        "dnsblannounce", "version"]
     };
 
     "uplink": {
