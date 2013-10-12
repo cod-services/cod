@@ -25,6 +25,7 @@ def initModule(cod):
     cod.sendLine(client.burst())
 
     cod.sendLine(client.join(cod.channels[cod.config["etc"]["snoopchan"]]))
+    cod.sendLine(client.join(cod.channels[cod.config["etc"]["staffchan"]]))
 
 def destroyModule(cod):
     global client
