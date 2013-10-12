@@ -40,8 +40,8 @@ def commandMPD(cod, line, splitline, source, destination):
         client = cod.clients[source]
 
         for result in results:
-            cod.reply(destination, source, "%s: %s -- %s" % \
-                    (client.nick, result["artist"], result["title"]))
+            cod.notice(source, "%s -- %s" % \
+                    (result["artist"], result["title"]))
     elif splitline[1].upper() == "STATUS":
         mpd.update()
         cur = mpd.currentsong()
