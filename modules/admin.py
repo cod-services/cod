@@ -12,6 +12,26 @@ def initModule(cod):
     cod.botcommands["MODLIST"] = [commandMODLIST]
     cod.botcommands["MODUNLOAD"] = [commandMODUNLOAD]
 
+    cur = cod.db.cursor()
+
+    cur.execute("PRAGMA table_info(Joins);")
+
+    pragma = cur.fetchall()
+
+    if pragma == []:
+        cur.execute("CREATE TABLE Joins(Id INTEGER PRIMARY KEY, Name TEXT);")
+        cod.db.commit()
+
+    cur.execute("SELECT * FROM Joins;")
+
+    rows = cur.fetchall()
+
+    if rows == []:
+        return
+
+    for row in rows:
+        cod.join(row[1])
+
 def destroyModule(cod):
     del cod.botcommands["JOIN"]
     del cod.botcommands["REHASH"]
@@ -32,6 +52,12 @@ def commandJOIN(cod, line, splitline, source, destination):
         cod.servicesLog("JOIN %s: %s" % (channel, client.nick))
         cod.reply(source, destination, "I have joined to %s" % channel)
 
+        cur = cod.db.cursor()
+
+        cur.execute("INSERT INTO Joins(Name) VALUES ('%s');" % channel)
+
+        cod.db.commit()
+
     else:
         cod.reply(source, destination, "USAGE: JOIN #channel")
 
@@ -49,6 +75,8 @@ def commandDIE(cod, line, splitline, source, destination):
         return
 
     cod.servicesLog("DIE: %s" % cod.clients[source].nick)
+
+    cod.db.close()
 
     cod.sendLine(cod.client.quit())
 
