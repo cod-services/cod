@@ -7,6 +7,7 @@ import socket
 import os
 import sys
 import gc
+import sqlite3 as lite
 
 from structures import *
 from mpd import MPDClient
@@ -32,6 +33,7 @@ class Cod():
         self.botcommands = {}
 
         self.bursted = False
+        self.db = None
 
         #Load config file
         self.config = config.Config(configpath).config
@@ -55,11 +57,26 @@ class Cod():
             else:
                 os._exit(0)
 
+        self.log("Initializing Database")
+
+        self.db = lite.connect(self.config["me"]["dbpath"])
+
+        try:
+            self.db.cursor().execute("PRAGMA table_info(Thistabledoesnotexist);")
+
+        except lite.DatabaseError as e:
+            self.log("Database at %s unreadable" % self.config["me"]["dbpath"], "!!!")
+            print e
+            sys.exit(-1)
+
+        self.log("done")
+
+        self.log("Loading core modules")
+
         for module in self.config["modules"]["coremods"]:
             self.loadmod(module)
 
-        for module in self.config["modules"]["optionalmods"]:
-            self.loadmod(module)
+        self.log("done")
 
         self.log("Establishing connection to uplink")
 
@@ -302,6 +319,10 @@ for line in cod.link.makefile('r'):
 
                 for channel in cod.config["me"]["channels"]:
                     cod.join(channel)
+
+                #Load remainder of modules
+                for module in cod.config["modules"]["optionalmods"]:
+                    cod.loadmod(module)
 
     #Handle server commands
     else:

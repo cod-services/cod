@@ -10,7 +10,8 @@
 
         "channels": ["#services"],
 
-        "motd": "etc/cod.motd"
+        "motd": "etc/cod.motd",
+        "dbpath": "var/cod.db"
     },
 
     "modules": {
