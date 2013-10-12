@@ -118,14 +118,17 @@ class Cod():
         it is up to functions calling this to do so.
         """
 
-        self.log("Trying to load module %s" % modname)
+        if self.bursted:
+            self.log("Trying to load module %s" % modname)
+
         oldpath = list(sys.path)
         sys.path.insert(0, "modules/")
 
         self.modules[modname] = __import__(modname)
         self.modules[modname].initModule(self)
 
-        self.log("Module %s loaded" % modname)
+        if self.bursted:
+            self.log("Module %s loaded" % modname)
 
         sys.path[:] = oldpath
 
