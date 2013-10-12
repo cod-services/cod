@@ -13,7 +13,11 @@ suffix = []
 slaves = []
 
 def initModule(cod):
-    global prefix, suffix
+    global prefix, suffix, slaves
+
+    prefix = []
+    suffix = []
+    slaves = []
 
     #Read prefix and suffix lines in
     with open(cod.config["etc"]["prefixfile"], 'r') as prefixfile:
