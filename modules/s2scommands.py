@@ -1,5 +1,8 @@
 from structures import *
 
+NAME="Server to server commands"
+DESC="TS6 protocol handling. Unloading this WILL break things. You have been warned."
+
 def initModule(cod):
     cod.s2scommands["EUID"] = [handleEUID]
     cod.s2scommands["QUIT"] = [handleQUIT]

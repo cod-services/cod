@@ -1,5 +1,8 @@
 import rblwatch
 
+NAME="dnsbl announce"
+DESC="Announces DNSBL hits and does lookups on them"
+
 def initModule(cod):
     cod.s2scommands["ENCAP"].append(announceDNSBLHits)
 

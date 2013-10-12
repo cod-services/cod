@@ -1,6 +1,9 @@
 from utils import *
 from structures import *
 
+NAME="dnsbl"
+DESC="Does DNSBL lookups by nick or IP address"
+
 import rblwatch
 
 def initModule(cod):
@@ -22,8 +25,12 @@ def commandRBL(cod, line, splitline, source, destination):
 
         client = cod.findClientByNick(target)
 
+        if client == None:
+            cod.notice(source, "Error: %s is not on IRC" % mark)
+            return
+
         if client.ip == "0":
-            cod.reply(source, destination, "Error: target %s is a network service" % client.nick)
+            cod.notice(source, "Error: target %s is a network service" % client.nick)
             return
 
         target = client.ip

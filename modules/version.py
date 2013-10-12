@@ -1,3 +1,6 @@
+NAME="Version"
+DESC="Shows the version of this Cod instance"
+
 def initModule(cod):
     cod.botcommands["VERSION"] = [commandVERSION]
 

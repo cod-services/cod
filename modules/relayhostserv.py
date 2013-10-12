@@ -1,3 +1,6 @@
+NAME="Relay HostServ"
+DESC="Relays HostServ lines in snoop channel to staff channel"
+
 def initModule(cod):
     cod.s2scommands["PRIVMSG"].append(relayHostServToOpers)
 

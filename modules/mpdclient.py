@@ -1,6 +1,9 @@
 from mpd import MPDClient
 from utils import *
 
+NAME="MPD Client"
+DESC="Does simple lookups and status on an mpd server"
+
 mpd = MPDClient()
 
 def initModule(cod):

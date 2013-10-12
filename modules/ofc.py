@@ -1,6 +1,5 @@
-"""
-Orbital Friendship cannon
-"""
+NAME="Orbital Friendship Cannon"
+DESC="Stress tester"
 
 from utils import *
 from structures import *

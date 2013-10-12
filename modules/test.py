@@ -5,6 +5,10 @@ from utils import *
 Example test module
 """
 
+#All modules have a name and description
+NAME="Test module"
+DESC="Small example to help you get started"
+
 def initModule(cod):
     """
     This function is called when the module is initialized. All bot or s2s

@@ -1,3 +1,6 @@
+NAME="kill announce"
+DESC="Announces non-services sourced kills to snoop channel"
+
 def initModule(cod):
     cod.s2scommands["KILL"].append(logKills)
 
@@ -11,6 +14,6 @@ def logKills(cod, line, splitline, source):
 
     cod.clients.pop(victim.uid)
 
-    if killer.nick != "NickServ":
+    if killer.nick != "NickServ" or killer.nick != "OperServ":
         cod.servicesLog("%s: KILL %s %s" % (killer.nick, victim.nick, splitline[4]))
 

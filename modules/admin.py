@@ -1,6 +1,9 @@
 from utils import *
 from structures import *
 
+NAME="Admin"
+DESC="Administrative commands"
+
 def initModule(cod):
     cod.botcommands["JOIN"] = [commandJOIN]
     cod.botcommands["REHASH"] = [commandREHASH]
@@ -56,7 +59,7 @@ def commandMODLIST(cod, line, splitline, source, destination):
         return
 
     for module in cod.modules:
-        cod.notice(source, module)
+        cod.notice(source, "%s: %s" % (cod.modules[module].NAME, cod.modules[module].DESC))
 
     cod.notice(source, "End of module list")
 

@@ -1,3 +1,6 @@
+NAME="Pretty Print"
+DESC="Print channel messages with nick"
+
 def initModule(cod):
     cod.s2scommands["PRIVMSG"].append(prettyPrintMessages)
 
