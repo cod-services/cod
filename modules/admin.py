@@ -77,6 +77,7 @@ def commandMODLOAD(cod, line, splitline, source, destination):
         cod.loadmod(target)
     except ImportError as e:
         cod.reply(source, destination, "Module %s failed load: %s" % (target, e))
+        return
 
     cod.servicesLog("MODLOAD:%s: %s" % (target, cod.clients[source].nick))
 
@@ -94,6 +95,7 @@ def commandMODUNLOAD(cod, line, splitline, source, destination):
         cod.unloadmod(target)
     except Exception as e:
         cod.reply(source, destination, "Module %s failed unload: %s" % (target, e))
+        return
 
     cod.servicesLog("MODUNLOAD:%s: %s" % (target, cod.clients[source].nick))
 
