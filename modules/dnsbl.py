@@ -13,7 +13,7 @@ def destroyModule(cod):
     del cod.botcommands["RBL"]
 
 def commandRBL(cod, line, splitline, source, destination):
-    if failIfNotOper(cod, cod.clients[source]):
+    if failIfNotOper(cod, cod.clients, cod.clients[source]):
         return
 
     search = None

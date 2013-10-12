@@ -37,7 +37,7 @@ def destroyModule(cod):
     del cod.botcommands["LISTCHANS"]
 
 def commandJOIN(cod, line, splitline, source, destination):
-    if failIfNotOper(cod, cod.clients[source]):
+    if failIfNotOper(cod, cod.client, cod.clients[source]):
         return
 
     if splitline[1][0] == "#":
@@ -59,7 +59,7 @@ def commandJOIN(cod, line, splitline, source, destination):
         cod.notice(source, "USAGE: JOIN #channel")
 
 def commandPART(cod, line, splitline, source, destination):
-     if failIfNotOper(cod, cod.clients[source]):
+     if failIfNotOper(cod, cod.client, cod.clients[source]):
          return
 
      if splitline[1][0] == "#":
@@ -80,7 +80,7 @@ def commandPART(cod, line, splitline, source, destination):
         cod.notice(source, "USAGE: PART #channel")
 
 def commandREHASH(cod, line, splitline, source, destination):
-    if failIfNotOper(cod, cod.clients[source]):
+    if failIfNotOper(cod, cod.client, cod.clients[source]):
         return
 
     cod.rehash()
@@ -89,7 +89,7 @@ def commandREHASH(cod, line, splitline, source, destination):
     cod.servicesLog("REHASH: %s" % client.nick)
 
 def commandDIE(cod, line, splitline, source, destination):
-    if failIfNotOper(cod, cod.clients[source]):
+    if failIfNotOper(cod, cod.client, cod.clients[source]):
         return
 
     cod.servicesLog("DIE: %s" % cod.clients[source].nick)
@@ -101,7 +101,7 @@ def commandDIE(cod, line, splitline, source, destination):
     cod.sendLine("SQUIT")
 
 def commandMODLIST(cod, line, splitline, source, destination):
-    if failIfNotOper(cod, cod.clients[source]):
+    if failIfNotOper(cod, cod.client, cod.clients[source]):
         return
 
     for module in cod.modules:
@@ -110,7 +110,7 @@ def commandMODLIST(cod, line, splitline, source, destination):
     cod.notice(source, "End of module list, %d modules loaded" % len(cod.modules))
 
 def commandMODLOAD(cod, line, splitline, source, destination):
-    if failIfNotOper(cod, cod.clients[source]):
+    if failIfNotOper(cod, cod.client, cod.clients[source]):
         return
 
     if len(splitline) < 2:
@@ -132,7 +132,7 @@ def commandMODLOAD(cod, line, splitline, source, destination):
     cod.servicesLog("MODLOAD:%s: %s" % (target, cod.clients[source].nick))
 
 def commandMODUNLOAD(cod, line, splitline, source, destination):
-    if failIfNotOper(cod, cod.clients[source]):
+    if failIfNotOper(cod, cod.client, cod.clients[source]):
         return
 
     if len(splitline) < 2:
@@ -154,7 +154,7 @@ def commandMODUNLOAD(cod, line, splitline, source, destination):
     cod.servicesLog("MODUNLOAD:%s: %s" % (target, cod.clients[source].nick))
 
 def commandLISTCHANS(cod, line, splitline, source, destination):
-    if failIfNotOper(cod, cod.clients[source]):
+    if failIfNotOper(cod, cod.client, cod.clients[source]):
         return
 
     cur = cod.db.cursor()

@@ -65,7 +65,7 @@ def help(cod, source):
 def ofc(cod, line, splitline, source, destination):
     global slaves
 
-    if failIfNotOper(cod, cod.clients[source]):
+    if failIfNotOper(cod, cod.client, cod.clients[source]):
         return
 
     if len(splitline) < 3:

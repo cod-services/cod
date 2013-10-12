@@ -10,7 +10,7 @@ def destroyModule(cod):
     del cod.botcommands["SAY"]
 
 def say(cod, line, splitline, source, destination):
-    if failIfNotOper(cod, cod.clients[source]):
+    if failIfNotOper(cod, cod.client, cod.clients[source]):
         return
 
     cod.privmsg(splitline[1], " ".join(splitline[2:]))
