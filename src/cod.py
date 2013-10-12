@@ -29,6 +29,8 @@ class Cod():
         self.servers = {}
         self.modules = {}
 
+        self.loginFunc = None
+
         self.s2scommands = {"PRIVMSG": []}
         self.botcommands = {}
 
@@ -73,7 +75,7 @@ class Cod():
 
         self.log("done")
 
-        self.log("Loading core module")
+        self.log("Loading core s2scommands module")
 
         self.loadmod("s2scommands", False)
 
@@ -85,13 +87,13 @@ class Cod():
 
         self.log("done")
 
+        self.log("Loading %s protocol module" % self.config["uplink"]["protocol"])
+
+        self.loadmod(self.config["uplink"]["protocol"], False)
+
         self.log("Sending credentials to remote IRC server")
 
-        self.sendLine("PASS %s TS 6 :%s" %
-                (self.config["uplink"]["pass"], self.config["uplink"]["sid"]))
-        self.sendLine("CAPAB :QS EX IE KLN UNKLN ENCAP SERVICES EUID EOPMOD")
-        self.sendLine("SERVER %s 1 :%s" %
-                (self.config["me"]["name"], self.config["me"]["desc"]))
+        self.loginFunc(self)
 
         self.log("done")
         self.log("Creating and bursting client")
@@ -107,7 +109,6 @@ class Cod():
         self.log("done")
 
         #Inform operators that Cod is initialized
-        self.snote("Cod initialized", "s")
         self.log("Cod initialized", "!!!")
 
     def loadmod(self, modname, commit=True):
