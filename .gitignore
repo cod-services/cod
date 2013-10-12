@@ -41,4 +41,4 @@ nosetests.xml
 config.json
 
 # Runtime generated files
-var/*
+var/*.db
