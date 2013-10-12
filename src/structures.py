@@ -73,6 +73,15 @@ def makeService(nick, user, host, name, uid):
     """
     return Client(nick, uid, "0", "+Sio", user, host, "*", nick, name)
 
+def makeClient(nick, user, host, name, uid):
+    """
+    Inputs: nick, user, host, real name, TS6 UID
+
+    Creates a generic client.
+    """
+    return Client(nick, uid, "0", "+Si", user, host, "*", nick, name)
+
+
 class Channel():
     """
     Channel data structure

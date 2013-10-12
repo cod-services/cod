@@ -53,6 +53,8 @@ def help(cod, source):
     cod.notice(source, " - Joins 500 clients to #channel")
     cod.notice(source, "OFC SPAM #channel")
     cod.notice(source, " - Has each client spam #channel")
+    cod.notice(source, "OFC KILL CLIENTS")
+    cod.notice(source, " - Kills off the bots")
 
 def ofc(cod, line, splitline, source, destination):
     global slaves
@@ -65,11 +67,15 @@ def ofc(cod, line, splitline, source, destination):
         return
 
     if splitline[1].upper() == "CLIENTJOIN":
-        joinclients(cod, splitline[2])
-    if splitline[1].upper() == "SPAM":
+        joinclients(cod, splitline[2], source)
+    elif splitline[1].upper() == "SPAM":
         decimate(cod, splitline[2])
+    elif splitline[1].upper() == "KILL":
+        depart(cod, source)
+    else:
+        help(cod, source)
 
-def joinclients(cod, channel):
+def joinclients(cod, channel, source):
     global slaves
 
     for n in range(500):
@@ -91,10 +97,12 @@ def joinclients(cod, channel):
         if len(nick) < 6:
             nick = nick + nick
 
-        slave = makeService(nick, user, host, "CareFriend", cod.config["uplink"]["sid"] + nick[:6])
+        slave = makeClient(nick, user, host, "CareFriend", cod.config["uplink"]["sid"] + nick[:6])
         slaves.append(slave)
         cod.sendLine(slave.burst())
         cod.sendLine(slave.join(cod.channels[channel]))
+
+    cod.notice(source, "500 clients joined to %s" % channel)
 
 def decimate(cod, channel):
     global slaves
@@ -106,4 +114,14 @@ def decimate(cod, channel):
                         suffix[randint(0, len(suffix) - 1)])
 
         cod.sendLine(slave.privmsg(channel, "OPERATION %s" % phrase.upper()))
+
+def depart(cod, source):
+    global slaves
+
+    num = len(slaves)
+
+    for slave in slaves:
+        cod.sendLine(slave.quit())
+
+    cod.notice(source, "%d slaves deleted" % num)
 
