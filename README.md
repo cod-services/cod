@@ -22,9 +22,7 @@ Extended IRC services and TS6 bot framework in Python
 ### Goals:
  - DNS record editing (Tortoise Labs)
  - Forwarding of `KILL`s not made by services to snoop channel (`#services`)
- - Logging to snoop channel (`#services`)
  - MPD playlist manipulation
- - RemindServ
  - XMPP MUC linking to an existing IRC channel
  - Web GUI for administration
 
