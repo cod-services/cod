@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-VERSION = "0.5.1"
+VERSION = "0.5.2"
 
 import config
 import socket
