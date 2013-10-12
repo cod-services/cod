@@ -329,14 +329,14 @@ for line in cod.link.makefile('r'):
             cod.sendLine("PONG %s" % splitline[1:][0])
 
             if not cod.bursted:
-                cod.bursted = True
-
                 for channel in cod.config["me"]["channels"]:
                     cod.join(channel)
 
                 #Load remainder of modules
                 for module in cod.config["modules"]["optionalmods"]:
                     cod.loadmod(module)
+
+                cod.bursted = True
 
     #Handle server commands
     else:
