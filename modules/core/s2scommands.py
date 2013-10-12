@@ -171,15 +171,15 @@ def handleWHOIS(cod, line, splitline, source):
     client = cod.clients[service]
 
     cod.sendLine(":{0} 311 {1} {2} {3} {4} * :{5}".format(
-        cod.config["uplink"]["sid"], source, cod.config["me"]["nick"], cod.config["me"]["user"],
-                cod.config["me"]["host"], cod.config["me"]["desc"]))
+        cod.config["uplink"]["sid"], source, client.nick, client.user,
+                client.host, client.gecos))
     cod.sendLine(":{0} 312 {1} {2} {3} :{4}".format(
-        cod.config["uplink"]["sid"], source, cod.config["me"]["nick"], cod.config["me"]["name"],
+        cod.config["uplink"]["sid"], source, client.nick, cod.config["me"]["name"],
         cod.config["me"]["desc"]))
     cod.sendLine(":{0} 313 {1} {2} :is a Network Service".format(
-        cod.config["uplink"]["sid"], source, cod.config["me"]["nick"]))
-    cod.sendLine(":{0} 318 {1} {2} End of /WHOIS list.".format(
-        cod.config["uplink"]["sid"], source, cod.config["me"]["nick"]))
+        cod.config["uplink"]["sid"], source, client.nick))
+    cod.sendLine(":{0} 318 {1} {2} :End of /WHOIS list.".format(
+        cod.config["uplink"]["sid"], source, client.nick))
 
 def handlePRIVMSG(cod, line, splitline, source):
     destination = splitline[2]
