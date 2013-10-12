@@ -5,10 +5,13 @@ from dns.resolver import Resolver, NXDOMAIN, NoNameservers, Timeout, NoAnswer
 from threading import Thread
 
 RBLS = [
+    '0spam.fusionzero.com',
     'aspews.ext.sorbs.net',
     'b.barracudacentral.org',
+    'backscatter.spameatingmonekey.net',
     'bl.deadbeef.com',
     'bl.emailbasura.org',
+    'bl.mailspike.net',
     'bl.spamcannibal.org',
     'bl.spamcop.net',
     'blackholes.five-ten-sg.com',
