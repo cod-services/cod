@@ -6,6 +6,7 @@ import config
 import socket
 import os
 import sys
+import gc
 
 from structures import *
 from mpd import MPDClient
@@ -123,6 +124,10 @@ class Cod():
 
         self.modules[modname].destroyModule(self)
         del self.modules[modname]
+        del sys.modules[modname]
+
+        #Run the garbage collector
+        gc.collect()
 
         self.log("Module %s unloaded" % modname)
 
