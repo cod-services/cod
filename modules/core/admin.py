@@ -14,16 +14,9 @@ def initModule(cod):
     cod.botcommands["MODUNLOAD"] = [commandMODUNLOAD]
     cod.botcommands["LISTCHANS"] = [commandLISTCHANS]
 
+    initDBTable(cod, "Joins", "Id INTEGER PRIMARY KEY, Name TEXT")
+
     cur = cod.db.cursor()
-
-    cur.execute("PRAGMA table_info(Joins);")
-
-    pragma = cur.fetchall()
-
-    if pragma == []:
-        cur.execute("CREATE TABLE Joins(Id INTEGER PRIMARY KEY, Name TEXT);")
-        cod.db.commit()
-
     cur.execute("SELECT * FROM Joins;")
 
     rows = cur.fetchall()
@@ -114,7 +107,7 @@ def commandMODLIST(cod, line, splitline, source, destination):
     for module in cod.modules:
         cod.notice(source, "%s: %s" % (cod.modules[module].NAME, cod.modules[module].DESC))
 
-    cod.notice(source, "End of module list")
+    cod.notice(source, "End of module list, %d modules loaded" % len(cod.modules))
 
 def commandMODLOAD(cod, line, splitline, source, destination):
     if failIfNotOper(cod, cod.clients[source]):

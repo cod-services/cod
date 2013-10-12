@@ -20,14 +20,7 @@ def initModule(cod):
     slaves = []
 
     #Initialize Database table
-    cur = cod.db.cursor()
-    cur.execute("PRAGMA table_info(OFCStats);")
-
-    pragma = cur.fetchall()
-
-    if pragma == []:
-        cur.execute("CREATE TABLE OFCStats(Id INTEGER PRIMARY KEY, Clients INTEGER);")
-        cod.db.commit()
+    initDBTable(cod, "OFCStats", "Id INTEGER PRIMARY KEY, Clients INTEGER")
 
     #Read prefix and suffix lines in
     with open(cod.config["etc"]["prefixfile"], 'r') as prefixfile:

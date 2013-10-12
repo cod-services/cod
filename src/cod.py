@@ -10,7 +10,7 @@ import gc
 import sqlite3 as lite
 
 from structures import *
-from mpd import MPDClient
+from utils import *
 
 class Cod():
     def __init__(self, configpath):
@@ -152,8 +152,7 @@ class Cod():
 
         cur = self.db.cursor()
         cur.execute("DELETE FROM Moduleautoload WHERE Name = \"%s\";" % modname)
-
-        self.log("Trying to unload module %s" % modname)
+        cod.db.commit()
 
         self.modules[modname].destroyModule(self)
         del self.modules[modname]
@@ -349,18 +348,11 @@ for line in cod.link.makefile('r'):
                 #Load remainder of modules
                 cod.loadmod("admin", False) #Required to be hard-coded
 
+                initDBTable(cod, "Moduleautoload", "Id INTEGER PRIMARY KEY, Name TEXT")
+
                 cur = cod.db.cursor()
 
-                cur.execute("PRAGMA table_info(Moduleautoload);")
-                pragma = cur.fetchall()
-
-                if pragma == []:
-                    cur.execute("CREATE TABLE Moduleautoload(Id INTEGER PRIMARY KEY, Name TEXT);")
-                    cod.log ("Created module database table")
-
                 cur.execute("SELECT * FROM Moduleautoload;")
-
-                cod.db.commit()
 
                 rows = cur.fetchall()
 

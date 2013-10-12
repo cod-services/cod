@@ -11,3 +11,12 @@ def failIfNotOper(cod, client):
     else:
         return False
 
+def initDBTable(cod, tabname, format):
+    cur = cod.db.cursor()
+    cur.execute("PRAGMA table_info(%s);" % tabname)
+
+    pragma = cur.fetchall()
+    if pragma == []:
+        cur.execute("CREATE TABLE %s(%s);" %(tabname, format))
+        cod.db.commit()
+
