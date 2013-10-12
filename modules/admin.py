@@ -70,6 +70,10 @@ def commandMODLOAD(cod, line, splitline, source, destination):
     if failIfNotOper(cod, cod.clients[source]):
         return
 
+    if len(splitline) < 2:
+        cod.notice(source, "Need name of module")
+        return
+
     target = splitline[1].lower()
 
     if target in cod.modules:
@@ -86,6 +90,10 @@ def commandMODLOAD(cod, line, splitline, source, destination):
 
 def commandMODUNLOAD(cod, line, splitline, source, destination):
     if failIfNotOper(cod, cod.clients[source]):
+        return
+
+    if len(splitline) < 2:
+        cod.notice(source, "Need name of module")
         return
 
     target = splitline[1].lower()
