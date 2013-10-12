@@ -60,9 +60,11 @@ class Cod():
         self.log("Initializing Database")
 
         self.db = lite.connect(self.config["me"]["dbpath"])
+        cur = self.db.cursor()
 
         try:
-            self.db.cursor().execute("PRAGMA table_info(Thistabledoesnotexist);")
+            cur.execute("PRAGMA table_info(Thistabledoesnotexist);")
+            rows = cur.fetchall()
 
         except lite.DatabaseError as e:
             self.log("Database at %s unreadable" % self.config["me"]["dbpath"], "!!!")
@@ -71,10 +73,9 @@ class Cod():
 
         self.log("done")
 
-        self.log("Loading core modules")
+        self.log("Loading core module")
 
-        for module in self.config["modules"]["coremods"]:
-            self.loadmod(module)
+        self.loadmod("s2scommands", False)
 
         self.log("done")
 
@@ -109,17 +110,21 @@ class Cod():
         self.snote("Cod initialized", "s")
         self.log("Cod initialized", "!!!")
 
-    def loadmod(self, modname):
+    def loadmod(self, modname, commit=True):
         """
-        Input: module name
+        Input: module name, whether or not to commit this module to the database
 
         This function tries to load a module and initialize its commands to
         the bot or s2s command tables. This function does no error checking and
-        it is up to functions calling this to do so.
+        it is up to functions calling this to do so. Commits module loads to the
+        database.
         """
 
-        if self.bursted:
-            self.log("Trying to load module %s" % modname)
+        if commit:
+            cur = self.db.cursor()
+            cur.execute("INSERT INTO Moduleautoload(Name) VALUES ('%s');" % modname)
+
+            self.db.commit()
 
         oldpath = list(sys.path)
         sys.path.insert(0, "modules/")
@@ -138,8 +143,13 @@ class Cod():
 
         This function tries to unload a module and destroy its commands to the
         bot or s2s command tables as makes sense. This function does not error
-        checking and it is up to functions calling this to do so.
+        checking and it is up to functions calling this to do so. Commits module
+        unloads to the database.
         """
+
+        cur = self.db.cursor()
+        cur.execute("DELETE FROM Moduleautoload WHERE Name = \"%s\";" % modname)
+
         self.log("Trying to unload module %s" % modname)
 
         self.modules[modname].destroyModule(self)
@@ -334,8 +344,26 @@ for line in cod.link.makefile('r'):
                 cod.join(cod.config["etc"]["snoopchan"])
 
                 #Load remainder of modules
-                for module in cod.config["modules"]["optionalmods"]:
-                    cod.loadmod(module)
+                cod.loadmod("admin", False) #Required to be hard-coded
+
+                cur = cod.db.cursor()
+
+                cur.execute("PRAGMA table_info(Moduleautoload);")
+                pragma = cur.fetchall()
+
+                if pragma == []:
+                    cur.execute("CREATE TABLE Moduleautoload(Id INTEGER PRIMARY KEY, Name TEXT);")
+                    cod.log ("Created module database table")
+
+                cur.execute("SELECT * FROM Moduleautoload;")
+
+                cod.db.commit()
+
+                rows = cur.fetchall()
+
+                if rows != []:
+                    for row in rows:
+                        cod.loadmod(row[1], False)
 
                 cod.bursted = True
 
