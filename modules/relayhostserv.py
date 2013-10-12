@@ -12,5 +12,5 @@ def relayHostServToOpers(cod, line, splitline, source):
     if splitline[2] == "#services":
         if cod.clients[source].nick == "HostServ":
             cod.sendLine(cod.client.privmsg(cod.config["etc"]["staffchan"],
-                "HostServ: " + " ".join (splitline[3:])[1:]))
+                "HostServ: " + " ".join(splitline[3:])[1:]))
 
