@@ -40,5 +40,10 @@
         "staffchan": "#opers",
         "prefixfile": "../etc/prefix.txt",
         "suffixfile": "../etc/suffix.txt"
+    },
+
+    "tortoiselabs": {
+        "username": "herpenderp",
+        "apikey": "asdfasdf"
     }
 }
