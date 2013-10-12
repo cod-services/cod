@@ -50,9 +50,6 @@ def commandDIE(cod, line, splitline, source, destination):
 
     cod.servicesLog("DIE: %s" % cod.clients[source].nick)
 
-    for module in cod.modules:
-        cod.unloadmod(module)
-
     cod.sendLine(cod.client.quit())
 
     cod.sendLine("SQUIT")
