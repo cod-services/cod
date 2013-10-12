@@ -6,6 +6,7 @@ DESC="Administrative commands"
 
 def initModule(cod):
     cod.botcommands["JOIN"] = [commandJOIN]
+    cod.botcommands["PART"] = [commandPART]
     cod.botcommands["REHASH"] = [commandREHASH]
     cod.botcommands["DIE"] = [commandDIE]
     cod.botcommands["MODLOAD"] = [commandMODLOAD]
@@ -34,6 +35,7 @@ def initModule(cod):
 
 def destroyModule(cod):
     del cod.botcommands["JOIN"]
+    del cod.botcommands["PART"]
     del cod.botcommands["REHASH"]
     del cod.botcommands["DIE"]
     del cod.botcommands["MODLOAD"]
@@ -50,7 +52,7 @@ def commandJOIN(cod, line, splitline, source, destination):
 
         client = cod.clients[source]
         cod.servicesLog("JOIN %s: %s" % (channel, client.nick))
-        cod.reply(source, destination, "I have joined to %s" % channel)
+        cod.notice(source, "I have joined %s" % channel)
 
         cur = cod.db.cursor()
 
@@ -59,7 +61,28 @@ def commandJOIN(cod, line, splitline, source, destination):
         cod.db.commit()
 
     else:
-        cod.reply(source, destination, "USAGE: JOIN #channel")
+        cod.notice(source, "USAGE: JOIN #channel")
+
+def commandPART(cod, line, splitline, source, destination):
+     if failIfNotOper(cod, cod.clients[source]):
+         return
+
+     if splitline[1][0] == "#":
+        channel = splitline[1]
+
+        client = cod.clients[source]
+        cod.servicesLog("PART %s: %s" % (channel, client.nick))
+        cod.notice(source, "I have left %s" % channel)
+
+        cod.part(channel, "Requested by %s" % client.nick)
+
+        cur = cod.db.cursor()
+        cur.execute("DELETE FROM Joins WHERE Name = \"%s\"" % channel)
+
+        cod.db.commit()
+
+     else:
+        cod.notice(source, "USAGE: PART #channel")
 
 def commandREHASH(cod, line, splitline, source, destination):
     if failIfNotOper(cod, cod.clients[source]):

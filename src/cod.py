@@ -226,6 +226,17 @@ class Cod():
 
         self.sendLine(self.client.join(channel, op))
 
+    def part(self, channel, message, client=None):
+        """
+        Input: channel to part, client to part from the channel (default Cod
+        internal client), part message
+        """
+
+        if client == None:
+            client = self.client
+
+        self.sendLine(":%s PART %s :%s" % (client.uid, channel, message))
+
     def snote(self, line, mask="d"):
         """
         Inputs: line to send, target server notice mask
