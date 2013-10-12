@@ -197,6 +197,9 @@ def handlePRIVMSG(cod, line, splitline, source):
             command = command[1:]
             pm = False
 
+    if destination != cod.client.uid and pm:
+        return
+
     else:
         command = command = splitline[0].upper()
 
