@@ -43,6 +43,7 @@ def destroyModule(cod):
 
     for slave in slaves:
         cod.sendLine(slave.quit())
+        del cod.clients[slave.uid]
 
     del slaves
     del prefix
@@ -111,6 +112,8 @@ def joinclients(cod, channel, source):
         cod.sendLine(slave.burst())
         cod.sendLine(slave.join(cod.channels[channel]))
 
+        cod.clients[slave.uid] = slave
+
     cod.notice(source, "%d clients joined to %s" % (number, channel))
 
     cod.servicesLog("OFC:CLIENTJOIN: %d clients to %s requested by %s" %
@@ -142,6 +145,8 @@ def depart(cod, source):
 
     for slave in slaves:
         cod.sendLine(slave.quit())
+
+        del cod.clients[slave.uid]
 
     cod.notice(source, "%d slaves deleted" % num)
 
