@@ -55,7 +55,7 @@ def commandMODLIST(cod, line, splitline, source, destination):
     if failIfNotOper(cod, cod.clients[source]):
         return
 
-    for module in cod.modules():
+    for module in cod.modules:
         cod.notice(source, module)
 
     cod.notice(source, "End of module list")
