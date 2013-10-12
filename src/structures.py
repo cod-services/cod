@@ -20,6 +20,7 @@ class Client():
         self.login = login
         self.gecos = gecos
         self.sid = self.uid[:3]
+        self.channels = []
 
         self.isOper = self.modes.find("o") != -1
 

@@ -190,10 +190,13 @@ def handlePRIVMSG(cod, line, splitline, source):
     pm = True
 
     if destination[0] == "#":
+        if destination not in cod.client.channels:
+            return
         if line[0] == cod.config["me"]["prefix"]:
             command = splitline[0].upper()
             command = command[1:]
             pm = False
+
     else:
         command = command = splitline[0].upper()
 
@@ -212,7 +215,7 @@ def handleKILL(cod, line, splitline, source):
 
     cod.sendLine(cod.client.burst())
 
-    for channel in cod.config["me"]["channels"]:
+    for channel in cod.client.channels:
         cod.join(channel)
 
     cod.servicesLog("KILL'd by %s " % cod.clients[source].nick)

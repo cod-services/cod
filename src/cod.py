@@ -178,7 +178,7 @@ class Cod():
         self.sendLine(self.client.quit())
         self.sendLine(self.client.burst())
 
-        for channel in cod.config["me"]["channels"]:
+        for channel in cod.client.channels:
             cod.join(channel, False)
 
         self.log("Rehash complete")
@@ -239,7 +239,9 @@ class Cod():
 
         channel = self.channels[channel]
 
-        self.sendLine(self.client.join(channel, op))
+        self.sendLine(client.join(channel, op))
+
+        client.channels.append(channel.name)
 
     def part(self, channel, message, client=None):
         """
@@ -251,6 +253,9 @@ class Cod():
             client = self.client
 
         self.sendLine(":%s PART %s :%s" % (client.uid, channel, message))
+
+        idx = client.channels.index(channel)
+        client.channels.pop(idx)
 
     def snote(self, line, mask="d"):
         """
