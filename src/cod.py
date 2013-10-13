@@ -50,11 +50,6 @@ class Cod():
             except OSError, e:
                 raise Exception, "%s [%d]" % (e.strerror, e.errno)
 
-            if (hasattr(os, "devnull")):
-                REDIRECT_TO = os.devnull
-            else:
-                REDIRECT_TO = "/dev/null"
-
             if (pid == 0):
                 os.setsid()
             else:
@@ -126,23 +121,31 @@ class Cod():
         database.
         """
 
-        if commit:
-            cur = self.db.cursor()
-            cur.execute("INSERT INTO Moduleautoload(Name) VALUES ('%s');" % modname)
-
-            self.db.commit()
-
         oldpath = list(sys.path)
         sys.path.insert(0, "modules/")
         sys.path.insert(1, "modules/protocol")
         sys.path.insert(2, "modules/core")
         sys.path.insert(3, "modules/experimental")
 
-        self.modules[modname] = __import__(modname)
-        self.modules[modname].initModule(self)
+        try:
+            self.modules[modname] = __import__(modname)
+            self.modules[modname].initModule(self)
+        except AttributeError as e:
+            self.servicesLog(e)
+            return
+        except ImportError as e:
+            self.servicesLog(e)
+            return
 
         if self.bursted:
             self.log("Module %s loaded" % modname)
+
+        if commit:
+            cur = self.db.cursor()
+            cur.execute("INSERT INTO Moduleautoload(Name) VALUES ('%s');" % modname)
+
+            self.db.commit()
+
 
         sys.path[:] = oldpath
 
