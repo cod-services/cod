@@ -54,7 +54,7 @@ def destroyModule(cod):
 def help(cod, source):
     cod.notice(source, "Valid commands are:")
     cod.notice(source, "OFC CLIENTJOIN #channel")
-    cod.notice(source, " - Joins 500 clients to #channel")
+    cod.notice(source, " - Joins a lot of clients to #channel")
     cod.notice(source, "OFC SPAM #channel")
     cod.notice(source, " - Has each client spam #channel")
     cod.notice(source, "OFC KILL CLIENTS")
@@ -86,7 +86,7 @@ def ofc(cod, line, splitline, source, destination):
 def joinclients(cod, channel, source):
     global slaves
 
-    number = 500
+    number = 1500
 
     for n in range(number):
         nick = prefix[randint(0, len(prefix) - 1)].upper() + prefix[randint(0, len(prefix) - 1)].upper()
