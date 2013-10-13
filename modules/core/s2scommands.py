@@ -106,7 +106,7 @@ def handleMODE(cod, line, splitline, source):
         if extparam[0] == "+":
             cod.clients[source].isOper = True
         else:
-            cod.clients[sourcd].isOper = False
+            cod.clients[source].isOper = False
 
 CHANMODES=["eIbq", "k" ,"flj" ,"CDEFGJKLMOPQTcdgimnpstz", "yaohv"]
 

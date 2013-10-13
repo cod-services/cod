@@ -4,7 +4,7 @@ from random import choice
 from random import randint
 
 NAME="Operation Name Generator"
-DESC="Generates something that could pass as a militart operation name in a B-movie"
+DESC="Generates something that could pass as a military operation name in a B-movie"
 
 prefix = []
 suffix = []
