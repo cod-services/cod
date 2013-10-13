@@ -4,7 +4,13 @@ from structures import *
 NAME="Admin"
 DESC="Administrative commands"
 
+global motd
+
+motd = []
+
 def initModule(cod):
+    global motd
+
     cod.botcommands["JOIN"] = [commandJOIN]
     cod.botcommands["PART"] = [commandPART]
     cod.botcommands["REHASH"] = [commandREHASH]
@@ -13,6 +19,9 @@ def initModule(cod):
     cod.botcommands["MODLIST"] = [commandMODLIST]
     cod.botcommands["MODUNLOAD"] = [commandMODUNLOAD]
     cod.botcommands["LISTCHANS"] = [commandLISTCHANS]
+
+    cod.s2scommands["ENCAP"] = [logREHASH]
+    cod.s2scommands["MOTD"] = [handleMOTD]
 
     initDBTable(cod, "Joins", "Id INTEGER PRIMARY KEY, Name TEXT")
 
@@ -27,7 +36,14 @@ def initModule(cod):
     for row in rows:
         cod.join(row[1])
 
+    with open(cod.config["me"]["motd"], "r") as fin:
+        cod.log("reading MOTD from %s" % cod.config["me"]["motd"], "===")
+        for line in fin.readlines():
+            motd.append(line.strip())
+
 def destroyModule(cod):
+    global motd
+
     del cod.botcommands["JOIN"]
     del cod.botcommands["PART"]
     del cod.botcommands["REHASH"]
@@ -35,6 +51,12 @@ def destroyModule(cod):
     del cod.botcommands["MODLOAD"]
     del cod.botcommands["MODUNLOAD"]
     del cod.botcommands["LISTCHANS"]
+
+    idx = cod.s2scommands["ENCAP"].index(logREHASH)
+    cod.s2scommands.pop(idx)
+
+    del cod.s2scommands["MOTD"]
+    del motd
 
 def commandJOIN(cod, line, splitline, source, destination):
     if failIfNotOper(cod, cod.client, cod.clients[source]):
@@ -170,4 +192,18 @@ def commandLISTCHANS(cod, line, splitline, source, destination):
         cod.notice(source, "AUTOJOIN: %d - %s" % (row[0], row[1]))
 
     cod.notice(source, "End of channel list")
+
+def logREHASH(cod, line, splitline, source):
+    if splitline[3] == "REHASH":
+        cod.rehash()
+
+        cod.servicesLog("REHASH: %s" % cod.clients[source].nick)
+
+def handleMOTD(cod, line, splitline, source):
+    global motd
+
+    for line in motd:
+        cod.notice(source, "MOTD: %s" % line)
+
+    cod.notice(source, "End of /MOTD")
 

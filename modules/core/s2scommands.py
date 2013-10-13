@@ -18,7 +18,6 @@ def initModule(cod):
     cod.s2scommands["PRIVMSG"] = [handlePRIVMSG]
     cod.s2scommands["KILL"] = [handleKILL]
 
-    cod.s2scommands["ENCAP"] = [nullCommand]
     cod.s2scommands["AWAY"] = [nullCommand]
     cod.s2scommands["PING"] = [nullCommand]
 
