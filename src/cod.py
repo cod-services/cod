@@ -184,12 +184,6 @@ class Cod():
 
         self.config = config.Config("config.json").config
 
-        self.sendLine(self.client.quit())
-        self.sendLine(self.client.burst())
-
-        for channel in cod.client.channels:
-            cod.join(cod.channels[channel], False)
-
         self.log("Rehash complete")
 
     def sendLine(self, line):
