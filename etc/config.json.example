@@ -17,6 +17,7 @@
         "port": 6667,
         "pass": "dev",
         "sid": "420",
+        "ssl": false,
         "protocol": "ponychat-ircd"
     },
 

@@ -6,6 +6,7 @@ import config
 import socket
 import os
 import sys
+import ssl
 import gc
 import sqlite3 as lite
 
@@ -58,6 +59,9 @@ class Cod():
                 os.setsid()
             else:
                 os._exit(0)
+
+        if self.config["uplink"]["ssl"]:
+            self.link = ssl.wrap_socket(self.link)
 
         self.log("Initializing Database")
 
