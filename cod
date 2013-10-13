@@ -9,13 +9,13 @@ MAIN=src/cod.py
 
 echo "--- Searching for ideal Python 2 interpreter"
 
-if [ -x $(which pypy-c) ]; then
+if [ -x "$(which pypy-c)" ]; then
     PYTHON=pypy-c
     echo "!!! pypy-c found! Cod will run much faster!"
-elif [ -x $(which python2) ]; then
+elif [ -x "$(which python2)" ]; then
     PYTHON=python2
     echo "!!! python2 found"
-elif [ -x $(which python) ]; then
+elif [ -x "$(which python)" ]; then
     PYTHON=python
     echo "!!! vanilla Python found. If this is Python 3, Cod will not work"
 else
