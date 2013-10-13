@@ -135,6 +135,7 @@ class Cod():
         sys.path.insert(0, "modules/")
         sys.path.insert(1, "modules/protocol")
         sys.path.insert(2, "modules/core")
+        sys.path.insert(3, "modules/experimental")
 
         self.modules[modname] = __import__(modname)
         self.modules[modname].initModule(self)
