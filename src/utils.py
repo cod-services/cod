@@ -5,8 +5,8 @@ def failIfNotOper(cod, client, dest):
     Checks if the client passed in an argument is an IRC operator and returns
     True **IF THEY ARE NOT AN OPERATOR***
     """
-    if not client.isOper:
-        cod.sendLine(client.notice(dest, "Insufficient permissions"))
+    if not dest.isOper:
+        cod.sendLine(client.notice(dest.uid, "Insufficient permissions"))
         return True
     else:
         return False
