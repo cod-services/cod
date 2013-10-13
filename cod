@@ -27,7 +27,7 @@ echo "--- Python interpreter is $PYTHON"
 echo "--- Searching for library dependencies"
 
 function testmodule {
-    if python -c "import $1" > /dev/null; then
+    if $PYTHON -c "import $1" > /dev/null; then
         echo "!!! library $1 found! $2 will function properly."
     else
         echo "!!! library $1 not found. Please install $1 from pip"
