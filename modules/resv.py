@@ -2,7 +2,7 @@ NAME="RESV logger"
 DESC="Logs the use of RESV commands"
 
 def initModule(cod):
-    cod.s2scommands["ENCAP"] = [logRESV]
+    cod.s2scommands["ENCAP"].append(logRESV)
 
 def destroyModule(cod):
     idx = cod.s2scommands["ENCAP"].index(logRESV)
