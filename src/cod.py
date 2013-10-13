@@ -62,6 +62,7 @@ class Cod():
 
         if self.config["uplink"]["ssl"]:
             self.link = ssl.wrap_socket(self.link)
+            self.log("SSL enabled")
 
         self.log("Initializing Database")
 
