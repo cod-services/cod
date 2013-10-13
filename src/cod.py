@@ -282,14 +282,18 @@ class Cod():
         if self.bursted and prefix == "---":
             self.snote("%s" % (message))
 
-    def servicesLog(self, line):
+    def servicesLog(self, line, client=None):
         """
         Inputs: line to log to services snoop channel
 
         This is a convenience function to send a message to the services logging
         channel. This channel is configurable in the config file.
         """
-        self.privmsg(self.config["etc"]["snoopchan"], line)
+
+        if client == None:
+            client = self.client
+
+        self.privmsg(self.config["etc"]["snoopchan"], line, client)
 
     def findClientByNick(self, nick):
         """
