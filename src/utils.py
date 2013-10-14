@@ -37,10 +37,41 @@ def failIfNotOper(cod, client, dest):
 
 def initDBTable(cod, tabname, format):
     cur = cod.db.cursor()
-    cur.execute("PRAGMA table_info(%s);" % tabname)
+
+    pragmaquery = "PRAGMA table_info(%s);" % tabname
+    cur.execute(pragmaquery)
+
+    cod.log("DB: %s" % pragmaquery, "===")
 
     pragma = cur.fetchall()
     if pragma == []:
-        cur.execute("CREATE TABLE %s(%s);" %(tabname, format))
+        query = "CREATE TABLE %s(%s);" %(tabname, format)
+
+        cur.execute(query)
         cod.db.commit()
+        cod.log("DB: %s" % query, "===")
+
+def lookupDB(cod, table):
+    cur = cod.db.cursor()
+
+    query = "SELECT * FROM %s;" % table
+
+    cur.execute(query)
+    cod.log("DB: %s" % query, "===")
+
+    return cur.fetchall()
+
+def deletefromDB(cod, query):
+    cur = cod.db.cursor()
+
+    cur.execute(query)
+    cod.db.commit()
+    cod.log("DB: %s" % query, "===")
+
+def addtoDB(cod, query):
+    cur = cod.db.cursor()
+
+    cur.execute(query)
+    cod.db.commit()
+    cod.log("DB: %s" % query, "===")
 

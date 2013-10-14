@@ -67,7 +67,10 @@ def destroyModule(cod):
 
     for slave in slaves:
         cod.sendLine(slave.quit())
-        del cod.clients[slave.uid]
+        try:
+            del cod.clients[slave.uid]
+        except:
+            continue
 
     del slaves
     del prefix
@@ -156,8 +159,7 @@ def decimate(cod, source, channel):
 
     num = len(slaves)
 
-    cur = cod.db.cursor()
-    cur.execute("INSERT INTO OFCStats(Clients) VALUES ('%d');" % num)
+    addtoDB(cod, "INSERT INTO OFCStats(Clients) VALUES ('%d');" % num)
 
     cod.servicesLog("OFC:DECIMATE: %d messages to %s requested by %s" %
             (len(slaves), channel, cod.clients[source].nick))
@@ -170,18 +172,17 @@ def depart(cod, source):
     for slave in slaves:
         cod.sendLine(slave.quit())
 
-        del cod.clients[slave.uid]
+        try:
+            del cod.clients[slave.uid]
+        except:
+            continue
 
     cod.notice(source, "%d slaves deleted" % num)
 
     cod.servicesLog("OFC:DEPART: requested by %s" % cod.clients[source].nick)
 
 def stats(cod, source):
-    cur = cod.db.cursor()
-
-    cur.execute("SELECT * FROM OFCStats")
-
-    rows = cur.fetchall()
+    rows = lookupDB(cod, "OFCStats")
 
     if rows == []:
         cod.notice(source, "The cannon has not been run yet. Please run the cannon and try again.")

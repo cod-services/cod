@@ -49,23 +49,16 @@ def initModule(cod):
     cod.s2scommands["MOTD"] = [handleMOTD]
 
     initDBTable(cod, "Moduleautoload", "Id INTEGER PRIMARY KEY, Name TEXT")
+    initDBTable(cod, "Joins", "Id INTEGER PRIMARY KEY, Name TEXT")
 
-    cur = cod.db.cursor()
 
-    cur.execute("SELECT * FROM Moduleautoload;")
-
-    rows = cur.fetchall()
+    rows = lookupDB(cod, "Moduleautoload")
 
     if rows != []:
         for row in rows:
             cod.loadmod(row[1])
 
-    initDBTable(cod, "Joins", "Id INTEGER PRIMARY KEY, Name TEXT")
-
-    cur = cod.db.cursor()
-    cur.execute("SELECT * FROM Joins;")
-
-    rows = cur.fetchall()
+    rows = lookupDB(cod, "Joins")
 
     if rows == []:
         return
@@ -109,11 +102,7 @@ def commandJOIN(cod, line, splitline, source, destination):
         cod.servicesLog("JOIN %s: %s" % (channel, client.nick))
         cod.notice(source, "I have joined %s" % channel)
 
-        cur = cod.db.cursor()
-
-        cur.execute("INSERT INTO Joins(Name) VALUES ('%s');" % channel)
-
-        cod.db.commit()
+        addtoDB(cod, "INSERT INTO Joins(Name) VALUES ('%s');" % channel)
 
     else:
         cod.notice(source, "USAGE: JOIN #channel")
@@ -131,10 +120,7 @@ def commandPART(cod, line, splitline, source, destination):
 
         cod.part(channel, "Requested by %s" % client.nick)
 
-        cur = cod.db.cursor()
-        cur.execute("DELETE FROM Joins WHERE Name = \"%s\"" % channel)
-
-        cod.db.commit()
+        deletefromDB(cod, "DELETE FROM Joins WHERE Name = \"%s\"" % channel)
 
      else:
         cod.notice(source, "USAGE: PART #channel")
@@ -188,11 +174,8 @@ def commandMODLOAD(cod, line, splitline, source, destination):
     except ImportError as e:
         cod.reply(source, destination, "Module %s failed load: %s" % (target, e))
         return
-    
-    cur = cod.db.cursor()
-    cur.execute("INSERT INTO Moduleautoload(Name) VALUES ('%s');" % target)
 
-    cod.db.commit()
+    addtoDB(cod, "INSERT INTO Moduleautoload(Name) VALUES ('%s');" % target)
 
     cod.servicesLog("MODLOAD:%s: %s" % (target, cod.clients[source].nick))
 
@@ -216,9 +199,7 @@ def commandMODUNLOAD(cod, line, splitline, source, destination):
         cod.reply(source, destination, "Module %s failed unload: %s" % (target, e))
         return
 
-    cur = cod.db.cursor()
-    cur.execute("DELETE FROM Moduleautoload WHERE Name = \"%s\";" % target)
-    cod.db.commit()
+    deletefromDB(cod, "DELETE FROM Moduleautoload WHERE Name = \"%s\";" % target)
 
     cod.servicesLog("MODUNLOAD:%s: %s" % (target, cod.clients[source].nick))
 
@@ -226,10 +207,7 @@ def commandLISTCHANS(cod, line, splitline, source, destination):
     if failIfNotOper(cod, cod.client, cod.clients[source]):
         return
 
-    cur = cod.db.cursor()
-    cur.execute("SELECT * FROM Joins;")
-
-    rows = cur.fetchall()
+    rows = lookupDB(cod, "Joins")
 
     if rows == []:
         cod.notice(source, "No channel joins in database")
@@ -256,3 +234,4 @@ def handleMOTD(cod, line, splitline, source):
 
 def commandVERSION(cod, line, splitline, source, destination):
     cod.notice(source, "Cod version %s" % cod.version)
+
