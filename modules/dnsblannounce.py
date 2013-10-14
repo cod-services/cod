@@ -40,7 +40,10 @@ def announceDNSBLHits(cod, line, splitline, source):
             message = line.split(":")[2]
             cod.servicesLog("DNSBL:HIT: %s" % message)
 
-            ip = message.split()[1].split("@")[1][:-1]
+            try:
+                ip = message.split()[1].split("@")[1][:-1]
+            except:
+                return
 
             cod.servicesLog("Checking %s in %d blacklists..." %(ip, len(rblwatch.RBLS)))
 
