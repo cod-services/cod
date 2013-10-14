@@ -27,35 +27,34 @@ MAIN=src/cod.py
 #     3. This notice may not be removed or altered from any source
 #     distribution.
 
-echo "--- Searching for ideal Python 2 interpreter"
+if [ -d env ]; then
+    echo "--- Virtualenv found"
+else
+    if [ -x $(virtualenv)]; then
+        echo "!!! Setting up virtual environment"
+        virtualenv env
+    else
+        echo "!!! Virtualenv not installed"
+        exit
+    fi
+fi
 
-if [ -x "$(which python2)" ]; then
+echo "--- Installing venv dependencies"
+env/bin/pip install -r requirements.txt > /dev/null
+
+echo "--- Searching for ideal Python 2 interpreter"
+if [ -x "$(which python)" ]; then
     PYTHON=python2
-    echo "!!! python2 found"
-elif [ -x "$(which python)" ]; then
+    echo "!!! Python found"
+elif [ -x "$(which python2)" ]; then
     PYTHON=python
-    echo "!!! vanilla Python found. If this is Python 3, Cod will not work"
+    echo "!!! Python2 found"
 else
     echo "!!! Compatible Python interpreter not found. Exiting"
+    exit
 fi
 
 echo "--- Python interpreter is $PYTHON"
-
-echo "--- Searching for library dependencies"
-
-function testmodule {
-    if $PYTHON -c "import $1" > /dev/null; then
-        echo "!!! library $1 found! $2 will function properly."
-    else
-        echo "!!! library $1 not found. Please install $1 from pip"
-        exit
-    fi
-}
-
-testmodule sqlite3 "Everything that uses the database"
-testmodule mpd "The MPD client"
-testmodule requests "The Tortoise Labs DNS client"
-testmodule dns "RBLWatch DNS blacklist lookups"
 
 $PYTHON $MAIN $1
 
