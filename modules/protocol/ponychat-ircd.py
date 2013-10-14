@@ -32,14 +32,13 @@ CHANMODES=["eIbq", "k" ,"flj" ,"CDEFGJKLMOPQTcdgimnpstz", "yaohv"]
 
 def initModule(cod):
     cod.loginFunc = login
-    
+
     cod.s2scommands["EUID"] = [handleEUID]
     cod.s2scommands["QUIT"] = [handleQUIT]
     cod.s2scommands["SJOIN"] = [handleSJOIN]
     cod.s2scommands["NICK"] = [handleNICK]
     cod.s2scommands["BMASK"] = [handleBMASK]
     cod.s2scommands["MODE"] = [handleMODE]
-    cod.s2scommands["TMODE"] = [handleTMODE]
     cod.s2scommands["CHGHOST"] = [handleCHGHOST]
     cod.s2scommands["WHOIS"] = [handleWHOIS]
     cod.s2scommands["JOIN"] = [handleJOIN]
@@ -55,14 +54,13 @@ def initModule(cod):
 def destroyModule(cod):
     del cod.loginFunc
     cod.loginFunc = None
-    
+
     del cod.s2scommands["EUID"]
     del cod.s2scommands["QUIT"]
     del cod.s2scommands["SJOIN"]
     del cod.s2scommands["NICK"]
     del cod.s2scommands["BMASK"]
     del cod.s2scommands["MODE"]
-    del cod.s2scommands["TMODE"]
     del cod.s2scommands["CHGHOST"]
     del cod.s2scommands["WHOIS"]
     del cod.s2scommands["NOTICE"]
@@ -71,9 +69,8 @@ def destroyModule(cod):
     del cod.s2scommands["ENCAP"]
     del cod.s2scommands["KILL"]
     del cod.s2scommands["STATS"]
-    
-    idx = cod.s2scommands["PRIVMSG"].index(handlePRIVMSG)
-    cod.s2scommands.pop(idx)
+
+    cod.s2scommands["PRIVMSG"].remove(handlePRIVMSG)
 
     del cod.s2scommands["AWAY"]
     del cod.s2scommands["PING"]
@@ -149,58 +146,6 @@ def handleMODE(cod, line, splitline, source):
             cod.clients[source].isOper = True
         else:
             cod.clients[source].isOper = False
-
-def handleTMODE(cod, line, splitline, source):
-    modechange = " ".join(splitline[4:])
-
-    """
-    0 = Mode that adds or removes a nick or address to a list. Always has a parameter.
-    1 = Mode that changes a setting and always has a parameter.
-    2 = Mode that changes a setting and only has a parameter when set.
-    3 = Mode that changes a setting and never has a parameter.
-    4 = Mode that indicates a channel prefix being added or removed.
-    """
-
-    plus = True
-    index = 1
-    channel = cod.channels[splitline[3]]
-
-    for mode in splitline[4]:
-        if mode == "+":
-            plus = True
-
-        elif mode == "-":
-            plus = False
-
-        elif mode in CHANMODES[0]:
-            #List-like mode
-            subMode(cod, source, plus, " ".join([mode, modechange[index]]), channel)
-            index += 1
-
-        elif mode in CHANMODES[1]:
-            #mode change has a parameter
-            subMode(cod, source, plus, " ".join([mode, modechange[index]]), channel)
-            index += 1
-
-        elif mode in CHANMODES[2]:
-            #mode change has a parameter when set
-            if plus:
-                subMode(cod, source, plus, " ".join([mode, modechange[index]]), channel)
-                index += 1
-            else:
-                subMode(cod, source, plus, mode, channel)
-
-        elif mode in CHANMODES[3]:
-            #Normal channel mode
-            subMode(cod, source, plus, mode, channel)
-
-        elif mode in CHANMODES[4]:
-            #Prefix mode
-            subMode(cod, source, plus, " ".join([mode, modechange[index]]), channel)
-            index += 1
-
-def subMode(cod, source, plus, mode, channel):
-    pass
 
 def handleCHGHOST(cod, line, splitline, source):
     cod.clients[splitline[2]].host = splitline[3]
