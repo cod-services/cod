@@ -45,3 +45,6 @@ var/*
 
 # Experimental modules folder
 modules/experimental/*
+
+# Venv
+env/*
