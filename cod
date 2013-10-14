@@ -30,9 +30,9 @@ MAIN=src/cod.py
 if [ -d env ]; then
     echo "--- Virtualenv found"
 else
-    if [ -x $(virtualenv)]; then
-        echo "!!! Setting up virtual environment"
-        virtualenv env
+    echo "!!! Setting up virtual environment"
+    if [ virtualenv env ]; then
+        echo "--- Virtual environment set up"
     else
         echo "!!! Virtualenv not installed"
         exit
