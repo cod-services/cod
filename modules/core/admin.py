@@ -48,6 +48,18 @@ def initModule(cod):
     cod.s2scommands["ENCAP"] = [logREHASH]
     cod.s2scommands["MOTD"] = [handleMOTD]
 
+    initDBTable(cod, "Moduleautoload", "Id INTEGER PRIMARY KEY, Name TEXT")
+
+    cur = cod.db.cursor()
+
+    cur.execute("SELECT * FROM Moduleautoload;")
+
+    rows = cur.fetchall()
+
+    if rows != []:
+        for row in rows:
+            cod.loadmod(row[1])
+
     initDBTable(cod, "Joins", "Id INTEGER PRIMARY KEY, Name TEXT")
 
     cur = cod.db.cursor()
@@ -176,6 +188,11 @@ def commandMODLOAD(cod, line, splitline, source, destination):
     except ImportError as e:
         cod.reply(source, destination, "Module %s failed load: %s" % (target, e))
         return
+    
+    cur = cod.db.cursor()
+    cur.execute("INSERT INTO Moduleautoload(Name) VALUES ('%s');" % target)
+
+    cod.db.commit()
 
     cod.servicesLog("MODLOAD:%s: %s" % (target, cod.clients[source].nick))
 
@@ -198,6 +215,10 @@ def commandMODUNLOAD(cod, line, splitline, source, destination):
     except Exception as e:
         cod.reply(source, destination, "Module %s failed unload: %s" % (target, e))
         return
+
+    cur = cod.db.cursor()
+    cur.execute("DELETE FROM Moduleautoload WHERE Name = \"%s\";" % target)
+    cod.db.commit()
 
     cod.servicesLog("MODUNLOAD:%s: %s" % (target, cod.clients[source].nick))
 

@@ -107,7 +107,7 @@ class Cod():
 
         self.log("Loading %s protocol module" % self.config["uplink"]["protocol"])
 
-        self.loadmod(self.config["uplink"]["protocol"], False)
+        self.loadmod(self.config["uplink"]["protocol"])
 
         self.log("Sending credentials to remote IRC server")
 
@@ -129,14 +129,13 @@ class Cod():
         #Inform operators that Cod is initialized
         self.log("Cod initialized", "!!!")
 
-    def loadmod(self, modname, commit=True):
+    def loadmod(self, modname):
         """
         Input: module name, whether or not to commit this module to the database
 
         This function tries to load a module and initialize its commands to
         the bot or s2s command tables. This function does no error checking and
-        it is up to functions calling this to do so. Commits module loads to the
-        database.
+        it is up to functions calling this to do so.
         """
 
         oldpath = list(sys.path)
@@ -158,13 +157,6 @@ class Cod():
         if self.bursted:
             self.log("Module %s loaded" % modname)
 
-        if commit:
-            cur = self.db.cursor()
-            cur.execute("INSERT INTO Moduleautoload(Name) VALUES ('%s');" % modname)
-
-            self.db.commit()
-
-
         sys.path[:] = oldpath
 
     def unloadmod(self, modname):
@@ -173,13 +165,8 @@ class Cod():
 
         This function tries to unload a module and destroy its commands to the
         bot or s2s command tables as makes sense. This function does not error
-        checking and it is up to functions calling this to do so. Commits module
-        unloads to the database.
+        checking and it is up to functions calling this to do so.
         """
-
-        cur = self.db.cursor()
-        cur.execute("DELETE FROM Moduleautoload WHERE Name = \"%s\";" % modname)
-        cod.db.commit()
 
         self.modules[modname].destroyModule(self)
         del self.modules[modname]
@@ -375,20 +362,8 @@ for line in cod.link.makefile('r'):
                 cod.join(cod.config["etc"]["staffchan"])
                 cod.join(cod.config["etc"]["snoopchan"])
 
-                #Load remainder of modules
-                cod.loadmod("admin", False) #Required to be hard-coded
-
-                initDBTable(cod, "Moduleautoload", "Id INTEGER PRIMARY KEY, Name TEXT")
-
-                cur = cod.db.cursor()
-
-                cur.execute("SELECT * FROM Moduleautoload;")
-
-                rows = cur.fetchall()
-
-                if rows != []:
-                    for row in rows:
-                        cod.loadmod(row[1], False)
+                #Load admin module
+                cod.loadmod("admin") #Required to be hard-coded
 
                 cod.bursted = True
 
