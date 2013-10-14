@@ -22,7 +22,7 @@ freely, subject to the following restrictions:
     distribution.
 """
 
-from mpd import MPDClient
+from mpd import MPDClient, ConnectionError
 from utils import *
 
 NAME="MPD Client"
@@ -51,8 +51,11 @@ def destroyModule(cod):
 
     cod.log("Disconnecting from MPD server", "===")
 
-    mpd.close()
-    mpd.disconnect()
+    try:
+        mpd.close()
+        mpd.disconnect()
+    except ConnectionError as e:
+        pass
 
     del cod.botcommands["MPD"]
     del mpd
