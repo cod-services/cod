@@ -48,6 +48,8 @@ def initModule(cod):
 
     cod.sendLine(client.burst())
 
+    cod.log("Bursting Tortoise Labs client", "!!!")
+
     cod.sendLine(client.join(cod.channels[cod.config["etc"]["snoopchan"]]))
     cod.sendLine(client.join(cod.channels[cod.config["etc"]["staffchan"]]))
 
