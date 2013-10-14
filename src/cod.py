@@ -383,5 +383,5 @@ for line in cod.link.makefile('r'):
         except KeyError as e:
             pass
 
-cod.log("Oh! I am slain.!")
+cod.log("Oh, I am slain.")
 
