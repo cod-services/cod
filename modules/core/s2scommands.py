@@ -17,6 +17,7 @@ def initModule(cod):
     cod.s2scommands["SID"] = [handleSID]
     cod.s2scommands["PRIVMSG"] = [handlePRIVMSG]
     cod.s2scommands["KILL"] = [handleKILL]
+    cod.s2scommands["STATS"] = [handleSTATS]
 
     cod.s2scommands["AWAY"] = [nullCommand]
     cod.s2scommands["PING"] = [nullCommand]
@@ -36,10 +37,10 @@ def destroyModule(cod):
     del cod.s2scommands["SID"]
     del cod.s2scommands["ENCAP"]
     del cod.s2scommands["KILL"]
+    del cod.s2scommands["STATS"]
 
     del cod.s2scommands["AWAY"]
     del cod.s2scommands["PING"]
-    del cod.s2scommands["ENCAP"]
 
 
 def nullCommand(cod, line, splitline, source):
@@ -224,4 +225,25 @@ def handleKILL(cod, line, splitline, source):
         cod.join(channel)
 
     cod.servicesLog("KILL'd by %s " % cod.clients[source].nick)
+    
+def handleSTATS(cod, line, splitline, source):
+    if splitline[2] == "v":
+        cod.notice(source, "Cod version %s" % cod.version)
+
+    elif splitline[2] == "c":
+        cod.notice(source, "%d clients in ram" % len(cod.clients))
+
+    elif splitline[2] == "C":
+        cod.notice(source, "%d channels in ram" % len(cod.channels))
+
+    elif splitline[2] == "m":
+        cod.notice(source, "%d modules loaded" % len(cod.modules))
+
+    elif splitline[2] == "M":
+        cod.notice(source, "%d protocol commands loaded" % len(cod.s2scommands))
+        cod.notice(source, "%d bot commands loaded" % len(cod.botcommands))
+    else:
+        cod.notice(source, "Stats commands: [v]ersion, [c]lients, [C]hannels, [m]modules, co[M]mands")
+
+    cod.notice(source, "End of /STATS report")
 
