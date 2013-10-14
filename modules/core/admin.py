@@ -98,6 +98,7 @@ def commandJOIN(cod, line, splitline, source, destination):
 
         if splitline[1] not in cod.channels:
             cod.notice(source, "I don't know about %s" % channel)
+            return
 
         cod.join(channel, False)
 
