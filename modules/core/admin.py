@@ -19,6 +19,7 @@ def initModule(cod):
     cod.botcommands["MODLIST"] = [commandMODLIST]
     cod.botcommands["MODUNLOAD"] = [commandMODUNLOAD]
     cod.botcommands["LISTCHANS"] = [commandLISTCHANS]
+    cod.botcommands["VERSION"] = [commandVERSION]
 
     cod.s2scommands["ENCAP"] = [logREHASH]
     cod.s2scommands["MOTD"] = [handleMOTD]
@@ -51,6 +52,7 @@ def destroyModule(cod):
     del cod.botcommands["MODLOAD"]
     del cod.botcommands["MODUNLOAD"]
     del cod.botcommands["LISTCHANS"]
+    del cod.botcommands["VERSION"]
 
     idx = cod.s2scommands["ENCAP"].index(logREHASH)
     cod.s2scommands.pop(idx)
@@ -207,3 +209,5 @@ def handleMOTD(cod, line, splitline, source):
 
     cod.notice(source, "End of /MOTD")
 
+def commandVERSION(cod, line, splitline, source, destination):
+    cod.notice(source, "Cod version %s" % cod.version)
