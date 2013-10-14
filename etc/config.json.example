@@ -45,6 +45,13 @@
         "suffixfile": "../etc/suffix.txt"
     },
 
+    "faq": {
+        "nick": "FAQServ",
+        "user": "faq",
+        "host": "services.example.com",
+        "gecos": "FAQ Service"
+    },
+
     "tortoiselabs": {
         "username": "herpenderp",
         "apikey": "asdfasdf"
