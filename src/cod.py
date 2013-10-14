@@ -99,12 +99,6 @@ class Cod():
 
         self.log("done")
 
-        self.log("Loading core s2scommands module")
-
-        self.loadmod("s2scommands", False)
-
-        self.log("done")
-
         self.log("Establishing connection to uplink")
 
         self.link.connect((self.config["uplink"]["host"], self.config["uplink"]["port"]))
