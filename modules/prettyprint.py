@@ -29,7 +29,7 @@ def initModule(cod):
     cod.s2scommands["PRIVMSG"].append(prettyPrintMessages)
 
 def destroyModule(cod):
-    idx = cod.s2scommands.index(prettyPrintMessages)
+    cod.s2scommands.remove(prettyPrintMessages)
     cod.s2scommands.pop(idx)
 
 def prettyPrintMessages(cod, line, splitline, source):

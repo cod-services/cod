@@ -56,8 +56,7 @@ def initModule(cod):
 def destroyModule(cod):
     global client
 
-    idx = cod.s2scommands["PRIVMSG"].index(handleMessages)
-    cod.s2scommands["PRIVMSG"].pop(idx)
+    cod.s2scommands["PRIVMSG"].remove(handleMessages)
 
     cod.sendLine(client.quit())
 

@@ -29,8 +29,7 @@ def initModule(cod):
     cod.s2scommands["ENCAP"].append(logRESV)
 
 def destroyModule(cod):
-    idx = cod.s2scommands["ENCAP"].index(logRESV)
-    cod.s2scommands.pop(idx)
+    cod.s2scommands["ENCAP"].remove(logRESV)
 
 def logRESV(cod, line, splitline, source):
     if splitline[3] == "RESV":

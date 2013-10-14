@@ -31,8 +31,7 @@ def initModule(cod):
     cod.s2scommands["ENCAP"].append(announceDNSBLHits)
 
 def destroyModule(cod):
-    idx = cod.s2scommands["ENCAP"].index(announceDNSBLHits)
-    cod.s2scommands.pop(idx)
+    cod.s2scommands["ENCAP"].remove(announceDNSBLHits)
 
 def announceDNSBLHits(cod, line, splitline, source):
     if splitline[3] == "SNOTE":

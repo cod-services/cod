@@ -29,8 +29,7 @@ def initModule(cod):
     cod.s2scommands["PRIVMSG"].append(relayHostServToOpers)
 
 def destroyModule(cod):
-    idx = cod.s2scommands.index(relayHostServToOpers)
-    cod.s2scommands.pop(idx)
+    cod.s2scommands.remove(relayHostServToOpers)
 
 def relayHostServToOpers(cod, line, splitline, source):
     if splitline[2] == "#services":
