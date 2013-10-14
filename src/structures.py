@@ -74,13 +74,10 @@ class Client():
 
     def join(self, channel, op=False):
         """
-        Input:  channel data structure, channel op status
+        Input:  channel data structure
         Output: valid s2s command for joining the channel
         """
         uid = self.uid
-
-        if op:
-            uid = "@" + uid
 
         return "SJOIN %s %s + %s" % (channel.ts, channel.name, uid)
 

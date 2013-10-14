@@ -231,11 +231,10 @@ class Cod():
 
         self.sendLine(":%s NOTICE %s :%s" % (self.client.uid, target, line))
 
-    def join(self, channel, client=None, op=False):
+    def join(self, channel, client=None):
         """
         Input: channel to join, client to join to the channel (default Cod
-        internal client), whether or not the server will set channel op
-        status (default off)
+        internal client)
 
         This is a convenience macro around SJOIN (which requires a matching TS)
         to join a channel. Will also let you join another client Cod controls to
@@ -247,7 +246,7 @@ class Cod():
 
         channel = self.channels[channel]
 
-        self.sendLine(client.join(channel, op))
+        self.sendLine(client.join(channel))
 
         client.channels.append(channel.name)
 
@@ -335,8 +334,6 @@ class Cod():
             cod.privmsg(destination, line)
 
 print "!!! Cod %s starting up" % VERSION
-
-#XXX: maybe take this as a command line parameter?
 
 cod = None
 
