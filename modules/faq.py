@@ -49,6 +49,8 @@ def initModule(cod):
     cod.log("Bursting FAQ client", "!!!")
 
     cod.sendLine(client.join(cod.channels[cod.config["etc"]["snoopchan"]]))
+    cod.sendLine(client.join(cod.channels[cod.config["etc"]["helpchan"]]))
+    cod.sendLine(client.join(cod.channels[cod.config["etc"]["staffchan"]]))
 
 def destroyModule(cod):
     global client

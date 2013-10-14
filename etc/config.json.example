@@ -41,6 +41,7 @@
         "production": true,
         "snoopchan": "#services",
         "staffchan": "#opers",
+        "helpchan": "#help",
         "prefixfile": "../etc/prefix.txt",
         "suffixfile": "../etc/suffix.txt"
     },
