@@ -41,5 +41,7 @@ nosetests.xml
 config.json
 
 # Runtime generated files
-var/*.db
+var/*
+
+# Experimental modules folder
 modules/experimental/*
