@@ -57,5 +57,5 @@ testmodule mpd "The MPD client"
 testmodule requests "The Tortoise Labs DNS client"
 testmodule dns "RBLWatch DNS blacklist lookups"
 
-$PYTHON $MAIN
+$PYTHON $MAIN $1
 

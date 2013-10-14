@@ -337,7 +337,13 @@ class Cod():
 print "!!! Cod %s starting up" % VERSION
 
 #XXX: maybe take this as a command line parameter?
-cod = Cod("config.json")
+
+cod = None
+
+if len(sys.argv) < 2:
+    cod = Cod("config.json")
+else:
+    cod = Cod(sys.argv[1])
 
 #start up
 
