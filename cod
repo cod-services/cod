@@ -31,7 +31,8 @@ if [ -d env ]; then
     echo "--- Virtualenv found"
 else
     echo "!!! Setting up virtual environment"
-    if [ virtualenv env ]; then
+    if [ -x "$(which virtualenv)" ]; then
+        virtualenv env > /dev/null
         echo "--- Virtual environment set up"
     else
         echo "!!! Virtualenv not installed"
