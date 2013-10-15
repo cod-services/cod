@@ -180,10 +180,13 @@ def handlePRIVMSG(cod, line, splitline, source):
     if destination[0] == "#":
         if destination not in cod.client.channels:
             return
-        if line[0] == cod.config["me"]["prefix"]:
-            command = splitline[0].upper()
-            command = command[1:]
-            pm = False
+        try:
+            if line[0] == cod.config["me"]["prefix"]:
+                command = splitline[0].upper()
+                command = command[1:]
+                pm = False
+        except IndexError as e:
+            return
 
     elif destination != cod.client.uid and pm:
         return
