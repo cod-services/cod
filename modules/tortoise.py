@@ -62,6 +62,9 @@ def destroyModule(cod):
 
     cod.clients.pop(client.uid)
 
+def rehash():
+    pass
+
 def handleMessages(cod, line, splitline, source):
     global client
 

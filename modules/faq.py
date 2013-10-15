@@ -50,7 +50,6 @@ def initModule(cod):
 
     cod.sendLine(client.join(cod.channels[cod.config["etc"]["snoopchan"]]))
     cod.sendLine(client.join(cod.channels[cod.config["etc"]["helpchan"]]))
-    cod.sendLine(client.join(cod.channels[cod.config["etc"]["staffchan"]]))
 
 def destroyModule(cod):
     global client
@@ -59,6 +58,9 @@ def destroyModule(cod):
     cod.clients.pop(client.uid)
 
     del cod.botcommands["FAQ"]
+
+def rehash():
+    pass
 
 def commandFAQ(cod, line, splitline, source, destination):
     global client

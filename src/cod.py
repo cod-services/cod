@@ -189,6 +189,9 @@ class Cod():
 
         self.config = config.Config("config.json").config
 
+        for module in self.modules:
+            self.modules[module].rehash()
+
         self.log("Rehash complete")
 
     def sendLine(self, line):

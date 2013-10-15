@@ -78,6 +78,9 @@ def destroyModule(cod):
 
     del cod.botcommands["OFC"]
 
+def rehash():
+    pass
+
 def help(cod, source):
     cod.notice(source, "Valid commands are:")
     cod.notice(source, "OFC CLIENTJOIN #channel")

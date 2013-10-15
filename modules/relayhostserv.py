@@ -31,6 +31,9 @@ def initModule(cod):
 def destroyModule(cod):
     cod.s2scommands.remove(relayHostServToOpers)
 
+def rehash():
+    pass
+
 def relayHostServToOpers(cod, line, splitline, source):
     if splitline[2] == "#services":
         if cod.clients[source].nick == "HostServ":

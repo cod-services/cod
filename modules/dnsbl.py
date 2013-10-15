@@ -36,8 +36,15 @@ def initModule(cod):
 def destroyModule(cod):
     del cod.botcommands["RBL"]
 
+def rehash():
+    pass
+
 def commandRBL(cod, line, splitline, source, destination):
     if failIfNotOper(cod, cod.clients, cod.clients[source]):
+        return
+
+    if len(splitline) < 2:
+        cod.notice(source, "USAGE: RBL [nick or IP address to scan]")
         return
 
     search = None

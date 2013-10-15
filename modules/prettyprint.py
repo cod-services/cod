@@ -32,6 +32,9 @@ def destroyModule(cod):
     cod.s2scommands.remove(prettyPrintMessages)
     cod.s2scommands.pop(idx)
 
+def rehash():
+    pass
+
 def prettyPrintMessages(cod, line, splitline, source):
     if not cod.config["etc"]["production"]:
         client = cod.clients[source]

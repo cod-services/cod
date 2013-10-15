@@ -33,6 +33,9 @@ def initModule(cod):
 def destroyModule(cod):
     cod.s2scommands["ENCAP"].remove(announceDNSBLHits)
 
+def rehash():
+    pass
+
 def announceDNSBLHits(cod, line, splitline, source):
     if splitline[3] == "SNOTE":
         if splitline[4] == "r":

@@ -40,6 +40,9 @@ def destroyModule(cod):
 
     del cod.botcommands["OPNAME"]
 
+def rehash():
+    pass
+
 def commandOPNAME(cod, line, splitline, source, destination):
     global prefix, suffix
 

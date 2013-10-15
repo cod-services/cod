@@ -49,6 +49,12 @@ def destroyModule(cod):
     del cod.botcommands["TEST"]
     del cod.s2scommands["TEST"]
 
+def rehash():
+    """
+    This function is called when a rehash is being done. If you need anything
+    to be done on a rehash, do it here.
+    """
+
 def testbotCommand(cod, line, splitline, source, destination):
     """
     A bot command takes in 5 arguments:

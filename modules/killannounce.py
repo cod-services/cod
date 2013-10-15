@@ -31,6 +31,9 @@ def initModule(cod):
 def destroyModule(cod):
     cod.s2scommands["KILL"].remove(logKills)
 
+def rehash():
+    pass
+
 def logKills(cod, line, splitline, source):
     victim = cod.clients[splitline[2]]
     killer = cod.clients[source]

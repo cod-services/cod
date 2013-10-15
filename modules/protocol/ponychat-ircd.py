@@ -75,6 +75,9 @@ def destroyModule(cod):
     del cod.s2scommands["AWAY"]
     del cod.s2scommands["PING"]
 
+def rehash():
+    pass
+
 def login(cod):
     cod.sendLine("PASS %s TS 6 :%s" % \
             (cod.config["uplink"]["pass"], cod.config["uplink"]["sid"]))

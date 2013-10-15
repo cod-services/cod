@@ -89,6 +89,9 @@ def destroyModule(cod):
     del cod.s2scommands["MOTD"]
     del motd
 
+def rehash():
+    pass
+
 def commandJOIN(cod, line, splitline, source, destination):
     if failIfNotOper(cod, cod.client, cod.clients[source]):
         return

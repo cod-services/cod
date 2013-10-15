@@ -33,6 +33,9 @@ def initModule(cod):
 def destroyModule(cod):
     del cod.botcommands["SAY"]
 
+def rehash():
+    pass
+
 def say(cod, line, splitline, source, destination):
     if failIfNotOper(cod, cod.client, cod.clients[source]):
         return

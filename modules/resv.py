@@ -31,6 +31,9 @@ def initModule(cod):
 def destroyModule(cod):
     cod.s2scommands["ENCAP"].remove(logRESV)
 
+def rehash():
+    pass
+
 def logRESV(cod, line, splitline, source):
     if splitline[3] == "RESV":
         if splitline[2] == "0":

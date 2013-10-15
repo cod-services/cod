@@ -38,6 +38,9 @@ def initModule(cod):
 def destroyModule(cod):
     del cod.botcommands["IMMATURE"]
 
+def rehash():
+    pass
+
 def commandIMMATURE(cod, line, splitline, source, destination):
     cod.reply(source, destination, immature(" ".join(splitline[1:])))
 
