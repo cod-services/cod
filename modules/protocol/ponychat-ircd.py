@@ -45,11 +45,11 @@ def initModule(cod):
     cod.s2scommands["SID"] = [handleSID]
     cod.s2scommands["KILL"] = [handleKILL]
     cod.s2scommands["STATS"] = [handleSTATS]
+    cod.s2scommands["PING"] = [handlePING]
 
     cod.s2scommands["PRIVMSG"].append(handlePRIVMSG)
 
     cod.s2scommands["AWAY"] = [nullCommand]
-    cod.s2scommands["PING"] = [nullCommand]
 
 def destroyModule(cod):
     del cod.loginFunc
@@ -69,11 +69,11 @@ def destroyModule(cod):
     del cod.s2scommands["ENCAP"]
     del cod.s2scommands["KILL"]
     del cod.s2scommands["STATS"]
+    del cod.s2scommands["PING"]
 
     cod.s2scommands["PRIVMSG"].remove(handlePRIVMSG)
 
     del cod.s2scommands["AWAY"]
-    del cod.s2scommands["PING"]
 
 def rehash():
     pass
@@ -234,3 +234,9 @@ def handleSTATS(cod, line, splitline, source):
         cod.notice(source, "Stats commands: [v]ersion, [c]lients, [C]hannels, [m]modules, co[M]mands")
 
     cod.notice(source, "End of /STATS report")
+
+def handlePING(cod, line, splitline, source):
+    cod.sendLine(":%s PONG %s :%s" %
+            (cod.config["uplink"]["sid"], cod.config["me"]["name"],
+                source))
+
