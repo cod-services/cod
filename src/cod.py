@@ -24,7 +24,7 @@ freely, subject to the following restrictions:
     distribution.
 """
 
-VERSION = "0.7"
+VERSION = "0.8"
 
 import config
 import socket
