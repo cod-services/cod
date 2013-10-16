@@ -37,7 +37,9 @@ import sqlite3 as lite
 from structures import *
 from utils import *
 
+
 class Cod():
+
     def __init__(self, configpath):
         """
         The main Cod class. This holds all the data structures needed
@@ -93,7 +95,8 @@ class Cod():
             rows = cur.fetchall()
 
         except lite.DatabaseError as e:
-            self.log("Database at %s unreadable" % self.config["me"]["dbpath"], "!!!")
+            self.log("Database at %s unreadable" %
+                    self.config["me"]["dbpath"], "!!!")
             print e
             sys.exit(-1)
 
@@ -101,11 +104,13 @@ class Cod():
 
         self.log("Establishing connection to uplink")
 
-        self.link.connect((self.config["uplink"]["host"], self.config["uplink"]["port"]))
+        self.link.connect((self.config["uplink"]["host"],
+            self.config["uplink"]["port"]))
 
         self.log("done")
 
-        self.log("Loading %s protocol module" % self.config["uplink"]["protocol"])
+        self.log("Loading %s protocol module" %
+                self.config["uplink"]["protocol"])
 
         self.loadmod(self.config["uplink"]["protocol"])
 
@@ -117,8 +122,9 @@ class Cod():
         self.log("Creating and bursting client")
 
         self.client = makeService(self.config["me"]["nick"],
-                self.config["me"]["user"], self.config["me"]["host"],
-                self.config["me"]["desc"], self.config["uplink"]["sid"] + "CODFIS")
+                    self.config["me"]["user"], self.config["me"]["host"],
+                    self.config["me"]["desc"],
+                    self.config["uplink"]["sid"] + "CODFIS")
 
         self.clients[self.config["uplink"]["sid"] + "CODFIS"] = self.client
 
@@ -131,7 +137,7 @@ class Cod():
 
     def loadmod(self, modname):
         """
-        Input: module name, whether or not to commit this module to the database
+        Input: module name
 
         This function tries to load a module and initialize its commands to
         the bot or s2s command tables. This function does no error checking and
@@ -181,9 +187,8 @@ class Cod():
         """
         Input: none
 
-        This function rehashes the configuration in memory with the configuration
-        on the disk. It also parts from any extra channels the bot may have
-        joined while running.
+        This function rehashes the configuration in memory with the
+        configuration on the disk.
         """
         self.log("Rehashing...")
 
@@ -215,7 +220,7 @@ class Cod():
         source of the message.
         """
 
-        if source == None:
+        if source is None:
             source = self.client
 
         self.sendLine(":%s PRIVMSG %s :%s" % (self.client.uid, target, line))
@@ -229,7 +234,7 @@ class Cod():
         source of the message.
         """
 
-        if source == None:
+        if source is None:
             source = self.client
 
         self.sendLine(":%s NOTICE %s :%s" % (self.client.uid, target, line))
@@ -244,7 +249,7 @@ class Cod():
         a channel. Also lets you set channel op on join.
         """
 
-        if client == None:
+        if client is None:
             client = self.client
 
         channel = self.channels[channel]
@@ -259,7 +264,7 @@ class Cod():
         internal client), part message
         """
 
-        if client == None:
+        if client is None:
             client = self.client
 
         self.sendLine(":%s PART %s :%s" % (client.uid, channel, message))
@@ -300,7 +305,7 @@ class Cod():
         channel. This channel is configurable in the config file.
         """
 
-        if client == None:
+        if client is None:
             client = self.client
 
         self.privmsg(self.config["etc"]["snoopchan"], line, client)

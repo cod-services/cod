@@ -26,12 +26,14 @@ import json
 import sys
 
 class Config():
+
     """
     This is a very basic configuration file parser class.
 
     You can access the config loaded with the element name
     "config" in an instance of this class.
     """
+
     def __init__(self, cfilepath):
         """
         Inputs: config file path
