@@ -69,7 +69,7 @@ class Cod():
 
         #Fork to background if needed
         if self.config["etc"]["production"]:
-            print "--- Forking to background"
+            print("--- Forking to background")
 
             try:
                 pid = os.fork()
@@ -292,7 +292,7 @@ class Cod():
         message.
         """
         if not self.config["etc"]["production"]:
-            print prefix, message
+            print(prefix, message)
 
         if self.bursted and prefix == "---":
             self.snote("%s" % (message))
@@ -341,7 +341,7 @@ class Cod():
             #Channel message
             cod.privmsg(destination, line)
 
-print "!!! Cod %s starting up" % VERSION
+print("!!! Cod %s starting up" % VERSION)
 
 cod = None
 
