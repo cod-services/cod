@@ -1,6 +1,7 @@
 #!/bin/bash
 
 MAIN=src/cod.py
+PYRHON=python
 
 # Launcher for Cod
 
@@ -44,5 +45,10 @@ env/bin/pip install -r requirements.txt > /dev/null
 
 source env/bin/activate
 
-python $MAIN $1
+if [ -x "$(which pypy-c)" ]; then
+    PYTHON=pypy-c
+    echo "!!! pypy-c found! Cod will run much faster!"
+fi
+
+$PYTHON $MAIN $1
 
