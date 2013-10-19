@@ -1,7 +1,7 @@
 #!/bin/bash
 
 MAIN=src/cod.py
-PYRHON=python
+PYTHON=python
 
 # Launcher for Cod
 
