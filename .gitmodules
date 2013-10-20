@@ -1,0 +1,3 @@
+[submodule "src/niilib"]
+	path = src/niilib
+	url = https://github.com/Niichan/Niilib.git

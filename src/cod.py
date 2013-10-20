@@ -26,7 +26,7 @@ freely, subject to the following restrictions:
 
 VERSION = "0.8"
 
-import config
+from niilib import config
 import socket
 import os
 import sys
