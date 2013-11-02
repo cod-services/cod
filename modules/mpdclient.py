@@ -83,8 +83,8 @@ def commandMPD(cod, line, splitline, source, destination):
         mpd.update()
         cur = mpd.currentsong()
 
-        cod.reply(source, destination, "%s -- %s -- %4.2f%%" % \
-                (cur["artist"], cur["title"], float(cur["pos"])/float(cur["time"])))
+        cod.reply(source, destination, "Now playing: %s -- %s" % \
+                (cur["artist"], cur["title"]))
 
     if failIfNotOper(cod, cod.client, cod.clients[source]):
         return
