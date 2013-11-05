@@ -316,7 +316,7 @@ class Cod():
 
         self.privmsg(self.config["etc"]["snoopchan"], line, client)
 
-        self.logger.log("Services: " + line)
+        self.logger.log("SVS: %s: %s" % (client.nick, line))
 
     def findClientByNick(self, nick):
         """
