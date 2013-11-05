@@ -27,6 +27,7 @@ freely, subject to the following restrictions:
 VERSION = "0.8"
 
 from niilib import config
+from niilib import log
 import socket
 import os
 import sys
@@ -66,6 +67,9 @@ class Cod():
 
         #Load config file
         self.config = config.Config(configpath).config
+
+        #logger instance
+        self.logger = log.Logger(self.config["etc"]["logfile"])
 
         #Fork to background if needed
         if self.config["etc"]["production"]:
@@ -297,6 +301,8 @@ class Cod():
         if self.bursted and prefix == "---":
             self.snote("%s" % (message))
 
+        self.logger.log("%s %s" % (prefix, message))
+
     def servicesLog(self, line, client=None):
         """
         Inputs: line to log to services snoop channel
@@ -309,6 +315,8 @@ class Cod():
             client = self.client
 
         self.privmsg(self.config["etc"]["snoopchan"], line, client)
+
+        self.logger.log("Services: " + line)
 
     def findClientByNick(self, nick):
         """
