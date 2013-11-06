@@ -40,7 +40,7 @@ def rehash():
     pass
 
 def commandRBL(cod, line, splitline, source, destination):
-    if failIfNotOper(cod, cod.clients, cod.clients[source]):
+    if failIfNotOper(cod, cod.client, cod.clients[source]):
         return
 
     if len(splitline) < 2:
