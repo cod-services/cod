@@ -25,8 +25,8 @@ freely, subject to the following restrictions:
 from structures import *
 from utils import *
 
-NAME="ponychat-ircd protocol module"
-DESC="Handles login and protocol commands for ponychat-ircd"
+NAME="elemental-ircd protocol module"
+DESC="Handles login and protocol commands for elemental-ircd"
 
 CHANMODES=["eIbq", "k" ,"flj" ,"CDEFGJKLMOPQTcdgimnpstz", "yaohv"]
 
