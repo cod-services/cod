@@ -73,7 +73,7 @@ class Cod():
 
         #Fork to background if needed
         if self.config["etc"]["production"]:
-            print "--- Forking to background"
+            self.log("Forking to background")
 
             try:
                 pid = os.fork()
@@ -153,6 +153,9 @@ class Cod():
         sys.path.insert(1, "modules/protocol")
         sys.path.insert(2, "modules/core")
         sys.path.insert(3, "modules/experimental")
+        sys.path.insert(4, "modules/bot")
+        sys.path.insert(5, "modules/services")
+        sys.path.insert(6, "modules/announcer")
 
         try:
             self.modules[modname] = __import__(modname)
