@@ -43,7 +43,7 @@ def commandCHOICE(cod, line, splitline, source, destination):
     if prevtime + PACE < time.time():
         pass
     else:
-        cod.log("CHOICE: Not bypassing rate limiting")
+        cod.log("CHOICE: Not bypassing rate limiting for %s on %s" % (source, destination))
         return
 
     choices = " ".join(splitline[1:])
