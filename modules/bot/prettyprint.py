@@ -35,7 +35,6 @@ def rehash():
     pass
 
 def prettyPrintMessages(cod, line, splitline, source):
-    if not cod.config["etc"]["production"]:
-        client = cod.clients[source]
+    client = cod.clients[source]
 
-        cod.log("{0}: <{1}> {2}".format(splitline[2], client.nick, " ".join (splitline[3:])[1:]), "MSG")
+    cod.log("{0}: <{1}> {2}".format(splitline[2], client.nick, " ".join (splitline[3:])[1:]), "MSG")
