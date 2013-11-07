@@ -29,8 +29,7 @@ def initModule(cod):
     cod.s2scommands["PRIVMSG"].append(prettyPrintMessages)
 
 def destroyModule(cod):
-    cod.s2scommands.remove(prettyPrintMessages)
-    cod.s2scommands.pop(idx)
+    cod.s2scommands["PRIVMSG"].remove(prettyPrintMessages)
 
 def rehash():
     pass
@@ -39,4 +38,4 @@ def prettyPrintMessages(cod, line, splitline, source):
     if not cod.config["etc"]["production"]:
         client = cod.clients[source]
 
-        print "{0}: <{1}> {2}".format(splitline[2], client.nick, " ".join (splitline[3:])[1:])
+        cod.log("{0}: <{1}> {2}".format(splitline[2], client.nick, " ".join (splitline[3:])[1:]), "MSG")
