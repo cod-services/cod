@@ -35,7 +35,7 @@ def initModule(cod):
 
     client = makeService(cod.config["faq"]["nick"], cod.config["faq"]["user"],
             cod.config["faq"]["host"], cod.config["faq"]["gecos"],
-            cod.config["uplink"]["sid"] + "FAQSRV")
+            cod.getUID())
 
     cod.botcommands["FAQ"] = [commandFAQ]
 

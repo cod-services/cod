@@ -39,8 +39,7 @@ def initModule(cod):
     global client
 
     client = makeService(cod.config["dns"]["nick"], cod.config["dns"]["user"],
-            cod.config["dns"]["host"], cod.config["dns"]["gecos"],
-            cod.config["uplink"]["sid"] + "DNSSRV")
+            cod.config["dns"]["host"], cod.config["dns"]["gecos"], cod.getUID())
 
     cod.s2scommands["PRIVMSG"].append(handleMessages)
 

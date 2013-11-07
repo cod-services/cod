@@ -57,6 +57,8 @@ class Cod():
         self.servers = {}
         self.modules = {}
 
+        self.lastid = 100000
+
         self.loginFunc = None
 
         self.s2scommands = {"PRIVMSG": []}
@@ -127,10 +129,9 @@ class Cod():
 
         self.client = makeService(self.config["me"]["nick"],
                     self.config["me"]["user"], self.config["me"]["host"],
-                    self.config["me"]["desc"],
-                    self.config["uplink"]["sid"] + "CODFIS")
+                    self.config["me"]["desc"], self.getUID())
 
-        self.clients[self.config["uplink"]["sid"] + "CODFIS"] = self.client
+        self.clients[self.client.uid] = self.client
 
         self.sendLine(self.client.burst())
 
@@ -138,6 +139,15 @@ class Cod():
 
         #Inform operators that Cod is initialized
         self.log("Cod initialized", "!!!")
+
+    def getUID(self):
+        """
+        Returns a valid, unique TS6 UID for use with services clients
+        """
+        ret = self.lastid
+        self.lastid = self.lastid + 1
+
+        return self.config["uplink"]["sid"] + str(ret)
 
     def loadmod(self, modname):
         """

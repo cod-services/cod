@@ -98,6 +98,14 @@ def ofc(cod, line, splitline, source, destination):
     if failIfNotOper(cod, cod.client, cod.clients[source]):
         return
 
+    if len(splitline) < 2:
+        help(cod, source)
+        return
+
+    if splitline[1].upper() == "STATS":
+        stats(cod, source)
+
+
     if len(splitline) < 3:
         help(cod, source)
         return
@@ -108,36 +116,20 @@ def ofc(cod, line, splitline, source, destination):
         decimate(cod, source, splitline[2])
     elif splitline[1].upper() == "KILL":
         depart(cod, source)
-    elif splitline[1].upper() == "STATS":
-        stats(cod, source)
     else:
         help(cod, source)
 
 def joinclients(cod, channel, source):
-    global slaves
+    global slaves, nicks
 
     number = 1500
 
     for n in range(number):
-        nick = prefix[randint(0, len(prefix) - 1)].upper() + prefix[randint(0, len(prefix) - 1)].upper()
         user = "~lel~"
-        host = "%s.%s.%s" %(prefix[randint(0, len(prefix) - 1)].upper(),
-            prefix[randint(0, len(prefix) - 1)].upper(),
-            suffix[randint(0, len(suffix) - 1)].upper())
 
-        #Strip characters that are invalid in nicknames
-        for char in [" ", "-", "&", "(", ")", ".", ",", "/", "'"]:
-            nick = "".join(nick.split(char))
+        uid = cod.getUID()
 
-        #Truncate nick to normal maximum length
-        nick = nick[:20]
-
-        host = ".".join(host.split())
-
-        if len(nick) < 6:
-            nick = nick + nick
-
-        slave = makeClient(nick, user, host, "CareFriend", cod.config["uplink"]["sid"] + nick[:6])
+        slave = makeClient(uid, user, uid, "CareFriend", uid)
         slaves.append(slave)
         cod.sendLine(slave.burst())
         cod.sendLine(slave.join(cod.channels[channel]))
