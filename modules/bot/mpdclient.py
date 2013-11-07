@@ -64,7 +64,11 @@ def commandMPD(cod, line, splitline, source, destination):
     global mpd
 
     if len(splitline) < 2:
-        cod.reply(source, destination, "Not enough arguments")
+        mpd.update()
+        cur = mpd.currentsong()
+
+        cod.reply(source, destination, "Now playing: %s -- %s" % \
+                (cur["artist"], cur["title"]))
         return
 
     if splitline[1].upper() == "FIND":
@@ -79,12 +83,6 @@ def commandMPD(cod, line, splitline, source, destination):
         for result in results:
             cod.notice(source, "%s -- %s" % \
                     (result["artist"], result["title"]))
-    elif splitline[1].upper() == "STATUS":
-        mpd.update()
-        cur = mpd.currentsong()
-
-        cod.reply(source, destination, "Now playing: %s -- %s" % \
-                (cur["artist"], cur["title"]))
 
     if failIfNotOper(cod, cod.client, cod.clients[source]):
         return
