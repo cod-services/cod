@@ -133,7 +133,8 @@ class Cod():
 
         self.clients[self.client.uid] = self.client
 
-        self.sendLine(self.client.burst())
+        self.burstClient(self, self.client.nick, self.client.user,
+                self.client.host, self.client.gecos, self.client.uid)
 
         self.log("done")
 

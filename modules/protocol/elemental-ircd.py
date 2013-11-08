@@ -32,6 +32,7 @@ CHANMODES=["eIbq", "k" ,"flj" ,"CDEFGJKLMOPQTcdgimnpstz", "yaohv"]
 
 def initModule(cod):
     cod.loginFunc = login
+    cod.burstClient = burstClient
 
     cod.s2scommands["EUID"] = [handleEUID]
     cod.s2scommands["QUIT"] = [handleQUIT]
@@ -54,6 +55,8 @@ def initModule(cod):
 def destroyModule(cod):
     del cod.loginFunc
     cod.loginFunc = None
+    del cod.burstClient
+    cod.burstClient = None
 
     del cod.s2scommands["EUID"]
     del cod.s2scommands["QUIT"]
@@ -84,6 +87,9 @@ def login(cod):
     cod.sendLine("CAPAB :QS EX IE KLN UNKLN ENCAP SERVICES EUID EOPMOD")
     cod.sendLine("SERVER %s 1 :%s" % \
             (cod.config["me"]["name"], cod.config["me"]["desc"]))
+
+def burstClient(cod, nick, user, host, real, uid):
+    cod.sendLine(cod.clients[uid].burst())
 
 def nullCommand(cod, line, splitline, source):
     pass
