@@ -36,7 +36,7 @@ def destroyModule(cod):
     del cod.botcommands["FPDTEST"]
 
 def fpdtestCMD(cod, line, splitline, source, destination):
-    if(failIfNotOper(cod, client, dest)):
+    if(failIfNotOper(cod, source, dest)):
         return
 
     if len(splitline) < 3:
