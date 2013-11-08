@@ -1,6 +1,9 @@
 import os
 import re
 
+NAME="memusage"
+DESC="Shows memory usage statistics"
+
 def initModule(cod):
     cod.botcommands["MEM"] = [cmdMEM]
 
