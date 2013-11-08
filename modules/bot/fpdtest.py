@@ -58,9 +58,9 @@ def fpdtestCMD(cod, line, splitline, source, destination):
         for line in s.makefile("r"):
             cod.log("%s:%d -- %s" % (host, port, line), "FPD")
 
-    except IOError as e:
-        cod.reply(source, destination, e.message)
-        cod.servicesLog("FPDTEST: " + e.message)
+    except Exception as e:
+        cod.reply(source, destination, e)
+        cod.servicesLog("FPDTEST: " + e)
         return
 
     newtime = time.time()
