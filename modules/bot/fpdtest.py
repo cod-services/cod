@@ -53,7 +53,7 @@ def fpdtestCMD(cod, line, splitline, source, destination):
         s.connect((host, port))
         cod.log("Connected to %s:%d" % (host, port), "===")
 
-        s.send("<get-policy />\r\n")
+        s.send("<policy-file-request />\0")
 
         for line in s.makefile("r"):
             cod.log("%s:%d -- %s" % (host, port, line), "FPD")
