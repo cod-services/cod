@@ -81,7 +81,7 @@ def rehash():
     pass
 
 def burstClient(cod, nick, user, host, real, uid):
-    cod.sendLine(":%s UID %s %d %s 127.0.0.1 %s %s 127.0.0.1 %d +io :%s" %
+    cod.sendLine(":%s UID %s %d %s 127.0.0.1 %s %s 127.0.0.1 %d +kio :%s" %
             (cod.config["uplink"]["sid"], uid, int(time.time()), nick, host,
                 user, int(time.time()), real))
 
