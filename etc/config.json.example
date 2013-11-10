@@ -17,7 +17,7 @@
         "port": 6667,
         "pass": "dev",
         "ssl": false,
-        "protocol": "ponychat-ircd"
+        "protocol": "elemental-ircd"
     },
 
     "dns": {
