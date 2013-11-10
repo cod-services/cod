@@ -24,7 +24,7 @@ def sendfileCMD(cod, line, splitline, source, destination):
         cod.reply(source, destination, "SENDFILE <target> <path>")
         return
 
-    with open(splitline[2], "r") as f:
+    with open("etc/sendfile/" + splitline[2], "r") as f:
         for line in f:
             cod.privmsg(splitline[1], line)
 
