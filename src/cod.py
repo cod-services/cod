@@ -33,6 +33,8 @@ import os
 import sys
 import ssl
 import gc
+import hashlib
+import base64
 import sqlite3 as lite
 
 from structures import *
@@ -66,6 +68,7 @@ class Cod():
 
         self.bursted = False
         self.db = None
+        self.sid = ""
 
         #Load config file
         self.config = config.Config(configpath).config
@@ -115,6 +118,10 @@ class Cod():
 
         self.log("done")
 
+        self.sid = self.getSID()
+
+        self.log("SID is %s" % self.sid)
+
         self.log("Loading %s protocol module" %
                 self.config["uplink"]["protocol"])
 
@@ -141,14 +148,44 @@ class Cod():
         #Inform operators that Cod is initialized
         self.log("Cod initialized", "!!!")
 
-    def getUID(self):
+    def getUID(self, sid=None):
         """
         Returns a valid, unique TS6 UID for use with services clients
         """
+
+        if sid == None:
+            sid = self.sid
+
         ret = self.lastid
         self.lastid = self.lastid + 1
 
-        return self.config["uplink"]["sid"] + str(ret)
+        return sid + str(ret)
+
+    def getSID(self, string=None):
+        """
+        Returns a server ID number based on the string provided, default is
+        the configured server name.
+        """
+
+        if string == None:
+            string = self.config["me"]["name"]
+
+        #chosen for most likelyhood of having numbers in its b64 output
+
+        nameHash = hashlib.sha256(string)
+
+        sid = base64.b64encode(nameHash.digest())
+
+        for c in sid:
+            if c.isdigit():
+                assert len(sid) > 3
+                break
+
+            sid = sid[:1]
+
+        sid = sid[:3].upper()
+
+        return sid
 
     def loadmod(self, modname):
         """

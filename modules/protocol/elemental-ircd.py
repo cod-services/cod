@@ -83,7 +83,7 @@ def rehash():
 
 def login(cod):
     cod.sendLine("PASS %s TS 6 :%s" % \
-            (cod.config["uplink"]["pass"], cod.config["uplink"]["sid"]))
+            (cod.config["uplink"]["pass"], cod.sid))
     cod.sendLine("CAPAB :QS EX IE KLN UNKLN ENCAP SERVICES EUID EOPMOD")
     cod.sendLine("SERVER %s 1 :%s" % \
             (cod.config["me"]["name"], cod.config["me"]["desc"]))
@@ -95,7 +95,9 @@ def nullCommand(cod, line, splitline, source):
     pass
 
 def handleEUID(cod, line, splitline, source):
-    client = Client(splitline[2], splitline[9], splitline[4], splitline[5], splitline[6], splitline[7], splitline[8], splitline[11], splitline[12][1:])
+    client = Client(splitline[2], splitline[9], splitline[4], splitline[5],
+            splitline[6], splitline[7], splitline[8], splitline[11],
+            splitline[12][1:])
 
     cod.clients[client.uid] = client
 
@@ -165,15 +167,15 @@ def handleWHOIS(cod, line, splitline, source):
     client = cod.clients[service]
 
     cod.sendLine(":{0} 311 {1} {2} {3} {4} * :{5}".format(
-        cod.config["uplink"]["sid"], source, client.nick, client.user,
+        cod.sid, source, client.nick, client.user,
                 client.host, client.gecos))
     cod.sendLine(":{0} 312 {1} {2} {3} :{4}".format(
-        cod.config["uplink"]["sid"], source, client.nick, cod.config["me"]["name"],
+        cod.sid, source, client.nick, cod.config["me"]["name"],
         cod.config["me"]["desc"]))
     cod.sendLine(":{0} 313 {1} {2} :is a Network Service".format(
-        cod.config["uplink"]["sid"], source, client.nick))
+        cod.sid, source, client.nick))
     cod.sendLine(":{0} 318 {1} {2} :End of /WHOIS list.".format(
-        cod.config["uplink"]["sid"], source, client.nick))
+        cod.sid, source, client.nick))
 
 def handlePRIVMSG(cod, line, splitline, source):
     destination = splitline[2]
@@ -246,6 +248,6 @@ def handleSTATS(cod, line, splitline, source):
 
 def handlePING(cod, line, splitline, source):
     cod.sendLine(":%s PONG %s :%s" %
-            (cod.config["uplink"]["sid"], cod.config["me"]["name"],
+            (cod.sid, cod.config["me"]["name"],
                 source))
 
