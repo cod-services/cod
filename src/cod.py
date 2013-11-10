@@ -39,6 +39,7 @@ import sqlite3 as lite
 
 from structures import *
 from utils import *
+from termcolor import colored as color
 
 
 class Cod():
@@ -346,13 +347,24 @@ class Cod():
         the default prefix, it will also send out a debug snote with the log
         message.
         """
-        if not self.config["etc"]["production"]:
-            print prefix, message
-
         if self.bursted and prefix == "---":
             self.snote("%s" % (message))
 
         self.logger.log("%s %s" % (prefix, message))
+
+        if prefix == ">>>" or prefix == "<<<":
+            prefix = color(prefix, "blue")
+        elif prefix == "!!!":
+            prefix = color(prefix, "red")
+        elif prefix == "---":
+            prefix = color(prefix, "green")
+        elif prefix == "===":
+            prefix = color(prefix, "yellow")
+        else:
+            prefix = color(prefix, "magenta")
+
+        if not self.config["etc"]["production"]:
+            print prefix, message
 
     def servicesLog(self, line, client=None):
         """
