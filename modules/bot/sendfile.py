@@ -26,6 +26,11 @@ def sendfileCMD(cod, line, splitline, source, destination):
 
     with open("etc/sendfile/" + splitline[2], "r") as f:
         for line in f:
+            if line.endswith("\n"):
+                line = line[:-1]
+            elif line.endswith("\r"):
+                line = line[:-1]
+
             cod.privmsg(splitline[1], line)
 
     cod.servicesLog("%s: SENDFILE %s: %s" %
