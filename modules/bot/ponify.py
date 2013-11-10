@@ -3,6 +3,9 @@ import json
 
 list_of_finds = []
 
+NAME="Ponify"
+DESC="Ponyfy words or phrases"
+
 def initModule(cod):
     global list_of_finds
 

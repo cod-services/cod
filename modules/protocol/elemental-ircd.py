@@ -224,7 +224,7 @@ def handleKILL(cod, line, splitline, source):
         cod.join(channel)
 
     cod.servicesLog("KILL'd by %s " % cod.clients[source].nick)
-    
+
 def handleSTATS(cod, line, splitline, source):
     if splitline[2] == "v":
         cod.notice(source, "Cod version %s" % cod.version)
