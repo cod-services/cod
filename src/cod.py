@@ -336,7 +336,7 @@ class Cod():
         arbitrary SNOMASK, but the default is the debug SNOMASK.
         """
         self.sendLine(":%s ENCAP * SNOTE %s :%s" % \
-                (self.config["uplink"]["sid"], mask, line))
+                (self.sid, mask, line))
 
     def log(self, message, prefix="---"):
         """
