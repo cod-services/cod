@@ -60,7 +60,6 @@ def fpdtestCMD(cod, line, splitline, source, destination):
 
     except Exception as e:
         cod.reply(source, destination, e)
-        cod.servicesLog("FPDTEST: " + e)
         return
 
     newtime = time.time()
@@ -69,7 +68,4 @@ def fpdtestCMD(cod, line, splitline, source, destination):
 
     cod.reply(source, destination, "FPD at %s:%d appears to be okay in %4.2f seconds" %
             (host, port, delta))
-
-    cod.servicesLog("%s: FPDTEST: %s:%d okay in %4.2f seconds" %
-            (cod.clients[source].nick, host, port, delta))
 
