@@ -54,3 +54,7 @@ Extended IRC services and TS6 bot framework in Python
 
 The official channel for Cod is `#cod` on `irc.yolo-swag.com`. Come take
 a visit and say hi!
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/lyska/cod/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
