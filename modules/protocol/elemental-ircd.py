@@ -200,7 +200,7 @@ def handlePRIVMSG(cod, line, splitline, source):
         return
 
     else:
-        command = command = splitline[0].upper()
+        command = splitline[0].upper()
 
     try:
         for impl in cod.botcommands[command]:
