@@ -28,6 +28,7 @@ VERSION = "0.8"
 
 from niilib import config
 from niilib import log
+from niilib.message import IRCMessage
 import socket
 import os
 import sys
@@ -416,6 +417,8 @@ for line in cod.link.makefile('r'):
     #Strip \r\n
     line = line.strip()
 
+    lineobj = IRCMessage(line)
+
     #debug output
     if cod.config["etc"]["debug"]:
         cod.log(line, "<<<")
@@ -423,8 +426,8 @@ for line in cod.link.makefile('r'):
     splitline = line.split()
 
     #Ping handler.
-    if line[0] != ":":
-        if line.split()[0] == "PING":
+    if lineobj.source == None:
+        if lineobj.verb == "PING":
             cod.sendLine("PONG %s" % splitline[1:][0])
 
             if not cod.bursted:
@@ -439,10 +442,10 @@ for line in cod.link.makefile('r'):
 
     #Handle server commands
     else:
-        source = splitline[0][1:]
+        source = lineobj.source
 
         try:
-            for impl in cod.s2scommands[splitline[1]]:
+            for impl in cod.s2scommands[lineobj.verb]:
                 impl(cod, line, splitline, source)
         except KeyError as e:
             pass
