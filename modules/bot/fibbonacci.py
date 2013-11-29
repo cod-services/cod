@@ -9,6 +9,9 @@ def initModule(cod):
 def destroyModule(cod):
     del cod.botcommands["FIB"]
 
+def rehash():
+    pass
+
 def fibCMD(cod, line, splitline, source, destination):
     if len(splitline) < 2:
         cod.reply(source, destination, "Syntax: FIB <num> - outputs num'th fibbonacci number")

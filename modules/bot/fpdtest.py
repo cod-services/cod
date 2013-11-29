@@ -35,6 +35,9 @@ def initModule(cod):
 def destroyModule(cod):
     del cod.botcommands["FPDTEST"]
 
+def rehash():
+    pass
+
 def fpdtestCMD(cod, line, splitline, source, destination):
     if(failIfNotOper(cod, cod.client, cod.clients[source])):
         return
