@@ -50,5 +50,8 @@ if [ -x "$(which pypy-c)" ]; then
     echo "!!! pypy-c found! Cod will run much faster!"
 fi
 
+echo "--- Cleaning up previous pyc files"
+rm **/*.pyc
+
 $PYTHON $MAIN $1
 
