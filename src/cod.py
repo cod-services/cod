@@ -165,28 +165,19 @@ class Cod():
     def getSID(self, string=None):
         """
         Returns a server ID number based on the string provided, default is
-        the configured server name.
+        the configured server name and description, much like how inpsircd
+        does SID generation..
         """
 
         if string == None:
-            string = self.config["me"]["name"]
+            string = self.config["me"]["name"] + self.config["me"]["desc"]
 
-        #chosen for most likelyhood of having numbers in its b64 output
+        hashval = 1
+        for char in string:
+            char = ord(char)
+            hashval = hashval * (char * (char + 1))
 
-        nameHash = hashlib.sha256(string)
-
-        sid = base64.b64encode(nameHash.digest())
-
-        for c in sid:
-            if c.isdigit():
-                assert len(sid) > 3
-                break
-
-            sid = sid[:1]
-
-        sid = sid[:3].upper()
-
-        return sid
+        return str(hashval)[:3]
 
     def loadmod(self, modname):
         """
@@ -216,8 +207,7 @@ class Cod():
             self.servicesLog(e)
             return
 
-        if self.bursted:
-            self.log("Module %s loaded" % modname)
+        self.log("Module %s loaded" % modname)
 
         sys.path[:] = oldpath
 
@@ -251,6 +241,7 @@ class Cod():
         self.config = config.Config("config.json").config
 
         for module in self.modules:
+            cod.log("Rehashing %s" % module, "===")
             self.modules[module].rehash()
 
         self.log("Rehash complete")
