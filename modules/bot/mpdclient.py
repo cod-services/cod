@@ -63,6 +63,14 @@ def destroyModule(cod):
 def commandMPD(cod, line, splitline, source, destination):
     global mpd
 
+    try:
+        mpd.currentsong()
+    except:
+        cod.log("===", "Reconnecting to MPD server")
+        mpd.close()
+        mpd.disconnect()
+        mpd.connect(cod.config["mpd"]["host"], cod.config["mpd"]["port"])
+
     if len(splitline) < 2:
         mpd.update()
         cur = mpd.currentsong()
@@ -116,7 +124,7 @@ def commandMPD(cod, line, splitline, source, destination):
         cur = mpd.currentsong()
 
         for line in mpd.playlistinfo():
-            cod.reply(source, destination, "%s%s: %s" % \
+            cod.notice(source, "%s%s: %s" % \
                     (("* " if cur["id"] == line["id"] else "  "),
                         line["artist"], line["title"]))
 
