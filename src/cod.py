@@ -34,8 +34,6 @@ import os
 import sys
 import ssl
 import gc
-import hashlib
-import base64
 import sqlite3 as lite
 
 from structures import *
