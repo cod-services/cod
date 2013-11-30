@@ -31,9 +31,6 @@ NAME="inspircd protocol module"
 DESC="Handles login and protocol commands for inspircd"
 
 def initModule(cod):
-    cod.log("Don't use this protocol module.", "!!!")
-    sys.exit(-1)
-
     cod.loginFunc = login
     cod.burstClient = burstClient
 
