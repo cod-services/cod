@@ -51,7 +51,7 @@ if [ -x "$(which pypy-c)" ]; then
 fi
 
 echo "--- Cleaning up previous pyc files"
-rm **/*.pyc
+rm -rf **/*.pyc
 
 $PYTHON $MAIN $1
 
