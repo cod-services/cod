@@ -225,19 +225,19 @@ def commandLISTCHANS(cod, line, splitline, source, destination):
 
     cod.notice(source, "End of channel list")
 
-def logREHASH(cod, line, splitline, source):
-    if splitline[3] == "REHASH":
+def logREHASH(cod, line):
+    if line.args[1] == "REHASH":
         cod.rehash()
 
-        cod.servicesLog("REHASH: %s" % cod.clients[source].nick)
+        cod.servicesLog("REHASH: %s" % cod.clients[line.source].nick)
 
-def handleMOTD(cod, line, splitline, source):
+def handleMOTD(cod, line):
     global motd
 
-    for line in motd:
-        cod.notice(source, "MOTD: %s" % line)
+    for mline in motd:
+        cod.notice(line.source, "MOTD: %s" % mline)
 
-    cod.notice(source, "End of /MOTD")
+    cod.notice(line.source, "End of /MOTD")
 
 def commandVERSION(cod, line, splitline, source, destination):
     cod.notice(source, "Cod version %s" % cod.version)

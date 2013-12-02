@@ -82,49 +82,93 @@ def rehash():
     pass
 
 def login(cod):
+    """
+    Sends the commands needed to authenticate to the remote IRC server.
+    """
+
     cod.sendLine("PASS %s TS 6 :%s" % \
             (cod.config["uplink"]["pass"], cod.sid))
     cod.sendLine("CAPAB :QS EX IE KLN UNKLN ENCAP SERVICES EUID EOPMOD")
     cod.sendLine("SERVER %s 1 :%s" % \
             (cod.config["me"]["name"], cod.config["me"]["desc"]))
 
-def burstClient(cod, nick, user, host, real, uid):
+def burstClient(cod, nick, user, host, real, uid=None):
+    """
+    XXX: Have this actually do what it says it does
+
+    Some TS6-compatible IRC servers use different syntaxes for bursting clients,
+    Thus, the protocol module needs to handle this.
+
+    Takes in everything needed for a client to be bursted. Will auto-generate
+    a UID if none is given.
+    """
+
+    if uid == None:
+        uid = cod.getUID()
+
     cod.sendLine(cod.clients[uid].burst())
 
-def nullCommand(cod, line, splitline, source):
+def nullCommand(cod, line):
+    """
+    Useful for ignoring commands that should be implemented later
+    """
+
     pass
 
-def handleEUID(cod, line, splitline, source):
-    client = Client(splitline[2], splitline[9], splitline[4], splitline[5],
-            splitline[6], splitline[7], splitline[8], splitline[11],
-            splitline[12][1:])
+def handleEUID(cod, line):
+    """
+    Listens for EUID commands and adds information about remote clients
+    accordingly.
+    """
+    # <<< :Home-server EUID Nick Hopcount TS umodes ident vhost realip UID realhost accountname :realname
+    client = Client(line.args[0], line.args[7], line.args[2], line.args[3],
+            line.args[4], line.args[5], line.args[6], line.args[9],
+            line.args[-1])
 
     cod.clients[client.uid] = client
 
-def handleQUIT(cod, line, splitline, source):
-    cod.clients.pop(source)
+def handleQUIT(cod, line):
+    """
+    Handles a client quitting from the network
+    """
 
-def handleJOIN(cod, line, splitline, source):
-    channel = cod.channels[splitline[3]]
+    cod.clients.pop(line.source)
+
+def handleJOIN(cod, line):
+    """
+    Handles a raw S2S JOIN, this is rarely seen in the wild.
+    """
+
+    channel = cod.channels[line.args[0]]
 
     channel.clientAdd(cod.clients[source])
 
-def handlePART(cod, line, splitline, source):
-    channel = cod.channels[splitline[3]]
+def handlePART(cod, line):
+    """
+    Handles a raw S2S PART, this removes a client from a channel.
+    """
+    channel = cod.channels[line.args[0]]
 
     channel.clients.pop(source)
 
-def handleSJOIN(cod, line, splitline, source):
+def handleSJOIN(cod, line):
+    """
+    Handles an SJOIN line from the server to add clients to a channel. Relevant
+    channel prefixes are passed into the ChanUser stub class for later handling.
+    """
+
+    # <<< :45X SJOIN 1385182842 #shadrips +nt :1AAAAAAA6 @00AAAAAA3 75XAAAADM 75XAAAACQ 69AAAAAAD 42JAAAAB4
     try:
-        cod.channels[splitline[3]]
+        cod.channels[line.args[1]]
     except KeyError as e:
-        cod.channels[splitline[3]] = Channel(splitline[3], splitline[2])
+        cod.channels[line.args[1]] = Channel(line.args[1], line.args[0])
     finally:
+        channel = cod.channels[line.args[1]]
         #Set channel modes
-        cod.channels[splitline[3]].modes = splitline[4]
+        channel.modes = line.args[2]
 
         #Join users to channel
-        uids = line.split(":")[2].split(" ")
+        uids = line.args[-1].split(" ")
         for uid in uids:
             #Extremely pro implementation
 
@@ -133,24 +177,48 @@ def handleSJOIN(cod, line, splitline, source):
 
             client = cod.clients[uid]
 
-            cod.channels[splitline[3]].clientAdd(client, prefix)
+            channel.clientAdd(client, prefix)
 
-def handleNICK(cod, line, splitline, source):
-    cod.clients[source].nick = splitline[2]
+def handleNICK(cod, line):
+    """
+    Handles a NICK line from the server. This changes a client's nickname.
+    """
 
-def handleSID(cod, line, splitline, source):
-    cod.servers[source] = Server(source, splitline[2], splitline[3], ":".join(line.split(":")[2:]))
+    cod.clients[line.source].nick = line.args[0]
 
-def handleBMASK(cod, line, splitline, source):
-    list = splitline[4]
+def handleSID(cod, line):
+    """
+    Handles a SID line from the server. This gives information about a remote
+    server link.
+    """
+
+    cod.servers[line.source] = Server(line.source, line.args[0], line.args[1],
+            line.args[-1])
+
+def handleBMASK(cod, line):
+    """
+    Handles a BMASK from the server. This communicates channel list-like modes,
+    even though this protocol command was only made for ban modes.
+    """
+
+    listmode = line.args[1]
 
     #The channel will be a valid channel
-    channel = cod.channels[splitline[3]]
+    channel = cod.channels[line.args[0]]
 
-    channel.lists[list].append([n for n in line.split(":")[2].split(" ")])
+    masks = line[args[-1]]
 
-def handleMODE(cod, line, splitline, source):
-    extparam = line.split(":")[2]
+    for mask in masks:
+        channel.lists[listmode].append(mask)
+
+def handleMODE(cod, line):
+    """
+    A brilliant move was to make MODE both the client mode changing command
+    and to make it the server to server command for USER MODES, while channel
+    modes are handled on an S2S level by TMODE.
+    """
+
+    extparam = line.args[-1]
 
     if extparam.find("o") != -1:
         if extparam[0] == "+":
@@ -158,28 +226,42 @@ def handleMODE(cod, line, splitline, source):
         else:
             cod.clients[source].isOper = False
 
-def handleCHGHOST(cod, line, splitline, source):
-    cod.clients[splitline[2]].host = splitline[3]
+def handleCHGHOST(cod, line):
+    """
+    Changes the visible host of a client
+    """
 
-def handleWHOIS(cod, line, splitline, source):
-    service = splitline[2]
+    cod.clients[line.args[0]].host = line.args[1]
+
+def handleWHOIS(cod, line):
+    """
+    Replies to a WHOIS request by a client with relevant information about
+    that service
+    """
+
+    service = line.args[0]
 
     client = cod.clients[service]
 
     cod.sendLine(":{0} 311 {1} {2} {3} {4} * :{5}".format(
-        cod.sid, source, client.nick, client.user,
+        cod.sid, line.source, client.nick, client.user,
                 client.host, client.gecos))
     cod.sendLine(":{0} 312 {1} {2} {3} :{4}".format(
-        cod.sid, source, client.nick, cod.config["me"]["name"],
+        cod.sid, line.source, client.nick, cod.config["me"]["name"],
         cod.config["me"]["desc"]))
     cod.sendLine(":{0} 313 {1} {2} :is a Network Service".format(
-        cod.sid, source, client.nick))
+        cod.sid, line.source, client.nick))
     cod.sendLine(":{0} 318 {1} {2} :End of /WHOIS list.".format(
-        cod.sid, source, client.nick))
+        cod.sid, line.source, client.nick))
 
-def handlePRIVMSG(cod, line, splitline, source):
-    destination = splitline[2]
-    line = ":".join(line.split(":")[2:])
+def handlePRIVMSG(cod, line):
+    """
+    Handle PRIVMSG
+    """
+
+    destination = line.args[0]
+    source = line.source
+    line = line.args[-1]
     splitline = line.split()
 
     command = ""
@@ -214,8 +296,12 @@ def handlePRIVMSG(cod, line, splitline, source):
     except KeyError as e:
         pass
 
-def handleKILL(cod, line, splitline, source):
-    if splitline[2] != cod.client.uid:
+def handleKILL(cod, line):
+    """
+    Reap off killed local clients and attempt to rejoin channels
+    """
+
+    if line.args[2] != cod.client.uid:
         return
 
     cod.sendLine(cod.client.burst())
@@ -225,29 +311,37 @@ def handleKILL(cod, line, splitline, source):
 
     cod.servicesLog("KILL'd by %s " % cod.clients[source].nick)
 
-def handleSTATS(cod, line, splitline, source):
-    if splitline[2] == "v":
-        cod.notice(source, "Cod version %s" % cod.version)
+def handleSTATS(cod, line):
+    """
+    Reply to remote STATS commands
+    """
 
-    elif splitline[2] == "c":
-        cod.notice(source, "%d clients in ram" % len(cod.clients))
+    if line.args[2] == "v":
+        cod.notice(line.source, "Cod version %s" % cod.version)
 
-    elif splitline[2] == "C":
-        cod.notice(source, "%d channels in ram" % len(cod.channels))
+    elif line.args[2] == "c":
+        cod.notice(line.source, "%d clients in ram" % len(cod.clients))
 
-    elif splitline[2] == "m":
-        cod.notice(source, "%d modules loaded" % len(cod.modules))
+    elif line.args[2] == "C":
+        cod.notice(line.source, "%d channels in ram" % len(cod.channels))
 
-    elif splitline[2] == "M":
-        cod.notice(source, "%d protocol commands loaded" % len(cod.s2scommands))
-        cod.notice(source, "%d bot commands loaded" % len(cod.botcommands))
+    elif line.args[2] == "m":
+        cod.notice(line.source, "%d modules loaded" % len(cod.modules))
+
+    elif line.args[2] == "M":
+        cod.notice(line.source, "%d protocol commands loaded" % len(cod.s2scommands))
+        cod.notice(line.source, "%d bot commands loaded" % len(cod.botcommands))
     else:
-        cod.notice(source, "Stats commands: [v]ersion, [c]lients, [C]hannels, [m]modules, co[M]mands")
+        cod.notice(line.source, "Stats commands: [v]ersion, [c]lients, [C]hannels, [m]modules, co[M]mands")
 
-    cod.notice(source, "End of /STATS report")
+    cod.notice(line.source, "End of /STATS report")
 
-def handlePING(cod, line, splitline, source):
+def handlePING(cod, line):
+    """
+    Pongs remote servers to end bursting
+    """
+
     cod.sendLine(":%s PONG %s :%s" %
             (cod.sid, cod.config["me"]["name"],
-                source))
+                line.source))
 

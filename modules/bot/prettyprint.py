@@ -34,7 +34,8 @@ def destroyModule(cod):
 def rehash():
     pass
 
-def prettyPrintMessages(cod, line, splitline, source):
-    client = cod.clients[source]
+def prettyPrintMessages(cod, line):
+    client = cod.clients[line.source]
 
-    cod.log("{0}: <{1}> {2}".format(splitline[2], client.nick, " ".join (splitline[3:])[1:]), "MSG")
+    cod.log("{0}: <{1}> {2}".format(line.args[0], client.nick, line.args[-1]), "MSG")
+

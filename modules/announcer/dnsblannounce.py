@@ -36,10 +36,10 @@ def destroyModule(cod):
 def rehash():
     pass
 
-def announceDNSBLHits(cod, line, splitline, source):
-    if splitline[3] == "SNOTE":
-        if splitline[4] == "r":
-            message = line.split(":")[2]
+def announceDNSBLHits(cod, line):
+    if line.args[1] == "SNOTE":
+        if line.args[2] == "r":
+            message = line.args[-1]
             cod.servicesLog("DNSBL:HIT: %s" % message)
 
             try:

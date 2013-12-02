@@ -435,7 +435,7 @@ for line in cod.link.makefile('r'):
 
         try:
             for impl in cod.s2scommands[lineobj.verb]:
-                impl(cod, line, splitline, source)
+                impl(cod, lineobj)
         except KeyError as e:
             pass
 

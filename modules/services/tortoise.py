@@ -64,17 +64,17 @@ def destroyModule(cod):
 def rehash():
     pass
 
-def handleMessages(cod, line, splitline, source):
+def handleMessages(cod, line):
     global client
 
-    if splitline[2] != client.uid:
+    if line.args[0] != client.uid:
         return
 
-    line = ":".join(line.split(":")[2:])
+    line = line.args[-1]
     splitline = line.split()
 
     if splitline[0].upper() == "POOL":
-        if failIfNotOper(cod, client, cod.clients[source]):
+        if failIfNotOper(cod, client, cod.clients[line.source]):
             return
 
         auth = (cod.config["tortoiselabs"]["username"],
@@ -86,10 +86,10 @@ def handleMessages(cod, line, splitline, source):
             if line["name"] == cod.config["dns"]["name"]:
                 for record in line["records"]:
                     if record["name"] == cod.config["dns"]["pool"]:
-                        cod.sendLine(client.privmsg(source, record["content"]))
-                cod.sendLine(client.privmsg(source, "End of pool %s" % cod.config["dns"]["pool"]))
+                        cod.sendLine(client.privmsg(line.source, record["content"]))
+                cod.sendLine(client.privmsg(line.source, "End of pool %s" % cod.config["dns"]["pool"]))
 
     else:
-        cod.sendLine(client.notice(source, "Valid commands are:"))
-        cod.sendLine(client.notice(source, " - POOL: Show DNS pool"))
+        cod.sendLine(client.notice(line.source, "Valid commands are:"))
+        cod.sendLine(client.notice(line.source, " - POOL: Show DNS pool"))
 
