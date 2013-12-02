@@ -31,6 +31,9 @@ NAME="inspircd protocol module"
 DESC="Handles login and protocol commands for inspircd"
 
 def initModule(cod):
+    cod.log("Lol not updated", "!!!")
+    sys.exit(-1)
+
     cod.loginFunc = login
     cod.burstClient = burstClient
 
@@ -234,7 +237,7 @@ def handleKILL(cod, line, splitline, source):
         cod.join(channel)
 
     cod.servicesLog("KILL'd by %s " % cod.clients[source].nick)
-    
+
 def handleSTATS(cod, line, splitline, source):
     if splitline[2] == "v":
         cod.notice(source, "Cod version %s" % cod.version)
