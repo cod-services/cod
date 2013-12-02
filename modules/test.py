@@ -67,14 +67,12 @@ def testbotCommand(cod, line, splitline, source, destination):
     """
     cod.reply(source, destination, "Hello!")
 
-def tests2sCommand(cod, line, splitline, source):
+def tests2sCommand(cod, line):
     """
-    A s2s command takes in 4 arguments:
+    A s2s command takes in 2 arguments:
 
     1. A reference to the cod instance
-    2. The line from the server
-    3. The line split by spaces for convenience
-    4. The source user or server ID of the message
+    2. An IRCMessage instance with the line from the server pre-populated
     """
     pass
 
