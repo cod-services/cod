@@ -222,9 +222,9 @@ def handleMODE(cod, line):
 
     if extparam.find("o") != -1:
         if extparam[0] == "+":
-            cod.clients[source].isOper = True
+            cod.clients[line.source].isOper = True
         else:
-            cod.clients[source].isOper = False
+            cod.clients[line.source].isOper = False
 
 def handleCHGHOST(cod, line):
     """
