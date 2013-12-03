@@ -38,8 +38,8 @@ Extended IRC services and TS6 bot framework in Python
  - Spam filtering (opt-in only)
 
 ### Installation:
-1. Set up an IRC network using Charybdis, ShadowIRCD, ponychat-ircd or any other TS6 ircd.
-2. Create a link block like [this](https://gist.github.com/Niichan/9c8a8e1a1102cbee61c7).
+1. Set up an IRC network using Charybdis, ShadowIRCD, elemental-ircd or any other TS6 ircd.
+2. Create a link block like [this](https://gist.github.com/lyska/9c8a8e1a1102cbee61c7).
 3. Copy `etc/config.json.example` to a file of your choice.
 4. Configure as needed for your deployment.
 5. Run `./cod /path/to/your/config.json`
@@ -48,9 +48,11 @@ Extended IRC services and TS6 bot framework in Python
  * dnsbl
  * dnsblannounce
  * killannounce
+ * memusage
  * relayhostserv
  * resv
  * say
+ * sendfile
 
 The official channel for Cod is `#cod` on `irc.yolo-swag.com`. Come take
 a visit and say hi!
