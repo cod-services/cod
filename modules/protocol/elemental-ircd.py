@@ -316,19 +316,19 @@ def handleSTATS(cod, line):
     Reply to remote STATS commands
     """
 
-    if line.args[2] == "v":
+    if line.args[0] == "v":
         cod.notice(line.source, "Cod version %s" % cod.version)
 
-    elif line.args[2] == "c":
+    elif line.args[0] == "c":
         cod.notice(line.source, "%d clients in ram" % len(cod.clients))
 
-    elif line.args[2] == "C":
+    elif line.args[0] == "C":
         cod.notice(line.source, "%d channels in ram" % len(cod.channels))
 
-    elif line.args[2] == "m":
+    elif line.args[0] == "m":
         cod.notice(line.source, "%d modules loaded" % len(cod.modules))
 
-    elif line.args[2] == "M":
+    elif line.args[0] == "M":
         cod.notice(line.source, "%d protocol commands loaded" % len(cod.s2scommands))
         cod.notice(line.source, "%d bot commands loaded" % len(cod.botcommands))
     else:
