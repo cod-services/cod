@@ -301,7 +301,7 @@ def handleKILL(cod, line):
     Reap off killed local clients and attempt to rejoin channels
     """
 
-    if line.args[2] != cod.client.uid:
+    if line.args[0] != cod.client.uid:
         return
 
     cod.sendLine(cod.client.burst())
