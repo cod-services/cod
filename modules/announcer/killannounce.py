@@ -34,12 +34,12 @@ def destroyModule(cod):
 def rehash():
     pass
 
-def logKills(cod, line, splitline, source):
-    victim = cod.clients[splitline[2]]
-    killer = cod.clients[source]
+def logKills(cod, line):
+    victim = cod.clients[line.args[0]]
+    killer = cod.clients[line.source]
 
     cod.clients.pop(victim.uid)
 
-    if killer.nick != "NickServ" or killer.nick != "OperServ":
-        cod.servicesLog("%s: KILL %s %s" % (killer.nick, victim.nick, splitline[4]))
+    if not killer.nick.endswith("Serv"):
+        cod.servicesLog("%s: KILL %s %s" % (killer.nick, victim.nick, line.args[-1]))
 
