@@ -24,6 +24,10 @@ distribution.
 
 # In an ideal world, this would not be needed.
 
+NAME="killonfailoper"
+DESC="Kills clients that fail OPER attempts"
+#XXX: Number of tries before kill?
+
 def initModule(cod):
     cod.s2scommands["ENCAP"].append(killOnFailOper)
 
