@@ -22,6 +22,9 @@ misrepresented as being the original software.
 distribution.
 """
 
+NAME="Away Reminder"
+DESC="Remind people about /away"
+
 def initModule(cod):
     cod.s2scommands["NICK"].append(remindAway)
 
