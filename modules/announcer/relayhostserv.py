@@ -42,6 +42,9 @@ def relayHostServToOpers(cod, line):
 
             splitline = line.args[-1].split()
 
+            if len(splitline) < 3:
+                return
+
             vhost = ""
 
             if splitline[1] == "REQUEST:":
