@@ -29,7 +29,7 @@ def initModule(cod):
     cod.s2scommands["PRIVMSG"].append(relayHostServToOpers)
 
 def destroyModule(cod):
-    cod.s2scommands.remove(relayHostServToOpers)
+    cod.s2scommands["PRIVMSG"].remove(relayHostServToOpers)
 
 def rehash():
     pass
@@ -39,4 +39,28 @@ def relayHostServToOpers(cod, line):
         if cod.clients[line.source].nick == "HostServ":
             cod.sendLine(cod.client.privmsg(cod.config["etc"]["staffchan"],
                 "HostServ: " + line.args[-1]))
+
+            splitline = line.args[-1].split()
+
+            vhost = ""
+
+            if splitline[1] == "REQUEST:":
+                vhost = splitline[2][1:-1] #shuck the vhost
+            elif splitline[2] == "REQUEST:":
+                vhost = splitline[3][1:-1] #shuck the vhost
+            else:
+                return
+
+            print vhost.split(".")
+
+            for frag in vhost.split("."):
+                if len(frag) < 5:
+                    frag = "*%s*" % frag
+                else:
+                    frag = "*%s*" % frag[2:-2]
+
+                print frag
+
+                cod.privmsg(cod.findClientByNick("HostServ").uid,
+                            "LISTVHOST %s" % frag)
 
