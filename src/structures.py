@@ -22,6 +22,8 @@ freely, subject to the following restrictions:
     distribution.
 """
 
+import time
+
 class Client():
     """
     Client data structure. Manages data for a client.
@@ -85,7 +87,9 @@ class Client():
         """
         Output: valid UID string to burst client onto the network
         """
-        return ":%s UID %s 0 0 %s %s %s 0 %s :%s" % (self.sid, self.nick, self.modes, self.user, self.host, self.uid, self.gecos)
+        return ":%s EUID %s 1 %d %s %s %s 0 %s * * :%s" %\
+                (self.sid, self.nick, int(time.time()), self.modes, self.user,
+                        self.host, self.uid, self.gecos)
 
 def makeService(nick, user, host, name, uid):
     """
