@@ -37,6 +37,9 @@ def initModule(cod):
 def destroyModule(cod):
     del cod.botcommands["CHOICE"]
 
+def rehash():
+    pass
+
 def commandCHOICE(cod, line, splitline, source, destination):
     global prevtime, PACE
 

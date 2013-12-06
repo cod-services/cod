@@ -60,6 +60,9 @@ def destroyModule(cod):
     del cod.botcommands["MPD"]
     del mpd
 
+def rehash():
+    global mpd
+
 def commandMPD(cod, line, splitline, source, destination):
     global mpd
 
