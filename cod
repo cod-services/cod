@@ -36,6 +36,15 @@ else
 fi
 }
 
+#Download the TLD list
+echo "-- Getting TLD list"
+
+if [ -e var/tlds-alpha-by-domain.txt ]; then
+	rm var/tlds-alpha-by-domain.txt
+fi
+
+wget -O var/tlds-alpha-by-domain.txt http://data.iana.org/TLD/tlds-alpha-by-domain.txt 2> /dev/null > /dev/null
+
 if [ -d env ]; then
 	echo "--- Virtualenv found"
 else
