@@ -417,6 +417,7 @@ class Cod():
                         #Join staff and snoop channels
                         self.join(self.config["etc"]["staffchan"])
                         self.join(self.config["etc"]["snoopchan"])
+                        cod.privmsg("NickServ", "IDENTIFY %s" % cod.config["me"]["servicespass"])
 
                         #Load admin module
                         self.loadmod("admin") #Required to be hard-coded
@@ -447,6 +448,5 @@ if __name__ == "__main__":
 
     #start up
 
-    while True:
-        cod.go()
+    cod.go()
 
