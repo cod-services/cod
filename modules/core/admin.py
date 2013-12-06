@@ -24,6 +24,7 @@ freely, subject to the following restrictions:
 
 from utils import *
 from structures import *
+import sys
 
 NAME="Admin"
 DESC="Administrative commands"
@@ -146,12 +147,12 @@ def commandDIE(cod, line, splitline, source, destination):
         return
 
     cod.servicesLog("DIE: %s" % cod.clients[source].nick)
-
     cod.db.close()
-
     cod.sendLine(cod.client.quit())
 
     cod.sendLine("SQUIT")
+
+    sys.exit()
 
 def commandMODLIST(cod, line, splitline, source, destination):
     if failIfNotOper(cod, cod.client, cod.clients[source]):

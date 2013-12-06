@@ -390,54 +390,63 @@ class Cod():
             #Channel message
             cod.privmsg(destination, line)
 
-print "!!! Cod %s starting up" % VERSION
+    def go(self):
+        """
+        Cod's main function
+        """
 
-cod = None
+        #Read lines from the server
+        for line in self.link.makefile('r'):
+            #Strip \r\n
+            line = line.strip()
 
-if len(sys.argv) < 2:
-    cod = Cod("config.json")
-else:
-    cod = Cod(sys.argv[1])
+            lineobj = IRCMessage(line)
 
-#start up
+            #debug output
+            if self.config["etc"]["debug"]:
+                self.log(line, "<<<")
 
-#Read lines from the server
-for line in cod.link.makefile('r'):
-    #Strip \r\n
-    line = line.strip()
+            splitline = line.split()
 
-    lineobj = IRCMessage(line)
+            #Ping handler.
+            if lineobj.source == None:
+                if lineobj.verb == "PING":
+                    self.sendLine("PONG %s" % splitline[1:][0])
 
-    #debug output
-    if cod.config["etc"]["debug"]:
-        cod.log(line, "<<<")
+                    if not self.bursted:
+                        #Join staff and snoop channels
+                        self.join(self.config["etc"]["staffchan"])
+                        self.join(self.config["etc"]["snoopchan"])
 
-    splitline = line.split()
+                        #Load admin module
+                        self.loadmod("admin") #Required to be hard-coded
 
-    #Ping handler.
-    if lineobj.source == None:
-        if lineobj.verb == "PING":
-            cod.sendLine("PONG %s" % splitline[1:][0])
+                        self.bursted = True
 
-            if not cod.bursted:
-                #Join staff and snoop channels
-                cod.join(cod.config["etc"]["staffchan"])
-                cod.join(cod.config["etc"]["snoopchan"])
+            #Handle server commands
+            else:
+                source = lineobj.source
 
-                #Load admin module
-                cod.loadmod("admin") #Required to be hard-coded
+                try:
+                    for impl in self.s2scommands[lineobj.verb]:
+                        impl(cod, lineobj)
+                except KeyError as e:
+                    pass
 
-                cod.bursted = True
+        self.log("Oh, I am slain.")
 
-    #Handle server commands
+if __name__ == "__main__":
+    print "!!! Cod %s starting up" % VERSION
+
+    cod = None
+
+    if len(sys.argv) < 2:
+        cod = Cod("config.json")
     else:
-        source = lineobj.source
+        cod = Cod(sys.argv[1])
 
-        try:
-            for impl in cod.s2scommands[lineobj.verb]:
-                impl(cod, lineobj)
-        except KeyError as e:
-            pass
+    #start up
 
-cod.log("Oh, I am slain.")
+    while True:
+        cod.go()
 
