@@ -30,6 +30,7 @@ RBLS = [
     'dnsbl.dronebl.org',
     'dnsbl.inps.de',
     'dnsbl.njabl.org',
+    'dnsbl.rizon.net',
     'dnsbl.sorbs.net',
     'drone.abuse.ch',
     'duinv.aupads.org',
@@ -166,6 +167,6 @@ if __name__ == "__main__":
 	else:
 		print """Usage summary:
 
-rblwatch <ip address to lookup> """ 
+rblwatch <ip address to lookup> """
     except KeyboardInterrupt:
 	pass
