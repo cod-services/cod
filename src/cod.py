@@ -339,7 +339,7 @@ class Cod():
         if not self.config["etc"]["production"]:
             print prefix, message
 
-        if self.bursted and prefix == "---":
+        if self.bursted and prefix == "!!!":
             self.snote("%s" % (message))
 
         self.logger.log("%s %s" % (prefix, message))
