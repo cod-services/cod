@@ -27,17 +27,26 @@ PYTHON=python
 #     3. This notice may not be removed or altered from any source
 #     distribution.
 
-if [ -d env ]; then
-    echo "--- Virtualenv found"
+function testmodule {
+if $PYTHON -c "import $1" > /dev/null; then
+	true
 else
-    echo "!!! Setting up virtual environment"
-    if [ -x "$(which virtualenv)" ]; then
-        virtualenv env --python=python2.7 > /dev/null
-        echo "--- Virtual environment set up"
-    else
-        echo "!!! Virtualenv not installed"
-        exit
-    fi
+	echo "!!! library $1 not found. Please install $1 from system package repositories"
+	exit
+fi
+}
+
+if [ -d env ]; then
+	echo "--- Virtualenv found"
+else
+	echo "!!! Setting up virtual environment"
+	if [ -x "$(which virtualenv)" ]; then
+		virtualenv env --python=python2.7 > /dev/null
+		echo "--- Virtual environment set up"
+	else
+		echo "!!! Virtualenv not installed"
+		exit
+	fi
 fi
 
 echo "--- Installing venv dependencies"
@@ -46,8 +55,8 @@ env/bin/pip install -r requirements.txt > /dev/null
 source env/bin/activate
 
 if [ -x "$(which pypy-c)" ]; then
-    PYTHON=pypy-c
-    echo "!!! pypy-c found! Cod will run much faster!"
+	PYTHON=pypy-c
+	echo "!!! pypy-c found! Cod will run much faster!"
 fi
 
 echo "--- Cleaning up previous pyc files"
