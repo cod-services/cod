@@ -25,9 +25,6 @@ freely, subject to the following restrictions:
 import time
 import random
 
-PACE=30 #Pace command use for n seconds between use
-prevtime = 0 #Previous time of use
-
 NAME="Choice bot command"
 DESC="Picks from a user-supplied, comma-delineated list of things"
 
@@ -41,14 +38,6 @@ def rehash():
     pass
 
 def commandCHOICE(cod, line, splitline, source, destination):
-    global prevtime, PACE
-
-    if prevtime + PACE < time.time():
-        pass
-    else:
-        cod.log("CHOICE: Not bypassing rate limiting for %s on %s" % (source, destination))
-        return
-
     choices = " ".join(splitline[1:])
     choices = choices.split(",")
 
