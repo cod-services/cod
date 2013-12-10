@@ -41,9 +41,6 @@ def commandCHOICE(cod, line, splitline, source, destination):
     choices = " ".join(splitline[1:])
     choices = choices.split(",")
 
-    if random.choice(range(15)) == 15:
-        choices.append("go force")
-
     prevtime = time.time()
 
     choice = random.choice(choices)
