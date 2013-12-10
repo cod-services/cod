@@ -28,6 +28,8 @@ import re
 NAME="Youtube lookups"
 DESC="Youtube searching and title lookups"
 
+YOUTUBE_REGEX = re.compile('(youtube.com/watch\S*v=|youtu.be/)([\w-]+)')
+
 def initModule(cod):
     cod.s2scommands["PRIVMSG"].append(youtubeLookup)
     cod.botcommands["YT"] = [youtubeSearch]
@@ -40,11 +42,12 @@ def rehash():
     pass
 
 def youtubeLookup(cod, line):
+    global YOUTUBE_REGEX
+
     if line.args[0] not in cod.channels:
         return
 
     client = cod.clients[line.source]
-    regex = re.compile('(youtube.com/watch\S*v=|youtu.be/)([\w-]+)')
     chatline = line.args[-1]
 
     if "youtube" not in chatline:
@@ -53,7 +56,7 @@ def youtubeLookup(cod, line):
     videoid = None
 
     try:
-        videoid = regex.split(chatline)[2]
+        videoid = YOUTUBE_REGEX.split(chatline)[2]
     except:
         return
 
