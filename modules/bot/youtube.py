@@ -50,7 +50,12 @@ def youtubeLookup(cod, line):
     if "youtube" not in chatline:
         return
 
-    videoid = regex.split(chatline)[2]
+    videoid = None
+
+    try:
+        videoid = regex.split(chatline)[2]
+    except:
+        return
 
     try:
         info = requests.get("http://gdata.youtube.com/feeds/api/videos/%s?v=2&alt=json" % videoid).json()
