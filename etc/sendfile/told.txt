@@ -62,4 +62,4 @@ Status:
 [X] Biotold 2
 [X] Toldbound
 [x] icetold
-[x] Told of the Rings
+[ ] Aint nobody got told fo' dat
