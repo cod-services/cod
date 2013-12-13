@@ -29,6 +29,7 @@ VERSION = "0.8"
 from niilib import config
 from niilib import log
 from niilib.message import IRCMessage
+from niilib.b36 import *
 import socket
 import os
 import sys
@@ -58,7 +59,7 @@ class Cod():
         self.servers = {}
         self.modules = {}
 
-        self.lastid = 100000
+        self.lastid = 60466176 # 100000 in base 36
 
         self.loginFunc = None
 
@@ -158,7 +159,7 @@ class Cod():
         ret = self.lastid
         self.lastid = self.lastid + 1
 
-        return sid + str(ret)
+        return sid + base36encode(ret)
 
     def getSID(self, string=None):
         """
