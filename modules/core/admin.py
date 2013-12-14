@@ -25,6 +25,7 @@ freely, subject to the following restrictions:
 from utils import *
 from structures import *
 import sys
+import subprocess
 
 NAME="Admin"
 DESC="Administrative commands"
@@ -45,6 +46,7 @@ def initModule(cod):
     cod.botcommands["MODUNLOAD"] = [commandMODUNLOAD]
     cod.botcommands["LISTCHANS"] = [commandLISTCHANS]
     cod.botcommands["VERSION"] = [commandVERSION]
+    cod.botcommands["UPGRADE"] = [commandUPGRADE]
 
     cod.s2scommands["ENCAP"] = [logREHASH]
     cod.s2scommands["MOTD"] = [handleMOTD]
@@ -83,6 +85,7 @@ def destroyModule(cod):
     del cod.botcommands["MODUNLOAD"]
     del cod.botcommands["LISTCHANS"]
     del cod.botcommands["VERSION"]
+    del cod.botcommands["UPGRADE"]
 
     idx = cod.s2scommands["ENCAP"].index(logREHASH)
     cod.s2scommands.pop(idx)
@@ -242,4 +245,21 @@ def handleMOTD(cod, line):
 
 def commandVERSION(cod, line, splitline, source, destination):
     cod.notice(source, "Cod version %s" % cod.version)
+
+def commandUPGRADE(cod, line, splitline, source, destination):
+    if failIfNotOper(cod, cod.client, cod.clients[source]):
+        return
+
+    p = subprocess.Popen(["git","pull"], stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE)
+
+    output, stderrdata = p.communicate()
+
+    if type(output) == type(""):
+        cod.servicesLog(output.strip())
+    else:
+        for line in output:
+            cod.servicesLog(line.strip())
+
+    cod.servicesLog("%s: UPGRADE" % cod.clients[source].nick)
 
