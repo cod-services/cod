@@ -30,6 +30,8 @@ from niilib import config
 from niilib import log
 from niilib.message import IRCMessage
 from niilib.b36 import *
+from select import select
+
 import socket
 import os
 import sys
@@ -58,6 +60,8 @@ class Cod():
         self.channels = {}
         self.servers = {}
         self.modules = {}
+
+        self.socks = [self.link]
 
         self.lastid = 60466176 # 100000 in base 36
 
@@ -396,11 +400,32 @@ class Cod():
         Cod's main function
         """
 
-        #Read lines from the server
-        for line in self.link.makefile('r'):
-            #Strip \r\n
-            line = line.strip()
+        buf = ""
 
+        while True:
+            inputready, outputready, execeptready = select(self.socks,[],[])
+
+            for s in inputready:
+                if s == self.link:
+                    tbuf = self.link.recv(2048)
+                    tbuf = buf + tbuf
+
+                    lines = tbuf.split("\r\n")
+
+                    buf = lines[-1]
+                    lines = lines[:-1]
+
+                    self.process(lines)
+
+        self.log("Oh, I am slain.")
+
+    def process(self, lines):
+        """
+        This checks and does all the module call handlers for lines from the
+        upstream socket.
+        """
+
+        for line in lines:
             lineobj = IRCMessage(line)
 
             #debug output
@@ -427,15 +452,11 @@ class Cod():
 
             #Handle server commands
             else:
-                source = lineobj.source
-
                 try:
                     for impl in self.s2scommands[lineobj.verb]:
                         impl(cod, lineobj)
-                except KeyError as e:
+                except KeyError:
                     pass
-
-        self.log("Oh, I am slain.")
 
 if __name__ == "__main__":
     print "!!! Cod %s starting up" % VERSION
