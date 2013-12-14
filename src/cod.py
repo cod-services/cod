@@ -451,12 +451,11 @@ class Cod():
                         self.bursted = True
 
             #Handle server commands
-            else:
-                try:
-                    for impl in self.s2scommands[lineobj.verb]:
-                        impl(cod, lineobj)
-                except KeyError:
-                    pass
+            try:
+                for impl in self.s2scommands[lineobj.verb]:
+                    impl(cod, lineobj)
+            except KeyError:
+                pass
 
 if __name__ == "__main__":
     print "!!! Cod %s starting up" % VERSION

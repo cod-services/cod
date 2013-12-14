@@ -22,6 +22,8 @@ freely, subject to the following restrictions:
     distribution.
 """
 
+import sys
+
 from structures import *
 from utils import *
 
@@ -47,6 +49,7 @@ def initModule(cod):
     cod.s2scommands["KILL"] = [handleKILL]
     cod.s2scommands["STATS"] = [handleSTATS]
     cod.s2scommands["PING"] = [handlePING]
+    cod.s2scommands["ERROR"] = [handleERROR]
 
     cod.s2scommands["PRIVMSG"].append(handlePRIVMSG)
 
@@ -73,6 +76,7 @@ def destroyModule(cod):
     del cod.s2scommands["KILL"]
     del cod.s2scommands["STATS"]
     del cod.s2scommands["PING"]
+    del cod.s2scommands["ERROR"]
 
     cod.s2scommands["PRIVMSG"].remove(handlePRIVMSG)
 
@@ -295,6 +299,15 @@ def handlePRIVMSG(cod, line):
                 cod.servicesLog("%s: %s" % (type(e), e))
     except KeyError as e:
         pass
+
+def handleERROR(cod, line):
+    """
+    Die on ERROR
+    """
+
+    cod.log(" ".join(line.args), "!!!")
+
+    sys.exit(0)
 
 def handleKILL(cod, line):
     """
