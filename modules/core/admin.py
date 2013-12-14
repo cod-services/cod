@@ -261,11 +261,5 @@ def commandUPGRADE(cod, line, splitline, source, destination):
         for line in output:
             cod.servicesLog(line.strip())
 
-    for module in cod.modules:
-        if module == cod.config["uplink"]["protocol"]:
-            pass
-        cod.unloadmod(module)
-        cod.loadmod(module)
-
     cod.servicesLog("%s: UPGRADE" % cod.clients[source].nick)
 
