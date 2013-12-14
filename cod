@@ -37,7 +37,7 @@ fi
 }
 
 #Download the TLD list
-echo "-- Getting TLD list"
+echo "--- Getting TLD list"
 
 if [ -e var/tlds-alpha-by-domain.txt ]; then
 	rm var/tlds-alpha-by-domain.txt
