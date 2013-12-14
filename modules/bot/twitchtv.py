@@ -61,7 +61,8 @@ def twitchLookup(cod, line):
     try:
         info = requests.get("https://api.twitch.tv/kraken/channels/" + streamid).json()
 
-        string = "^ Twitch: %s playing %s" % (info["display_name"], info["game"])
+        string = "^ Twitch: %s playing %s: %s" %\
+                (info["display_name"], info["game"], info["status"])
 
         cod.privmsg(line.args[0], string)
     except Exception as e:
