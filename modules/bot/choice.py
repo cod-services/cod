@@ -39,7 +39,7 @@ def rehash():
 
 def commandCHOICE(cod, line, splitline, source, destination):
     choices = " ".join(splitline[1:])
-    choices = choices.split(",")
+    choices = choices.split(", ")
 
     prevtime = time.time()
 
