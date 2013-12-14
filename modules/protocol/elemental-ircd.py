@@ -69,7 +69,6 @@ def destroyModule(cod):
     del cod.s2scommands["MODE"]
     del cod.s2scommands["CHGHOST"]
     del cod.s2scommands["WHOIS"]
-    del cod.s2scommands["NOTICE"]
     del cod.s2scommands["JOIN"]
     del cod.s2scommands["SID"]
     del cod.s2scommands["ENCAP"]
