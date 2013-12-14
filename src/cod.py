@@ -452,6 +452,7 @@ class Cod():
                         self.loadmod("admin") #Required to be hard-coded
 
                         self.bursted = True
+                    continue
 
             #Handle server commands
             try:
