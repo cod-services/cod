@@ -6,6 +6,8 @@ Extended IRC services in Python
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/lyska/cod/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 ### Features:
+ - Asynchronous socket handling
+   (and an easy way for modules to add socket handlers)
  - Dynamic channel joins
  - Forking to background
  - Logging to snoop channel
@@ -15,8 +17,15 @@ Extended IRC services in Python
  - SQLite database
  - Virtual environment support
 
+### Link Protocol Support:
+ - First-class support for TS6
+ - Partial support for inspircd
+   - Support for inspircd has not been updated to the new link protocol handler
+     functions. If you know anything about the inspircd link protocol or have
+     some documentation on it, please let me know.
+
 ### Modules:
- - Announcing and full RBL lookups of DNSBL hits
+ - Announcing and full RBL lookups of DNSBL hits (on elemental-ircd only)
  - Brainfuck interpreter
  - DNSBL lookups to snoop channel by user or IP address
  - DNS pool displaying (Via Tortoise Labs API)
@@ -31,22 +40,27 @@ Extended IRC services in Python
  - Memory use statistics
  - MPD interface
    - Pause/Play/Next/Previous
- - Partial inspircd support (If you know anything about the inspircd link protocol,
-   help would really be appreciated)
  - Pretty printing of channel messages to the screen or log file
+ - Random choice from a list
  - Relaying of `HostServ` messages from snoop channel to staff channel
    - Also does `HostServ` lookups on requested vhosts
+   - Automatically rejects real domain names
  - Relaying of otherwise hidden protocol staff abuse points to snoop channel
    - On elemental-ircd, DNSBL hits are logged
    - `RESV` use
  - SQLite database
  - Sending files from the disk to a user or channel
  - Stress testing via the Orbital Friendship Cannon
+   - Statistics logging of OFC runs
+ - Twitch.tv API lookups of video streams
+ - Youtube API lookups and searching
 
 ### Goals:
  - DNS record editing (Tortoise Labs)
+ - Feature-completeness with skybot
  - MPD playlist manipulation
- - XMPP MUC linking to an existing IRC channel
+ - User statistics collection
+   - Follow anonyminity standards of the Tor Project
  - Web GUI for administration
 
 ### Stretch Goals:
@@ -76,6 +90,8 @@ Extended IRC services in Python
  * resv
  * say
  * sendfile
+ * twitchtv
+ * youtube
 
 The official channel for Cod is `#cod` on `irc.yolo-swag.com`. Come take
 a visit and say hi!
