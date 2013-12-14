@@ -36,6 +36,9 @@ else
 fi
 }
 
+echo "--- Updating niilib"
+git submodule update 2> /dev/null > /dev/nul
+
 #Download the TLD list
 echo "--- Getting TLD list"
 
