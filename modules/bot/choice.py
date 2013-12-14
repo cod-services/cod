@@ -42,7 +42,7 @@ def commandCHOICE(cod, line, splitline, source, destination):
     choices = choices.split(", ")
 
     if len(choices) == 0 or len(choices) == 1:
-        cod.reply(source, destination, "BAD " + source)
+        cod.reply(source, destination, "BAD " + cod.clients[source].nick)
         return
 
     choice = random.choice(choices)
