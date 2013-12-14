@@ -62,6 +62,7 @@ class Cod():
         self.modules = {}
 
         self.socks = [self.link]
+        self.sockhandlers = {self.link: self.process}
 
         self.lastid = 60466176 # 100000 in base 36
 
@@ -139,8 +140,8 @@ class Cod():
         self.log("Creating and bursting client")
 
         self.client = makeService(self.config["me"]["nick"],
-                    self.config["me"]["user"], self.config["me"]["host"],
-                    self.config["me"]["desc"], self.getUID())
+                self.config["me"]["user"], self.config["me"]["host"],
+                self.config["me"]["desc"], self.getUID())
 
         self.clients[self.client.uid] = self.client
 
@@ -400,26 +401,28 @@ class Cod():
         Cod's main function
         """
 
-        buf = ""
+        self.buf = ""
 
         while True:
             inputready, outputready, execeptready = select(self.socks,[],[])
 
             for s in inputready:
-                if s == self.link:
-                    tbuf = self.link.recv(2048)
-                    tbuf = buf + tbuf
-
-                    lines = tbuf.split("\r\n")
-
-                    buf = lines[-1]
-                    lines = lines[:-1]
-
-                    self.process(lines)
+                self.sockhandlers[s]([cod, s])
 
         self.log("Oh, I am slain.")
 
-    def process(self, lines):
+    def process(self, args):
+        tbuf = self.link.recv(2048)
+        tbuf = self.buf + tbuf
+
+        lines = tbuf.split("\r\n")
+
+        self.buf = lines[-1]
+        lines = lines[:-1]
+
+        self.processLines(lines)
+
+    def processLines(self, lines):
         """
         This checks and does all the module call handlers for lines from the
         upstream socket.
