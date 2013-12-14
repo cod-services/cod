@@ -41,7 +41,9 @@ def commandCHOICE(cod, line, splitline, source, destination):
     choices = " ".join(splitline[1:])
     choices = choices.split(", ")
 
-    prevtime = time.time()
+    if len(choices) == 0 or len(choices) == 1:
+        cod.reply(source, destination, "BAD " + source)
+        return
 
     choice = random.choice(choices)
 
