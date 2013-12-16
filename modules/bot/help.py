@@ -31,6 +31,9 @@ def initModule(cod):
 def destroyModule(cod):
     del cod.botcommands["HELP"]
 
+def rehash():
+    pass
+
 def commandHELP(cod, line, splitline, source, destination):
     commandlist = " ".join(cod.botcommands)
 

@@ -246,7 +246,10 @@ class Cod():
 
         for module in self.modules:
             cod.log("Rehashing %s" % module, "===")
-            self.modules[module].rehash()
+            try:
+                self.modules[module].rehash()
+            except:
+                pass
 
         self.log("Rehash complete")
 
