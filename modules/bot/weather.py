@@ -60,6 +60,9 @@ def commandWEATHER(cod, line, splitline, source, destination):
                 (weatherInfo["data"]["current_condition"][0]["winddir16Point"],
                         weatherInfo["data"]["current_condition"][0]["windspeedKmph"])
 
+        if locale == "":
+            locale = location
+
         cod.reply(source, destination, "Weather report for %s: %s degrees C, %s" %\
                 (locale, temps[1], wind))
 
