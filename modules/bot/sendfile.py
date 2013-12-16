@@ -28,10 +28,10 @@ DESC="allows you to send people files"
 from utils import *
 
 def initModule(cod):
-    cod.botcommands["SENDFILE"] = [sendfileCMD]
+    cod.registerCMD("SENDFILE", sendfileCMD, True)
 
 def destroyModule(cod):
-    del cod.botcommands["SENDFILE"]
+    del cod.opercmds["SENDFILE"]
 
 def rehash():
     pass

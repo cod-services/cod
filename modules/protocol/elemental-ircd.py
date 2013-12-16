@@ -289,15 +289,26 @@ def handlePRIVMSG(cod, line):
 
     try:
         for impl in cod.botcommands[command]:
+                try:
+                    if pm:
+                        impl(cod, line, splitline, source, source)
+                    else:
+                        impl(cod, line, splitline, source, destination)
+                except Exception as e:
+                    cod.servicesLog("%s: %s" % (type(e), e))
+    except KeyError as e:
+        pass
+
+    if cod.clients[source].isOper:
+        for impl in cod.opercmds[command]:
             try:
                 if pm:
                     impl(cod, line, splitline, source, source)
                 else:
                     impl(cod, line, splitline, source, destination)
-            except Exception as e:
+            except IOError as e:
                 cod.servicesLog("%s: %s" % (type(e), e))
-    except KeyError as e:
-        pass
+
 
 def handleERROR(cod, line):
     """

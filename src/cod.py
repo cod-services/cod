@@ -70,6 +70,7 @@ class Cod():
 
         self.s2scommands = {"PRIVMSG": []}
         self.botcommands = {}
+        self.opercmds = {}
 
         self.bursted = False
         self.db = None
@@ -182,6 +183,12 @@ class Cod():
             hashval = hashval * (char * (char + 1))
 
         return str(hashval)[:3]
+
+    def registerCMD(self, name, function, oper=False):
+        if oper:
+            self.opercmds[name] = [function]
+        else:
+            self.botcommands[name] = [function]
 
     def loadmod(self, modname):
         """
