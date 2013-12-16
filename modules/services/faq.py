@@ -37,7 +37,7 @@ def initModule(cod):
             cod.config["faq"]["host"], cod.config["faq"]["gecos"],
             cod.getUID())
 
-    cod.registerCMD("FAQ", commandFAQ, True)
+    cod.botcommands["FAQ"] = [commandFAQ]
 
     initDBTable(cod, "FAQ",
             "Id INTEGER PRIMARY KEY, Name TEXT, Content TEXT")
@@ -57,7 +57,7 @@ def destroyModule(cod):
     cod.sendLine(client.quit())
     cod.clients.pop(client.uid)
 
-    del cod.opercmds["FAQ"]
+    del cod.botcommands["FAQ"]
 
 def rehash():
     pass

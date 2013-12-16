@@ -36,10 +36,6 @@ def rehash():
 
 def commandHELP(cod, line, splitline, source, destination):
     commandlist = " ".join(cod.botcommands)
-    opercmdlist = " ".join(cod.opercmds)
-
-    if cod.clients[source].isOper:
-        commandlist += " (%s)" % opercmdlist
 
     cod.reply(source, destination, "Commands: %s" % commandlist)
 

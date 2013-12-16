@@ -37,16 +37,16 @@ motd = []
 def initModule(cod):
     global motd
 
-    cod.registerCMD("JOIN", commandJOIN, True)
-    cod.registerCMD("PART", commandPART, True)
-    cod.registerCMD("REHASH", commandREHASH, True)
-    cod.registerCMD("DIE", commandDIE, True)
-    cod.registerCMD("MODLOAD", commandMODLOAD, True)
-    cod.registerCMD("MODLIST", commandMODLIST, True)
-    cod.registerCMD("MODUNLOAD", commandMODUNLOAD, True)
-    cod.registerCMD("LISTCHANS", commandLISTCHANS, True)
-    cod.registerCMD("VERSION", commandVERSION, True)
-    cod.registerCMD("UPGRADE", commandUPGRADE, True)
+    cod.botcommands["JOIN"] = [commandJOIN]
+    cod.botcommands["PART"] = [commandPART]
+    cod.botcommands["REHASH"] = [commandREHASH]
+    cod.botcommands["DIE"] = [commandDIE]
+    cod.botcommands["MODLOAD"] = [commandMODLOAD]
+    cod.botcommands["MODLIST"] = [commandMODLIST]
+    cod.botcommands["MODUNLOAD"] = [commandMODUNLOAD]
+    cod.botcommands["LISTCHANS"] = [commandLISTCHANS]
+    cod.botcommands["VERSION"] = [commandVERSION]
+    cod.botcommands["UPGRADE"] = [commandUPGRADE]
 
     cod.s2scommands["ENCAP"] = [logREHASH]
     cod.s2scommands["MOTD"] = [handleMOTD]
@@ -77,15 +77,15 @@ def initModule(cod):
 def destroyModule(cod):
     global motd
 
-    del cod.opercmds["JOIN"]
-    del cod.opercmds["PART"]
-    del cod.opercmds["REHASH"]
-    del cod.opercmds["DIE"]
-    del cod.opercmds["MODLOAD"]
-    del cod.opercmds["MODUNLOAD"]
-    del cod.opercmds["LISTCHANS"]
-    del cod.opercmds["VERSION"]
-    del cod.opercmds["UPGRADE"]
+    del cod.botcommands["JOIN"]
+    del cod.botcommands["PART"]
+    del cod.botcommands["REHASH"]
+    del cod.botcommands["DIE"]
+    del cod.botcommands["MODLOAD"]
+    del cod.botcommands["MODUNLOAD"]
+    del cod.botcommands["LISTCHANS"]
+    del cod.botcommands["VERSION"]
+    del cod.botcommands["UPGRADE"]
 
     idx = cod.s2scommands["ENCAP"].index(logREHASH)
     cod.s2scommands.pop(idx)
@@ -100,11 +100,7 @@ def commandJOIN(cod, line, splitline, source, destination):
     if failIfNotOper(cod, cod.client, cod.clients[source]):
         return
 
-    if len(splitline) < 2:
-        cod.notice(source, "USAGE: PART #channel")
-        return
-
-    elif splitline[1][0] == "#":
+    if splitline[1][0] == "#":
         channel = splitline[1]
 
         if splitline[1] not in cod.channels:
@@ -126,11 +122,7 @@ def commandPART(cod, line, splitline, source, destination):
      if failIfNotOper(cod, cod.client, cod.clients[source]):
          return
 
-     if len(splitline) < 2:
-         cod.notice(source, "USAGE: PART #channel")
-         return
-
-     elif splitline[1][0] == "#":
+     if splitline[1][0] == "#":
         channel = splitline[1]
 
         client = cod.clients[source]

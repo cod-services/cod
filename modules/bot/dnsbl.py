@@ -31,10 +31,10 @@ DESC="Does DNSBL lookups by nick or IP address"
 import rblwatch
 
 def initModule(cod):
-    cod.registerCMD("RBL", commandRBL, True)
+    cod.botcommands["RBL"] = [commandRBL]
 
 def destroyModule(cod):
-    del cod.opercmds["RBL"]
+    del cod.botcommands["RBL"]
 
 def rehash():
     pass
