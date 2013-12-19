@@ -173,7 +173,7 @@ class Cod():
         does SID generation..
         """
 
-        if string == None:
+        if string is None:
             string = self.config["me"]["name"] + self.config["me"]["desc"]
 
         hashval = 1
