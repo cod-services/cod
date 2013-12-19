@@ -201,16 +201,8 @@ class Cod():
         sys.path.insert(5, "modules/services")
         sys.path.insert(6, "modules/announcer")
 
-        try:
-            self.modules[modname] = __import__(modname)
-            self.modules[modname].initModule(self)
-        except AttributeError as e:
-            self.servicesLog(e)
-            return
-        except ImportError as e:
-            self.servicesLog(e)
-            return
-
+        self.modules[modname] = __import__(modname)
+        self.modules[modname].initModule(self)
         self.log("Module %s loaded" % modname)
 
         sys.path[:] = oldpath

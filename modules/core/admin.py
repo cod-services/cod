@@ -59,7 +59,10 @@ def initModule(cod):
 
     if rows != []:
         for row in rows:
-            cod.loadmod(row[1])
+            try:
+                cod.loadmod(row[1])
+            except AttributeError:
+                pass
 
     rows = lookupDB(cod, "Joins")
 
@@ -182,7 +185,7 @@ def commandMODLOAD(cod, line, splitline, source, destination):
 
     try:
         cod.loadmod(target)
-    except ImportError as e:
+    except Exception as e:
         cod.reply(source, destination, "Module %s failed load: %s" % (target, e))
         return
 
