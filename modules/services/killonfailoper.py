@@ -47,15 +47,18 @@ def killOnFailOper(cod, line):
     if not line.args[-1].split()[1] == "OPER":
         return
 
-    offendingclient = cod.findClientByNick(line.args[-1].split()[7])
+    try:
+        offendingclient = cod.findClientByNick(line.args[-1].split()[7])
 
-    cod.notice(offendingclient.uid, "You may not attempt to become an operator without being on staff")
-    cod.notice(offendingclient.uid, "Staff has been notified.")
+        cod.notice(offendingclient.uid, "You may not attempt to become an operator without being on staff")
+        cod.notice(offendingclient.uid, "Staff has been notified.")
 
-    cod.servicesLog("%s FAILED OPER attempt: (%s@%s : %s), killed" % (offendingclient.nick,
-        offendingclient.user, offendingclient.host, offendingclient.ip))
+        cod.servicesLog("%s FAILED OPER attempt: (%s@%s : %s), killed" % (offendingclient.nick,
+            offendingclient.user, offendingclient.host, offendingclient.ip))
 
-    cod.sendLine(":%s KILL %s :spacing (Failed OPER attempt)" % (cod.client.uid, offendingclient.uid))
+        cod.sendLine(":%s KILL %s :spacing (Failed OPER attempt)" % (cod.client.uid, offendingclient.uid))
 
-    cod.clients.pop(offendingclient.uid)
+        cod.clients.pop(offendingclient.uid)
+    except Exception as e:
+        return
 
