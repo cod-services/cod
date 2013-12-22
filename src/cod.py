@@ -340,6 +340,9 @@ class Cod():
         if client is None:
             client = self.client
 
+        if channel not in self.channels:
+            self.channels[channel] = Channel(channel, int(time.time()))
+
         channel = self.channels[channel]
 
         self.sendLine(client.join(channel))
