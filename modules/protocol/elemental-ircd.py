@@ -299,6 +299,7 @@ def handlePRIVMSG(cod, line):
                         impl(cod, line, splitline, source, destination)
                 except Exception as e:
                     cod.servicesLog("%s: %s" % (type(e), e.message))
+                    continue
         else:
             raise KeyError
 
