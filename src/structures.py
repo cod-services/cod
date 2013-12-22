@@ -52,9 +52,9 @@ class Client():
 
     def __str__(self):
         """
-        Output : nick!user@host: real name
+        Output : Client UID
         """
-        return "%s!%s@%s :%s" % (self.nick, self.user, self.host, self.gecos)
+        return self.uid
 
     def privmsg(self, target, message):
         """
