@@ -15,14 +15,8 @@ Extended IRC services in Python
  - No specific libc dependency (tested on glibc, uclibc and musl)
  - Rehashing config file
  - SQLite database
+ - TS6 link protocol support
  - Virtual environment support
-
-### Link Protocol Support:
- - First-class support for TS6
- - Partial support for inspircd
-   - Support for inspircd has not been updated to the new link protocol handler
-     functions. If you know anything about the inspircd link protocol or have
-     some documentation on it, please let me know.
 
 ### Modules:
  - Announcing and full RBL lookups of DNSBL hits (on elemental-ircd only)
@@ -52,8 +46,16 @@ Extended IRC services in Python
  - Sending files from the disk to a user or channel
  - Stress testing via the Orbital Friendship Cannon
    - Statistics logging of OFC runs
+
+### URL Scraping:
+ - 4chan post lookups
+ - danbooru post lookups
+ - derpibooru post lookups
+ - reddit post lookups
  - Twitch.tv API lookups of video streams
  - Youtube API lookups and searching
+
+
 
 ### Goals:
  - DNS record editing (Tortoise Labs)
