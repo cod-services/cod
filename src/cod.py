@@ -285,6 +285,19 @@ class Cod():
 
         self.sendLine(":%s NOTICE %s :%s" % (self.client.uid, target, line))
 
+    def kill(self, target, source=None, message="Connection has been terminated."):
+        """
+        Wrapper function to kill off clients and remove their client data
+        """
+
+        if source is None:
+            source = self.client
+
+        self.sendLine(":%s KILL %s :spacing %s" % (source.uid,
+            target.uid, message))
+
+        self.clients.pop(target.uid)
+
     def join(self, channel, client=None):
         """
         Input: channel to join, client to join to the channel (default Cod
