@@ -45,8 +45,6 @@ def eqbeatsLookup(cod, line):
     if line.args[0] not in cod.channels:
         return
 
-    print "Got here"
-
     client = cod.clients[line.source]
     chatline = line.args[-1]
 
