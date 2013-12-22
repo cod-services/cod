@@ -193,6 +193,9 @@ class Cod():
         it is up to functions calling this to do so.
         """
 
+        if modname in self.modules:
+            return
+
         oldpath = list(sys.path)
         sys.path.insert(0, "modules/")
         sys.path.insert(1, "modules/protocol")
@@ -202,14 +205,9 @@ class Cod():
         sys.path.insert(5, "modules/services")
         sys.path.insert(6, "modules/announcer")
 
-        try:
-            self.modules[modname] = __import__(modname)
-            self.modules[modname].initModule(self)
-            self.log("Module %s loaded" % modname)
-
-        except Exception as e:
-            self.log("%s failed load because %s: %s" %\
-                    (modname, type(e), e.message))
+        self.modules[modname] = __import__(modname)
+        self.modules[modname].initModule(self)
+        self.log("Module %s loaded" % modname)
 
         sys.path[:] = oldpath
 
