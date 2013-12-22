@@ -204,6 +204,7 @@ class Cod():
         sys.path.insert(4, "modules/bot")
         sys.path.insert(5, "modules/services")
         sys.path.insert(6, "modules/announcer")
+        sys.path.insert(7, "modules/scrapers")
 
         self.modules[modname] = __import__(modname)
         self.modules[modname].initModule(self)
