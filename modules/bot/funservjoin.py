@@ -48,8 +48,11 @@ def handleNOTICE(cod, line):
     if cod.clients[line.source].nick.upper() == "FUNSERV":
         args = line.args[1].split()
         if args[0] == "JOIN":
-            if args[1] in cod.channels:
+            if args[1] not in cod.channels:
+                cod.servicesLog("I don't know what %s is", args[1])
                 return
+
+            cod.servicesLog("Asked to join %s" % args[1])
 
             cod.join(args[1])
             addtoDB(cod, "INSERT INTO Joins(Name) VALUES ('%s');" % args[1])
