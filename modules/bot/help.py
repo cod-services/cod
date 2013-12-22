@@ -41,5 +41,5 @@ def commandHELP(cod, line, splitline, source, destination):
         commandlist = commandlist + \
             " (%s)" % " ".join([n.lower() for n in cod.opercommands])
 
-    cod.reply(source, destination.uid, "Commands: %s" % commandlist)
+    cod.reply(source, destination, "Commands: %s" % commandlist)
 
