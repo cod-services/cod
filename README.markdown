@@ -1,9 +1,11 @@
 Cod
 ===
 
-Extended IRC services in Python
+Extended IRC services in Python [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/lyska/cod/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/lyska/cod/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+Installation directions are in `doc/INSTALL.markdown`. Directions for setting
+up Atheme integration are in `doc/funserv.markdown`. If you have any questions,
+please ask in `#cod` on `irc.yolo-swag.com`.
 
 ### Features:
  - Asynchronous socket handling
@@ -14,6 +16,7 @@ Extended IRC services in Python
  - Modular loading and unloading
  - No specific libc dependency (tested on glibc, uclibc and musl)
  - Rehashing config file
+ - Separation of user and oper commands
  - SQLite database
  - TS6 link protocol support
  - Virtual environment support
@@ -55,8 +58,6 @@ Extended IRC services in Python
  - Twitch.tv API lookups of video streams
  - Youtube API lookups and searching
 
-
-
 ### Goals:
  - DNS record editing (Tortoise Labs)
  - Feature-completeness with skybot
@@ -68,32 +69,6 @@ Extended IRC services in Python
 ### Stretch Goals:
  - Automated provisioning and linking of temporary overflow IRC daemons
  - Spam filtering (opt-in only)
-
-### Installation:
-1. Set up an IRC network using Charybdis, ShadowIRCD, elemental-ircd or any other
-   TS6 ircd. Note that regardless of what TS6 irc daemon you end up choosing,
-   your protocol module will have to be `elemental-ircd`.
-2. Create a link block like [this](https://gist.github.com/lyska/9c8a8e1a1102cbee61c7).
-3. Copy `etc/config.json.example` to a file of your choice.
-4. Set up an account for your pesudoservice inside your IRC services package.
-   This is needed for the automatic vhost rejection feature as well as many
-   others waiting to be written.
-5. Configure as needed for your deployment.
-6. Run `./cod /path/to/your/config.json`. By default it will use the `config.json`
-   in the current working directory.
-7. `@modload` the modules you want, a useful list is:
-
- * dnsbl
- * dnsblannounce
- * killannounce
- * killonfailoper
- * memusage
- * relayhostserv
- * resv
- * say
- * sendfile
- * twitchtv
- * youtube
 
 The official channel for Cod is `#cod` on `irc.yolo-swag.com`. Come take
 a visit and say hi!
