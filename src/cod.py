@@ -495,7 +495,10 @@ class Cod():
             #Handle server commands
             try:
                 for impl in self.s2scommands[lineobj.verb]:
-                    impl(cod, lineobj)
+                    try:
+                        impl(cod, lineobj)
+                    except Exception as e:
+                        continue
             except KeyError:
                 pass
 
