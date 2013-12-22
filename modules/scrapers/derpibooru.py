@@ -28,7 +28,7 @@ import re
 NAME="Derpibooru lookups"
 DESC="Derpibooru image info lookups"
 
-DERPI_REGEX = re.compile('(derpiboo.ru/)([\w-]+)')
+DERPI_REGEX = re.compile('(derpiboo(ru.org|.ru)/)([\w-]+)')
 
 def initModule(cod):
     cod.s2scommands["PRIVMSG"].append(derpiLookup)
@@ -53,7 +53,7 @@ def derpiLookup(cod, line):
     imageid = None
 
     try:
-        imageid = DERPI_REGEX.split(chatline)[2]
+        imageid = DERPI_REGEX.split(chatline)[3]
     except:
         return
 
