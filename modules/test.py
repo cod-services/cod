@@ -38,7 +38,7 @@ def initModule(cod):
     This function is called when the module is initialized. All bot or s2s
     commands must be declared here for them to be recognized.
     """
-    cod.botcommands["TEST"] = [testbotCommand]
+    cod.addBotCommand("TEST", testbotCommand)
     cod.s2scommands["TEST"] = [tests2sCommand]
 
 def destroyModule(cod):
@@ -46,7 +46,7 @@ def destroyModule(cod):
     This function is called when the module is being destroyed. All bot, s2s
     commands and any side effects must be deleted here.
     """
-    del cod.botcommands["TEST"]
+    cod.delBotCommand("TEST")
     del cod.s2scommands["TEST"]
 
 def rehash():
