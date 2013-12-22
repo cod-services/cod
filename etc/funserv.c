@@ -1,11 +1,3 @@
-/*
- * Copyright (c) 2005 William Pitcock, et al.
- * The rights to this code are as documented under doc/LICENSE.
- *
- * Meow!
- *
- */
-
 #include "atheme-compat.h"
 
 DECLARE_MODULE_V1
