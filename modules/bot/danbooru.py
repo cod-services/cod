@@ -45,7 +45,6 @@ def danboLookup(cod, line):
     if line.args[0] not in cod.channels:
         return
 
-    client = cod.clients[line.source]
     chatline = line.args[-1]
 
     if "danbooru" not in chatline:
