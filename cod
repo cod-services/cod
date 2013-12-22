@@ -72,7 +72,8 @@ if [ -x "$(which pypy-c)" ]; then
 fi
 
 echo "--- Cleaning up previous pyc files"
-rm -rf **/*.pyc
+rm -rf modules/**/*.pyc
+rm -rf src/**/*.pyc
 
 $PYTHON $MAIN $1
 
