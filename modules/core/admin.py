@@ -37,16 +37,16 @@ motd = []
 def initModule(cod):
     global motd
 
-    cod.botcommands["JOIN"] = [commandJOIN]
-    cod.botcommands["PART"] = [commandPART]
-    cod.botcommands["REHASH"] = [commandREHASH]
-    cod.botcommands["DIE"] = [commandDIE]
-    cod.botcommands["MODLOAD"] = [commandMODLOAD]
-    cod.botcommands["MODLIST"] = [commandMODLIST]
-    cod.botcommands["MODUNLOAD"] = [commandMODUNLOAD]
-    cod.botcommands["LISTCHANS"] = [commandLISTCHANS]
-    cod.botcommands["VERSION"] = [commandVERSION]
-    cod.botcommands["UPGRADE"] = [commandUPGRADE]
+    cod.addBotCommand("JOIN", commandJOIN, True)
+    cod.addBotCommand("PART", commandPART, True)
+    cod.addBotCommand("REHASH", commandREHASH, True)
+    cod.addBotCommand("DIE", commandDIE, True)
+    cod.addBotCommand("MODLOAD", commandMODLOAD, True)
+    cod.addBotCommand("MODLIST", commandMODLIST, True)
+    cod.addBotCommand("MODUNLOAD", commandMODUNLOAD, True)
+    cod.addBotCommand("LISTCHANS", commandLISTCHANS, True)
+    cod.addBotCommand("VERSION", commandVERSION, True)
+    cod.addBotCommand("UPGRADE", commandUPGRADE, True)
 
     cod.s2scommands["ENCAP"] = [logREHASH]
     cod.s2scommands["MOTD"] = [handleMOTD]
@@ -80,15 +80,15 @@ def initModule(cod):
 def destroyModule(cod):
     global motd
 
-    del cod.botcommands["JOIN"]
-    del cod.botcommands["PART"]
-    del cod.botcommands["REHASH"]
-    del cod.botcommands["DIE"]
-    del cod.botcommands["MODLOAD"]
-    del cod.botcommands["MODUNLOAD"]
-    del cod.botcommands["LISTCHANS"]
-    del cod.botcommands["VERSION"]
-    del cod.botcommands["UPGRADE"]
+    cod.delBotCommand("JOIN")
+    cod.delBotCommand("PART")
+    cod.delBotCommand("REHASH")
+    cod.delBotCommand("DIE")
+    cod.delBotCommand("MODLOAD")
+    cod.delBotCommand("MODUNLOAD")
+    cod.delBotCommand("LISTCHANS")
+    cod.delBotCommand("VERSION")
+    cod.delBotCommand("UPGRADE")
 
     idx = cod.s2scommands["ENCAP"].index(logREHASH)
     cod.s2scommands.pop(idx)
@@ -100,7 +100,7 @@ def rehash():
     pass
 
 def commandJOIN(cod, line, splitline, source, destination):
-    if failIfNotOper(cod, cod.client, cod.clients[source]):
+    if failIfNotOper(cod, cod.client, source):
         return
 
     if splitline[1][0] == "#":
@@ -112,7 +112,7 @@ def commandJOIN(cod, line, splitline, source, destination):
 
         cod.join(channel, cod.client)
 
-        client = cod.clients[source]
+        client = source
         cod.servicesLog("JOIN %s: %s" % (channel, client.nick))
         cod.notice(source, "I have joined %s" % channel)
 
@@ -122,13 +122,13 @@ def commandJOIN(cod, line, splitline, source, destination):
         cod.notice(source, "USAGE: JOIN #channel")
 
 def commandPART(cod, line, splitline, source, destination):
-     if failIfNotOper(cod, cod.client, cod.clients[source]):
+     if failIfNotOper(cod, cod.client, source):
          return
 
      if splitline[1][0] == "#":
         channel = splitline[1]
 
-        client = cod.clients[source]
+        client = source
         cod.servicesLog("PART %s: %s" % (channel, client.nick))
         cod.notice(source, "I have left %s" % channel)
 
@@ -140,19 +140,19 @@ def commandPART(cod, line, splitline, source, destination):
         cod.notice(source, "USAGE: PART #channel")
 
 def commandREHASH(cod, line, splitline, source, destination):
-    if failIfNotOper(cod, cod.client, cod.clients[source]):
+    if failIfNotOper(cod, cod.client, source):
         return
 
     cod.rehash()
 
-    client = cod.clients[source]
+    client = source
     cod.servicesLog("REHASH: %s" % client.nick)
 
 def commandDIE(cod, line, splitline, source, destination):
-    if failIfNotOper(cod, cod.client, cod.clients[source]):
+    if failIfNotOper(cod, cod.client, source):
         return
 
-    cod.servicesLog("DIE: %s" % cod.clients[source].nick)
+    cod.servicesLog("DIE: %s" % source.nick)
     cod.db.close()
     cod.sendLine(cod.client.quit())
 
@@ -161,7 +161,7 @@ def commandDIE(cod, line, splitline, source, destination):
     sys.exit()
 
 def commandMODLIST(cod, line, splitline, source, destination):
-    if failIfNotOper(cod, cod.client, cod.clients[source]):
+    if failIfNotOper(cod, cod.client, source):
         return
 
     for module in cod.modules:
@@ -170,7 +170,7 @@ def commandMODLIST(cod, line, splitline, source, destination):
     cod.notice(source, "End of module list, %d modules loaded" % len(cod.modules))
 
 def commandMODLOAD(cod, line, splitline, source, destination):
-    if failIfNotOper(cod, cod.client, cod.clients[source]):
+    if failIfNotOper(cod, cod.client, source):
         return
 
     if len(splitline) < 2:
@@ -191,10 +191,10 @@ def commandMODLOAD(cod, line, splitline, source, destination):
 
     addtoDB(cod, "INSERT INTO Moduleautoload(Name) VALUES ('%s');" % target)
 
-    cod.servicesLog("MODLOAD:%s: %s" % (target, cod.clients[source].nick))
+    cod.servicesLog("MODLOAD:%s: %s" % (target, source.nick))
 
 def commandMODUNLOAD(cod, line, splitline, source, destination):
-    if failIfNotOper(cod, cod.client, cod.clients[source]):
+    if failIfNotOper(cod, cod.client, source):
         return
 
     if len(splitline) < 2:
@@ -215,10 +215,10 @@ def commandMODUNLOAD(cod, line, splitline, source, destination):
 
     deletefromDB(cod, "DELETE FROM Moduleautoload WHERE Name = \"%s\";" % target)
 
-    cod.servicesLog("MODUNLOAD:%s: %s" % (target, cod.clients[source].nick))
+    cod.servicesLog("MODUNLOAD:%s: %s" % (target, source.nick))
 
 def commandLISTCHANS(cod, line, splitline, source, destination):
-    if failIfNotOper(cod, cod.client, cod.clients[source]):
+    if failIfNotOper(cod, cod.client, source):
         return
 
     rows = lookupDB(cod, "Joins")
@@ -250,7 +250,7 @@ def commandVERSION(cod, line, splitline, source, destination):
     cod.notice(source, "Cod version %s" % cod.version)
 
 def commandUPGRADE(cod, line, splitline, source, destination):
-    if failIfNotOper(cod, cod.client, cod.clients[source]):
+    if failIfNotOper(cod, cod.client, source):
         return
 
     p = subprocess.Popen(["git","pull"], stdout=subprocess.PIPE,
@@ -264,5 +264,5 @@ def commandUPGRADE(cod, line, splitline, source, destination):
         for line in output:
             cod.servicesLog(line.strip())
 
-    cod.servicesLog("%s: UPGRADE" % cod.clients[source].nick)
+    cod.servicesLog("%s: UPGRADE" % source.nick)
 

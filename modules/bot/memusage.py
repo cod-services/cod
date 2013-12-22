@@ -1,14 +1,18 @@
 import os
 import re
 
+"""
+Code from skybot
+"""
+
 NAME="memusage"
 DESC="Shows memory usage statistics"
 
 def initModule(cod):
-    cod.botcommands["MEM"] = [cmdMEM]
+    cod.addBotCommand("MEM", cmdMEM, True)
 
 def destroyModule(cod):
-    del cod.botcommands["MEM"]
+    cod.delBotCommand("MEM")
 
 def rehash():
     pass

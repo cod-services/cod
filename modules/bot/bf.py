@@ -10,10 +10,10 @@ NAME="Brainfuck interpreter"
 DESC="Interprets brainfuck programs"
 
 def initModule(cod):
-    cod.botcommands["BF"] = [bf_wrapper]
+    cod.addBotCommand("BF", bf_wrapper)
 
 def destroyModule(cod):
-    del cod.botcommands["BF"]
+    cod.delBotCommand("BF")
 
 def rehash():
     pass

@@ -33,12 +33,12 @@ DESC="Ponyfy words or phrases"
 def initModule(cod):
     global list_of_finds
 
-    cod.botcommands["PONIFY"] = [ponifyCMD]
+    cod.addBotCommand("PONIFY", ponifyCMD)
     list_of_finds = json.load(open("etc/ponifylist.json"))
     list_of_finds = list(map(lambda x: [bytes(s) for s in x[:2]], list_of_finds))
 
 def destroyModule(cod):
-    del cod.botcommands["PONIFY"]
+    cod.delBotCommand("PONIFY")
 
 def rehash():
     pass

@@ -248,7 +248,7 @@ def handleWHOIS(cod, line):
 
     cod.sendLine(":{0} 311 {1} {2} {3} {4} * :{5}".format(
         cod.sid, line.source, client.nick, client.user,
-                client.host, client.gecos))
+        client.host, client.gecos))
     cod.sendLine(":{0} 312 {1} {2} {3} :{4}".format(
         cod.sid, line.source, client.nick, cod.config["me"]["name"],
         cod.config["me"]["desc"]))
@@ -263,7 +263,7 @@ def handlePRIVMSG(cod, line):
     """
 
     destination = line.args[0]
-    source = line.source
+    source = cod.clients[line.source]
     line = line.args[-1]
     splitline = line.split()
 
@@ -285,9 +285,24 @@ def handlePRIVMSG(cod, line):
         return
 
     else:
+        destination = cod.clients[destination]
         command = splitline[0].upper()
 
+    #Guido, I am sorry.
     try:
+        if source.isOper:
+            for impl in cod.opercommands[command]:
+                try:
+                    if pm:
+                        impl(cod, line, splitline, source, source)
+                    else:
+                        impl(cod, line, splitline, source, destination)
+                except Exception as e:
+                    cod.servicesLog("%s: %s" % (type(e), e.message))
+        else:
+            raise KeyError
+
+    except KeyError as e:
         for impl in cod.botcommands[command]:
             try:
                 if pm:
@@ -295,9 +310,11 @@ def handlePRIVMSG(cod, line):
                 else:
                     impl(cod, line, splitline, source, destination)
             except Exception as e:
-                cod.servicesLog("%s: %s" % (type(e), e))
+                cod.servicesLog("%s: %s" % (type(e), e.message))
     except KeyError as e:
-        pass
+        return
+    except Exception as e:
+        cod.servicesLog("%s: %s" % (type(e), e.message))
 
 def handleERROR(cod, line):
     """

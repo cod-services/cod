@@ -35,10 +35,10 @@ def initModule(cod):
 
     apikey = cod.config["apikeys"]["worldweatheronline"]
 
-    cod.botcommands["WEATHER"] = [commandWEATHER]
+    cod.addBotCommand("WEATHER", commandWEATHER)
 
 def destroyModule(cod):
-    del cod.botcommands["WEATHER"]
+    cod.delBotCommand("WEATHER")
 
 def commandWEATHER(cod, line, splitline, source, destination):
     global apikey

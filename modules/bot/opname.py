@@ -30,7 +30,7 @@ def initModule(cod):
             ix[junk] = ix[junk].strip()
 
     #Register bot command
-    cod.botcommands["OPNAME"] = [commandOPNAME]
+    cod.addBotCommand("OPNAME", commandOPNAME)
 
 def destroyModule(cod):
     global prefix, suffix
@@ -38,7 +38,7 @@ def destroyModule(cod):
     del prefix
     del suffix
 
-    del cod.botcommands["OPNAME"]
+    cod.delBotCommand("OPNAME")
 
 def rehash():
     pass

@@ -3,11 +3,15 @@
 NAME="fibbonacci number generator"
 DESC="Outputs fibbonacci numbers"
 
+"""
+Code taken from wikipedia
+"""
+
 def initModule(cod):
-    cod.botcommands["FIB"] = [fibCMD]
+    cod.addBotCommand("FIB", fibCMD)
 
 def destroyModule(cod):
-    del cod.botcommands["FIB"]
+    cod.delBotCommand("FIB")
 
 def rehash():
     pass

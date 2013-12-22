@@ -70,6 +70,7 @@ class Cod():
 
         self.s2scommands = {"PRIVMSG": []}
         self.botcommands = {}
+        self.opercommands = {}
 
         self.bursted = False
         self.db = None
@@ -170,7 +171,7 @@ class Cod():
         """
         Returns a server ID number based on the string provided, default is
         the configured server name and description, much like how inpsircd
-        does SID generation..
+        does SID generation.
         """
 
         if string is None:
@@ -201,9 +202,14 @@ class Cod():
         sys.path.insert(5, "modules/services")
         sys.path.insert(6, "modules/announcer")
 
-        self.modules[modname] = __import__(modname)
-        self.modules[modname].initModule(self)
-        self.log("Module %s loaded" % modname)
+        try:
+            self.modules[modname] = __import__(modname)
+            self.modules[modname].initModule(self)
+            self.log("Module %s loaded" % modname)
+
+        except Exception as e:
+            self.log("%s failed load because %s: %s" %\
+                    (modname, type(e), e.message))
 
         sys.path[:] = oldpath
 
@@ -224,6 +230,30 @@ class Cod():
         gc.collect()
 
         self.log("Module %s unloaded" % modname)
+
+    def addBotCommand(self, command, func, oper=False):
+        """
+        Adds a botcommand to the bot commands table, optionally adding it
+        to the special table full of oper-only commands.
+        """
+
+        wheretoadd = self.botcommands
+
+        if oper:
+            wheretoadd = self.opercommands
+
+        wheretoadd[command] = [func]
+
+    def delBotCommand(self, command):
+        """
+        Removes a bot command from the oper-only and normal user level bot commands
+        tables if applicable
+        """
+
+        try:
+            del self.botcommands[command]
+        except KeyError:
+            del self.opercommands[command]
 
     def rehash(self):
         """

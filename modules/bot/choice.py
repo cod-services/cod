@@ -29,10 +29,10 @@ NAME="Choice bot command"
 DESC="Picks from a user-supplied, comma-delineated list of things"
 
 def initModule(cod):
-    cod.botcommands["CHOICE"] = [commandCHOICE]
+    cod.addBotCommand("CHOICE", commandCHOICE)
 
 def destroyModule(cod):
-    del cod.botcommands["CHOICE"]
+    cod.delBotCommand("CHOICE")
 
 def rehash():
     pass

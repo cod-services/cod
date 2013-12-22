@@ -30,10 +30,10 @@ NAME="FPD checker"
 DESC="Checks a flash policy daemon"
 
 def initModule(cod):
-    cod.botcommands["FPDTEST"] = [fpdtestCMD]
+    cod.addBotCommand("FPDTEST", fpdtestCMD, True)
 
 def destroyModule(cod):
-    del cod.botcommands["FPDTEST"]
+    cod.delBotCommand("FPDTEST")
 
 def rehash():
     pass

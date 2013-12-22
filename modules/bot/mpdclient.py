@@ -44,7 +44,7 @@ def initModule(cod):
 
     cod.log("done", "===")
 
-    cod.botcommands["MPD"] = [commandMPD]
+    cod.addBotCommand("MPD", commandMPD)
 
 def destroyModule(cod):
     global mpd
@@ -57,7 +57,7 @@ def destroyModule(cod):
     except ConnectionError as e:
         pass
 
-    del cod.botcommands["MPD"]
+    cod.delBotCommand("MPD")
     del mpd
 
 def rehash():

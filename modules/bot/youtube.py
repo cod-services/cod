@@ -32,11 +32,11 @@ YOUTUBE_REGEX = re.compile('(youtube.com/watch\S*v=|youtu.be/)([\w-]+)')
 
 def initModule(cod):
     cod.s2scommands["PRIVMSG"].append(youtubeLookup)
-    cod.botcommands["YT"] = [youtubeSearch]
+    cod.addBotCommand("YT", youtubeSearch)
 
 def destroyModule(cod):
     cod.s2scommands["PRIVMSG"].remove(youtubeLookup)
-    del cod.botcommands["YT"]
+    cod.delBotCommand("YT")
 
 def rehash():
     pass

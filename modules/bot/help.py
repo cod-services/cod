@@ -26,16 +26,20 @@ NAME="Help command"
 DESC="Lol, as if there's help yet."
 
 def initModule(cod):
-    cod.botcommands["HELP"] = [commandHELP]
+    cod.addBotCommand("HELP", commandHELP)
 
 def destroyModule(cod):
-    del cod.botcommands["HELP"]
+    cod.delBotCommand("HELP")
 
 def rehash():
     pass
 
 def commandHELP(cod, line, splitline, source, destination):
-    commandlist = " ".join(cod.botcommands)
+    commandlist = " ".join([n.lower() for n in cod.botcommands])
 
-    cod.reply(source, destination, "Commands: %s" % commandlist)
+    if source.isOper:
+        commandlist = commandlist + \
+            " (%s)" % " ".join([n.lower() for n in cod.opercommands])
+
+    cod.reply(source, destination.uid, "Commands: %s" % commandlist)
 

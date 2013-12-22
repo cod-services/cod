@@ -29,10 +29,10 @@ import requests
 from bs4 import BeautifulSoup
 
 def initModule(cod):
-    cod.botcommands["TFW"] = [commandTFW]
+    cod.addBotCommand("TFW", commandTFW)
 
 def destroyModule(cod):
-    del cod.botcommands["TFW"]
+    cod.delBotCommand("TFW")
 
 def commandTFW(cod, line, splitline, source, destination):
     location = " ".join(splitline[1:])

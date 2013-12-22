@@ -60,7 +60,7 @@ def initModule(cod):
             ix[junk] = ix[junk].strip()
 
     #Register bot commands
-    cod.botcommands["OFC"] = [ofc]
+    cod.addBotCommand("OFC", ofc, True)
 
 def destroyModule(cod):
     global prefix, suffix, slaves

@@ -28,10 +28,10 @@ DESC="Sends arbitrary text to a channel"
 from utils import *
 
 def initModule(cod):
-    cod.botcommands["SAY"] = [say]
+    cod.addBotCommand("SAY", say, True)
 
 def destroyModule(cod):
-    del cod.botcommands["SAY"]
+    cod.delBotCommand("SAY")
 
 def rehash():
     pass
