@@ -62,9 +62,11 @@ def redditLookup(cod, line):
         title = info[0]["data"]["children"][0]["data"]["title"]
         board = info[0]["data"]["children"][0]["data"]["subreddit"]
         author = info[0]["data"]["children"][0]["data"]["author"]
-        link = " - URL: %s" % info[0]["data"]["children"][0]["data"]["url"]
+        url = info[0]["data"]["children"][0]["data"]["url"]
 
-        if link.startswith("http://www.reddit.com"):
+        link = " - URL: %s" % url
+
+        if url in chatline:
             link = ""
 
         string = "^ Reddit: %s posted to %s: %s%s" %\
