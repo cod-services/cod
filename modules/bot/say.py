@@ -40,5 +40,5 @@ def say(cod, line, splitline, source, destination):
     cod.privmsg(splitline[1], " ".join(splitline[2:]))
 
     cod.servicesLog("SAY: %s to %s" %
-            (cod.clients[source].nick, splitline[1]))
+            (source.nick, splitline[1]))
 
