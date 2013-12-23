@@ -95,7 +95,8 @@ def commandMPD(cod, line, splitline, source, destination):
             cod.notice(source, "%s -- %s" % \
                     (result["artist"], result["title"]))
 
-    if failIfNotOper(cod, cod.client, cod.clients[source]):
+    if not source.isOper:
+        cod.notice(source, "Permission denied.")
         return
 
     if splitline[1].upper() == "NEXT":

@@ -65,9 +65,6 @@ def rehash():
 def commandFAQ(cod, line, splitline, source, destination):
     global client
 
-    if failIfNotOper(cod, client, cod.clients[source]):
-        return
-
     if len(splitline) < 2:
         cod.notice(source, "At least 2 parameters needed", client)
         return

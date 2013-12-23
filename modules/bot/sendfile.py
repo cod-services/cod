@@ -37,9 +37,6 @@ def rehash():
     pass
 
 def sendfileCMD(cod, line, splitline, source, destination):
-    if failIfNotOper(cod, cod.client, cod.clients[source]):
-        return
-
     if len(splitline) < 3:
         cod.reply(source, destination, "SENDFILE <target> <path>")
         return

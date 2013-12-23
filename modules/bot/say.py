@@ -37,9 +37,6 @@ def rehash():
     pass
 
 def say(cod, line, splitline, source, destination):
-    if failIfNotOper(cod, cod.client, cod.clients[source]):
-        return
-
     cod.privmsg(splitline[1], " ".join(splitline[2:]))
 
     cod.servicesLog("SAY: %s to %s" %

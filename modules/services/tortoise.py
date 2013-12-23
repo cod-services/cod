@@ -74,7 +74,7 @@ def handleMessages(cod, line):
     splitline = line.split()
 
     if splitline[0].upper() == "POOL":
-        if failIfNotOper(cod, client, cod.clients[line.source]):
+        if failIfNotOper(cod, client, line.source):
             return
 
         auth = (cod.config["tortoiselabs"]["username"],

@@ -40,9 +40,6 @@ def rehash():
     pass
 
 def commandRBL(cod, line, splitline, source, destination):
-    if failIfNotOper(cod, cod.client, cod.clients[source]):
-        return
-
     if len(splitline) < 2:
         cod.notice(source, "USAGE: RBL [nick or IP address to scan]")
         return
@@ -66,7 +63,7 @@ def commandRBL(cod, line, splitline, source, destination):
 
         target = client.ip
 
-    cod.servicesLog("RBL: %s: %s" % (target, cod.clients[source].nick))
+    cod.servicesLog("RBL: %s: %s" % (target, source.nick))
 
     search = rblwatch.RBLSearch(cod, target)
 
