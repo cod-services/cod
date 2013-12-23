@@ -62,9 +62,13 @@ def redditLookup(cod, line):
         title = info[0]["data"]["children"][0]["data"]["title"]
         board = info[0]["data"]["children"][0]["data"]["subreddit"]
         author = info[0]["data"]["children"][0]["data"]["author"]
+        link = " - URL: %s" % info[0]["data"]["children"][0]["data"]["url"]
 
-        string = "^ Reddit: %s posted to %s: %s" %\
-                (author, board, title)
+        if link.startswith("http://www.reddit.com"):
+            link = ""
+
+        string = "^ Reddit: %s posted to %s: %s%s" %\
+                (author, board, title, link)
 
         cod.privmsg(line.args[0], string)
     except Exception as e:
