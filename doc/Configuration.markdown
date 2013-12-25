@@ -19,7 +19,7 @@ will suffice, but your needs may vary.
 Basic configuration about Cod
 
 | Name | Description | Type |
-|:--- |:----------:| -------:|
+|:--- |:---------- | -------:|
 | `name` | TS6 pesudoserver name, must match value in C/N lines of ircd.conf | string |
 | `desc` | Server description and client gecos | string |
 | `nick` | Pseudoclient nick | string |
@@ -35,7 +35,7 @@ Basic configuration about Cod
 Information about the uplink ircd
 
 | Name | Description | Type   |
-|:---- |:-----------:| ------:|
+|:---- |:----------- | ------:|
 | `host` | Hostname of the uplink ircd | string |
 | `port` | Portnumber to connect to | integer |
 | `pass` | Password to send to the remote ircd | string |
@@ -47,7 +47,7 @@ Information about the uplink ircd
 Various other settings
 
 | Name | Description | Type   |
-|:---- |:-----------:| ------:|
+|:---- |:----------- | ------:|
 | `debug` | Whether or not to log/print all lines sent to and recieved from the server. Don't enable in production. | boolean |
 | `production` | Whether or not to fork to the background | boolean |
 | `snoopchan` | The channel that Cod will log all administrative actions or unexpected exceptions to | string |
@@ -62,6 +62,7 @@ Various other settings
 The `mpdclient` module uses a `mpd` block for its configuration parameters.
 
 | Name | Description | Type |
+|:---- |:----------- | ------:|
 | `host` | MPD server to connect to | string |
 | `port` | Port that MPD is listening on | integer |
 
@@ -75,6 +76,7 @@ of service prohibits publci distribution of them.
 The API key goes in the `apikeys` block.
 
 | Name | Descrption | Type |
+|:---- |:----------- | ------:|
 | `worldweatheronline` | WorldWeatherOnline API key | string |
 
 ### `services/faq`
@@ -83,6 +85,7 @@ The `faq` module defines its own pesudoclient. As such it needs to have informat
 set about it.
 
 | Name | Description | Type |
+|:---- |:----------- | ------:|
 | `nick` | Nickname for FAQ client | string |
 | `user` | Ident for FAQ client | string |
 | `host` | Vhost for FAQ client | string |
