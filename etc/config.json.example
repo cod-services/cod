@@ -1,6 +1,6 @@
-
-"me": {
-	"name": "ardreth.shadownet.int",
+{
+	"me": {
+		"name": "ardreth.shadownet.int",
 		"desc": "Cod fishy",
 		"nick": "Cod",
 		"user": "fish",
@@ -11,7 +11,7 @@
 
 		"motd": "etc/cod.motd",
 		"dbpath": "var/cod.db"
-},
+	},
 
 	"uplink": {
 		"host": "127.0.0.1",
