@@ -74,6 +74,9 @@ source env/bin/activate
 if [ -x "$(which pypy-c)" ]; then
 	PYTHON=pypy-c
 	echo "!!! pypy-c found! Cod will run much faster!"
+elif [ -x "$(which pypy)" ]; then
+	PYTHON=pypy
+	echo "!!! pypy found! Cod will run much faster!"
 fi
 
 echo "--- Cleaning up previous pyc files"
