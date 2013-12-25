@@ -35,7 +35,7 @@ def rehash():
     pass
 
 def prettyPrintMessages(cod, line):
-    client = cod.clients[line.source]
+    client = line.source
 
     try:
         cod.log(u"{0}: <{1}> {2}".format(line.args[0], client.nick, line.args[-1]), "MSG")
