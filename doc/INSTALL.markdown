@@ -6,7 +6,8 @@
    TS6 ircd. Note that regardless of what TS6 irc daemon you end up choosing,
    your protocol module will have to be `elemental-ircd`.
 2. Create a link block like [this](https://gist.github.com/lyska/9c8a8e1a1102cbee61c7).
-3. Copy `etc/config.json.example` to a file of your choice.
+3. Copy `etc/config.json.example` to a file of your choice. Read `Configuration.markdown`
+   for more detailed explanation about each of the configuration elements.
 4. Set up an account for your pesudoservice inside your IRC services package.
    This is needed for the automatic vhost rejection feature as well as many
    others waiting to be written.
@@ -28,5 +29,5 @@
  * twitchtv
  * youtube
 
-The weather script will require an API key from [WorldWeatherOnline](http://worldweatheronline.com).
+The weather script will require a free API key from [WorldWeatherOnline](http://worldweatheronline.com).
 

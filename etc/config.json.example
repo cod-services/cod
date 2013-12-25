@@ -1,4 +1,4 @@
-{
+
     "me": {
         "name": "ardreth.shadownet.int",
         "desc": "Cod fishy",
@@ -57,5 +57,9 @@
     "tortoiselabs": {
         "username": "herpenderp",
         "apikey": "asdfasdf"
+    },
+
+    "apikeys": {
+            "worldweatheronline": "asdfasdfasdfasdf"
     }
 }
