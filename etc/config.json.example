@@ -1,65 +1,65 @@
 
-    "me": {
-        "name": "ardreth.shadownet.int",
-        "desc": "Cod fishy",
-        "nick": "Cod",
-        "user": "fish",
-        "host": "blub.blub",
-        "servicespass": "FsmaCapyRCfZzeRndmHBteGdm1jGpnOPmLNHMINiulmZTDDNDPEiJHajLEJFeeGbTcDNrGqsEEthkrJGTGEDF3pyjFgiYMxCJJeX",
+"me": {
+	"name": "ardreth.shadownet.int",
+		"desc": "Cod fishy",
+		"nick": "Cod",
+		"user": "fish",
+		"host": "blub.blub",
+		"servicespass": "FsmaCapyRCfZzeRndmHBteGdm1jGpnOPmLNHMINiulmZTDDNDPEiJHajLEJFeeGbTcDNrGqsEEthkrJGTGEDF3pyjFgiYMxCJJeX",
 
-        "prefix": "@",
+		"prefix": "@",
 
-        "motd": "etc/cod.motd",
-        "dbpath": "var/cod.db"
-    },
+		"motd": "etc/cod.motd",
+		"dbpath": "var/cod.db"
+},
 
-    "uplink": {
-        "host": "127.0.0.1",
-        "port": 6667,
-        "pass": "dev",
-        "ssl": false,
-        "protocol": "elemental-ircd"
-    },
+	"uplink": {
+		"host": "127.0.0.1",
+		"port": 6667,
+		"pass": "dev",
+		"ssl": false,
+		"protocol": "elemental-ircd"
+	},
 
-    "dns": {
-        "pool": "irc.example.com",
-        "name": "example.com",
-        "nick": "DNSServ",
-        "user": "DNSServ",
-        "host": "services.example.com",
-        "gecos": "DNS Services"
-    },
+	"dns": {
+		"pool": "irc.example.com",
+		"name": "example.com",
+		"nick": "DNSServ",
+		"user": "DNSServ",
+		"host": "services.example.com",
+		"gecos": "DNS Services"
+	},
 
-    "mpd": {
-        "host": "127.0.0.1",
-        "port": 6600,
-        "channel": "#sparkleradio"
-    },
+	"mpd": {
+		"host": "127.0.0.1",
+		"port": 6600,
+		"channel": "#sparkleradio"
+	},
 
-    "etc": {
-        "debug": false,
-        "production": true,
-        "snoopchan": "#services",
-        "staffchan": "#opers",
-        "helpchan": "#help",
-        "prefixfile": "etc/prefix.txt",
-        "suffixfile": "etc/suffix.txt",
-        "logfile": "var/cod.log"
-    },
+	"etc": {
+		"debug": false,
+		"production": true,
+		"snoopchan": "#services",
+		"staffchan": "#opers",
+		"helpchan": "#help",
+		"prefixfile": "etc/prefix.txt",
+		"suffixfile": "etc/suffix.txt",
+		"logfile": "var/cod.log"
+	},
 
-    "faq": {
-        "nick": "FAQServ",
-        "user": "faq",
-        "host": "services.example.com",
-        "gecos": "FAQ Service"
-    },
+	"faq": {
+		"nick": "FAQServ",
+		"user": "faq",
+		"host": "services.example.com",
+		"gecos": "FAQ Service"
+	},
 
-    "tortoiselabs": {
-        "username": "herpenderp",
-        "apikey": "asdfasdf"
-    },
+	"tortoiselabs": {
+		"username": "herpenderp",
+		"apikey": "asdfasdf"
+	},
 
-    "apikeys": {
-            "worldweatheronline": "asdfasdfasdfasdf"
-    }
+	"apikeys": {
+		"worldweatheronline": "asdfasdfasdfasdf"
+	}
 }
