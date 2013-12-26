@@ -1,6 +1,10 @@
 argparse==1.2.1
+beautifulsoup4==4.3.2
+distribute==0.6.24
 dnspython==1.11.1
 pydns==2.3.6
+pykemon==0.1.1
 python-mpd2==0.5.1
-requests==2.0.0
+requests==2.0.1
+simplejson==3.3.1
 wsgiref==0.1.2
