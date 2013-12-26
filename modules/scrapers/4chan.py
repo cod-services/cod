@@ -67,7 +67,7 @@ def fourchanLookup(cod, line):
         text = text.replace('<span class="quote">&gt;', ">")
         text = text.replace("</span>", "")
 
-        string = "^ fourchan: %s on /%s/ - %s" %\
+        string = "^ 4chan: %s on /%s/ - %s" %\
                 (info["posts"][0]["name"], board, text)
 
         cod.privmsg(line.args[0], string)
