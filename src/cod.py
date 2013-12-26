@@ -100,6 +100,9 @@ class Cod():
             self.link = ssl.wrap_socket(self.link)
             self.log("SSL enabled")
 
+        #pid value
+        self.pid = os.getpid()
+
         self.log("Initializing Database")
 
         self.db = lite.connect(self.config["me"]["dbpath"])
@@ -444,10 +447,34 @@ class Cod():
         self.buf = ""
 
         while True:
-            inputready, outputready, execeptready = select(self.socks,[],[])
+            try:
+                inputready, outputready, execeptready = select(self.socks,[],[])
 
-            for s in inputready:
-                self.sockhandlers[s]([cod, s])
+                for s in inputready:
+                    self.sockhandlers[s]([cod, s])
+            except KeyboardInterrupt:
+                print " <-- Control-C pressed, dying"
+                self.servicesLog("DIE: KEYBOARD")
+
+                self.db.close()
+                self.sendLine(self.client.quit())
+
+                for module in self.modules:
+                    if module == "elemental-ircd":
+                        continue
+                    elif module == "admin":
+                        continue
+                    try:
+                        self.modules[module].destroyModule(self)
+                    except Exception:
+                        print "Lol can't unload %s" % module
+
+                self.sendLine("SQUIT :Killed.")
+
+                os.system("killall %d" % self.pid)
+
+                sys.exit()
+
 
         self.log("Oh, I am slain.")
 

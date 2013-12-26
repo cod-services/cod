@@ -76,7 +76,7 @@ def destroyModule(cod):
     del prefix
     del suffix
 
-    del cod.botcommands["OFC"]
+    cod.delBotCommand("OFC")
 
 def rehash():
     pass
