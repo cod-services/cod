@@ -75,7 +75,7 @@ def countUsers(cod, func, interval):
 
     cod.log("CLIENTS: %d" % len(cod.clients))
 
-    myRRD.bufferValue(`int(time.time())`, len(cod.clients))
+    myRRD.bufferValue(int(time.time()), len(cod.clients))
     myRRD.update()
 
     refresh(cod, func, interval)
