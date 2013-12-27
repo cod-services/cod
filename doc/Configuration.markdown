@@ -57,6 +57,15 @@ Various other settings
 
 ## Module-spefific configuration blocks
 
+Some modules need to add configuration keys to existing blocks. The shorthand
+syntax `level::name` expands to:
+
+```javascript
+"level": {
+	"name": "foo"
+}
+```
+
 ### `bot/mpdclient`
 
 The `mpdclient` module uses a `mpd` block for its configuration parameters.
@@ -75,6 +84,17 @@ Example:
 },
 ```
 
+### `bot/opname`
+
+The `opname` module needs prefix and suffix files, which conveniently are
+shipped in every base distribution of Cod. The `services/ofc` module also uses
+these files.
+
+| Name | Description | Example | Type |
+|:---- |:----------- |:------- | ----:|
+| `etc::prefixfile` | List of prefixes for the military operation name generator | `"etc/prefix.txt"` | string |
+| `etc::suffixfile` | List of suffixes for the military operation name generator | `"etc/suffix.txt"` | string |
+
 ### `bot/weather`
 
 The `weather` module needs an API key from
@@ -84,9 +104,9 @@ of service prohibits publci distribution of them.
 
 The API key goes in the `apikeys` block.
 
-| Name | Descrption | Type |
-|:---- |:----------- | ------:|
-| `worldweatheronline` | WorldWeatherOnline API key | string |
+| Name | Descrption | Example | Type |
+|:---- |:---------- |:------- | ----:|
+| `apikeys::worldweatheronline` | WorldWeatherOnline API key | `"asdfewsdf"` | string |
 
 ### `services/faq`
 
