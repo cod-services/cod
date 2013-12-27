@@ -18,7 +18,8 @@ def rehash():
     pass
 
 def cmdMEM(cod, line, splitline, source, destination):
-    cod.reply(source, destination, mem())
+    cod.reply(source, destination, mem() + " %d clients, %d channels" %\
+            (len(cod.clients), len(cod.channels)))
 
 def mem():
     status_file = open("/proc/%d/status" % os.getpid()).read()
