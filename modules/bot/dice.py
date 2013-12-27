@@ -92,6 +92,6 @@ def destroyModule(cod):
 def diceWrapper(cod, line, splitline, source, destination):
     try:
         cod.reply(source, destination, dice(" ".join(splitline[1:])))
-    except IndexError:
+    except AttributeError:
         cod.reply(source, destination, "dice <diceroll> -- simulates dicerolls, e.g. .dice 2d20-d5+4 roll 2 D20s, subtract 1D5, add 4")
 
