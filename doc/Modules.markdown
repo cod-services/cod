@@ -61,6 +61,7 @@ Announces RESV use and logs it.
 | `bf` | `BF` | No | A simple brainfuck interepreter for one-line experimentation. |
 | `btc` | `BTC` | No | Grabs the latest prices from MTGox. |
 | `choice` | `CHOICE` | No | Randomly chooses from a list of one or more comma-seperated choices. |
+| `dice` | `DICE` | No | Simulates dice rolls |
 | `dnsbl` | `RBL` | Yes | Does DNSBL lookups on arbitrary users or IP addresses. |
 | `fibbonacci` | `FIB` | No | A memoizing fibbonacci calculator. |
 | `fpdtest` | `FPDTEST` | Yes | A flash policy daemon tester. |
