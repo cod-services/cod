@@ -3,6 +3,7 @@
 The modules in Cod are separated into seven types:
 
 | Type | Description |
+|:---- |:----------- |
 | `announcer` | Modules that listen for protocol/services events and announce them to operators. |
 | `bot` | Pseudoclient commands for users. |
 | `core` | Core functionality for administrators and users. |
