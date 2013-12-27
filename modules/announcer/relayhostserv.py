@@ -80,6 +80,10 @@ def relayHostServToOpers(cod, line):
                     return
 
             for frag in splithost:
+                #don't look up "to", "a", etc
+                if len(frag) < 3:
+                    continue
+
                 if len(frag) < 7:
                     frag = "*%s*" % frag
                 else:
