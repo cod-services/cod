@@ -23,7 +23,7 @@ freely, subject to the following restrictions:
 """
 
 NAME="Help command"
-DESC="Lol, as if there's help yet."
+DESC="Shows commands and does lookups on them."
 
 def initModule(cod):
     cod.addBotCommand("HELP", commandHELP)
@@ -35,11 +35,35 @@ def rehash():
     pass
 
 def commandHELP(cod, line, splitline, source, destination):
-    commandlist = " ".join([n.lower() for n in cod.botcommands])
+    """Does help lookups on other commands"""
+    if len(splitline) < 2:
+        commands = [n.lower() for n in cod.botcommands]
+        commands.sort()
 
-    if source.isOper:
-        commandlist = commandlist + \
-            " (%s)" % " ".join([n.lower() for n in cod.opercommands])
+        commandlist = " ".join(commands)
 
-    cod.reply(source, destination, "Commands: %s" % commandlist)
+        if source.isOper:
+            opercmds = [n.lower() for n in cod.opercommands]
+            opercmds.sort()
+
+            commandlist = commandlist + \
+                " (%s)" % " ".join(opercmds)
+
+        cod.reply(source, destination, "Commands: %s" % commandlist)
+    else:
+        splitline[1] = splitline[1].upper()
+        try:
+            assert str(cod.botcommands[splitline[1]].__doc__) != None
+            cod.reply(source, destination, "%s: %s" %\
+                    (splitline[1], cod.botcommands[splitline[1]][0].__doc__))
+        except IndexError:
+            try:
+                if source.isOper:
+                    assert str(cod.botcommands[splitline[1]].__doc__) != "None"
+                    cod.reply(source, destination, "%s: %s" %\
+                            (splitline[1], cod.botcommands[splitline[1]][0].__doc__))
+                else:
+                    cod.reply(source, destination, "No help available for %s." % splitline[1])
+            except IndexError:
+                cod.reply(source, destination, "No help available for %s." % splitline[1])
 
