@@ -56,6 +56,8 @@ def rehash():
     """
 
 def testbotCommand(cod, line, splitline, source, destination):
+    "A simple test command"
+
     """
     A bot command takes in 5 arguments:
 
