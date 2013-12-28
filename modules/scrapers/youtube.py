@@ -69,6 +69,8 @@ def youtubeLookup(cod, line):
         cod.privmsg(line.args[0], "There was some error looking up that video: %s" % e.message)
 
 def youtubeSearch(cod, line, splitline, source, destination):
+    "Params: string to query youtube for"
+
     search = " ".join(splitline[1:])
 
     try:
