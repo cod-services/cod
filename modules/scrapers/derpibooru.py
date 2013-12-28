@@ -63,8 +63,9 @@ def derpiLookup(cod, line):
         tags = info["tags"]
         nsfw = "explicit" in tags
 
-        string = "^ Derpibooru: %s - Score: %s (+%s -%s) - %s" % (info["tags"],
-                info["score"], info["upvotes"], info["downvotes"], "NSFW" if nsfw else "SFW")
+        string = "^ Derpibooru: [%s] %s - Score: %s (+%s -%s)" %\
+                ("NSFW" if nsfw else "SFW", info["tags"], info["score"],
+                        info["upvotes"], info["downvotes"])
 
         cod.privmsg(line.args[0], string)
     except Exception as e:
