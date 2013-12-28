@@ -100,6 +100,8 @@ def rehash():
     pass
 
 def commandJOIN(cod, line, splitline, source, destination):
+    "Makes Cod join a channel. This does not check bans."
+
     if splitline[1][0] == "#":
         channel = splitline[1]
 
@@ -119,7 +121,9 @@ def commandJOIN(cod, line, splitline, source, destination):
         cod.notice(source, "USAGE: JOIN #channel")
 
 def commandPART(cod, line, splitline, source, destination):
-     if splitline[1][0] == "#":
+    "Makes Cod leave a cahnnel."
+
+    if splitline[1][0] == "#":
         channel = splitline[1]
 
         client = source
@@ -130,16 +134,20 @@ def commandPART(cod, line, splitline, source, destination):
 
         deletefromDB(cod, "DELETE FROM Joins WHERE Name = \"%s\"" % channel)
 
-     else:
+    else:
         cod.notice(source, "USAGE: PART #channel")
 
 def commandREHASH(cod, line, splitline, source, destination):
+    "Rehashes Cod's configuration file from the disk."
+
     cod.rehash()
 
     client = source
     cod.servicesLog("REHASH: %s" % client.nick)
 
 def commandDIE(cod, line, splitline, source, destination):
+    "Kills off Cod"
+
     cod.servicesLog("DIE: %s" % source.nick)
     cod.db.close()
     cod.sendLine(cod.client.quit())
@@ -149,12 +157,16 @@ def commandDIE(cod, line, splitline, source, destination):
     sys.exit()
 
 def commandMODLIST(cod, line, splitline, source, destination):
+    "Sends information about currently running modules to the oper requesting it."
+
     for module in cod.modules:
         cod.notice(source, "%s: %s" % (cod.modules[module].NAME, cod.modules[module].DESC))
 
     cod.notice(source, "End of module list, %d modules loaded" % len(cod.modules))
 
 def commandMODLOAD(cod, line, splitline, source, destination):
+    "Makes Cod try to load a module."
+
     if len(splitline) < 2:
         cod.notice(source, "Need name of module")
         return
@@ -176,6 +188,8 @@ def commandMODLOAD(cod, line, splitline, source, destination):
     cod.servicesLog("MODLOAD:%s: %s" % (target, source.nick))
 
 def commandMODUNLOAD(cod, line, splitline, source, destination):
+    "Makes Cod unload a module."
+
     if len(splitline) < 2:
         cod.notice(source, "Need name of module")
         return
@@ -197,6 +211,8 @@ def commandMODUNLOAD(cod, line, splitline, source, destination):
     cod.servicesLog("MODUNLOAD:%s: %s" % (target, source.nick))
 
 def commandLISTCHANS(cod, line, splitline, source, destination):
+    "Lists all the channels Cod is set to autojoin."
+
     rows = lookupDB(cod, "Joins")
 
     if rows == []:
@@ -223,9 +239,13 @@ def handleMOTD(cod, line):
     cod.notice(line.source, "End of /MOTD")
 
 def commandVERSION(cod, line, splitline, source, destination):
+    "Shows Cod's version information."
+
     cod.notice(source, "Cod version %s" % cod.version)
 
 def commandUPGRADE(cod, line, splitline, source, destination):
+    "Updrace Cod's code on the disk without reloading anything."
+
     p = subprocess.Popen(["git","pull"], stdout=subprocess.PIPE,
             stderr=subprocess.PIPE)
 

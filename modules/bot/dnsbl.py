@@ -40,6 +40,8 @@ def rehash():
     pass
 
 def commandRBL(cod, line, splitline, source, destination):
+    "USAGE: RBL [nick or IP address to scan]"
+
     if len(splitline) < 2:
         cod.notice(source, "USAGE: RBL [nick or IP address to scan]")
         return

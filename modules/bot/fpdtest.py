@@ -39,6 +39,8 @@ def rehash():
     pass
 
 def fpdtestCMD(cod, line, splitline, source, destination):
+    "Usage: FPDTEST <server to test> <port>"
+
     if len(splitline) < 3:
         cod.reply(source, destination, "Usage: FPDTEST <server to test> <port>")
         return

@@ -64,6 +64,8 @@ def rehash():
     global mpd
 
 def commandMPD(cod, line, splitline, source, destination):
+    "Shows what is now playing on the MPD server"
+
     global mpd
 
     try:
@@ -88,8 +90,6 @@ def commandMPD(cod, line, splitline, source, destination):
         cod.reply(source, destination, "Searching for %s" % query)
 
         results = mpd.find("any", query)
-
-        client = cod.clients[source]
 
         for result in results:
             cod.notice(source, "%s -- %s" % \

@@ -44,6 +44,8 @@ def rehash():
     pass
 
 def ponifyCMD(cod, line, splitline, source, destination):
+    "Makes sentences easier for everypony to understand by removing those \"human\" terms"
+
     global list_of_finds
 
     line = " ".join(splitline[1:])

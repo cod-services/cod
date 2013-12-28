@@ -37,6 +37,8 @@ def rehash():
     pass
 
 def say(cod, line, splitline, source, destination):
+    "Sends arbitrary text to a channel or user"
+
     cod.privmsg(splitline[1], " ".join(splitline[2:]))
 
     cod.servicesLog("SAY: %s to %s" %

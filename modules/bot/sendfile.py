@@ -37,6 +37,8 @@ def rehash():
     pass
 
 def sendfileCMD(cod, line, splitline, source, destination):
+    "Sends files to people over IRC, great for sharing art"
+
     if len(splitline) < 3:
         cod.reply(source, destination, "SENDFILE <target> <path>")
         return

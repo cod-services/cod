@@ -37,6 +37,8 @@ def rehash():
     pass
 
 def priceCheck(cod, line, splitline, source, destination):
+    "Shows BTC exchange rates on MTGox"
+
     try:
         info = requests.get("http://data.mtgox.com/api/2/BTCUSD/money/ticker").json()
 

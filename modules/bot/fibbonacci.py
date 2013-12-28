@@ -17,6 +17,8 @@ def rehash():
     pass
 
 def fibCMD(cod, line, splitline, source, destination):
+    "Syntax: FIB <num> - outputs num'th fibbonacci number"
+
     if len(splitline) < 2:
         cod.reply(source, destination, "Syntax: FIB <num> - outputs num'th fibbonacci number")
         return

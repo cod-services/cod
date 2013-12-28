@@ -53,17 +53,20 @@ def commandHELP(cod, line, splitline, source, destination):
     else:
         splitline[1] = splitline[1].upper()
         try:
+            if splitline[1] in cod.opercommands:
+                raise KeyError
+
             assert str(cod.botcommands[splitline[1]].__doc__) != None
             cod.reply(source, destination, "%s: %s" %\
                     (splitline[1], cod.botcommands[splitline[1]][0].__doc__))
-        except IndexError:
+        except KeyError:
             try:
                 if source.isOper:
                     assert str(cod.botcommands[splitline[1]].__doc__) != "None"
                     cod.reply(source, destination, "%s: %s" %\
-                            (splitline[1], cod.botcommands[splitline[1]][0].__doc__))
+                            (splitline[1], cod.opercommands[splitline[1]][0].__doc__))
                 else:
                     cod.reply(source, destination, "No help available for %s." % splitline[1])
-            except IndexError:
+            except KeyError:
                 cod.reply(source, destination, "No help available for %s." % splitline[1])
 

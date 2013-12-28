@@ -38,11 +38,12 @@ def rehash():
     pass
 
 def commandCHOICE(cod, line, splitline, source, destination):
+    "Randomly chooses between a comma-separated list of items"
     choices = " ".join(splitline[1:])
     choices = choices.split(", ")
 
     if len(choices) == 0 or len(choices) == 1:
-        cod.reply(source, destination, "BAD " + cod.clients[source].nick)
+        cod.reply(source, destination, "BAD " + source.nick)
         return
 
     choice = random.choice(choices)

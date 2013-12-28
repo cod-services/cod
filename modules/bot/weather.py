@@ -41,6 +41,8 @@ def destroyModule(cod):
     cod.delBotCommand("WEATHER")
 
 def commandWEATHER(cod, line, splitline, source, destination):
+    "Params: location to look up"
+
     global apikey
 
     location = " ".join(splitline[1:])

@@ -35,6 +35,8 @@ def rehash():
     pass
 
 def commandWHOAMI(cod, line, splitline, source, destination):
+    "Shows you what cod thinks it knows about you"
+
     try:
         oper = "Oper" if source.isOper else "User"
         uidstring = " (%s)" % source.uid if source.isOper else ""

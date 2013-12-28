@@ -19,6 +19,8 @@ def rehash():
     pass
 
 def bf_wrapper(cod, line, splitline, source, destination):
+    "BF <prog> -- executes brainfuck program <prog>"
+
     if len(splitline) < 2:
         cod.reply(source, destination, "BF <prog> -- executes brainfuck program <prog>")
         return

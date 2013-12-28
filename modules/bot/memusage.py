@@ -18,6 +18,8 @@ def rehash():
     pass
 
 def cmdMEM(cod, line, splitline, source, destination):
+    "Shows memory usage statistics for curious opers"
+
     cod.reply(source, destination, mem() + ", %d clients, %d channels" %\
             (len(cod.clients), len(cod.channels)))
 

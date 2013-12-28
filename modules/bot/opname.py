@@ -44,6 +44,8 @@ def rehash():
     pass
 
 def commandOPNAME(cod, line, splitline, source, destination):
+    "Military Operation Name generator"
+
     global prefix, suffix
 
     #Create phrase

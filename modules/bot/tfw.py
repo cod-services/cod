@@ -35,6 +35,8 @@ def destroyModule(cod):
     cod.delBotCommand("TFW")
 
 def commandTFW(cod, line, splitline, source, destination):
+    "Params: location to look up"
+
     location = " ".join(splitline[1:])
 
     html = requests.get("http://thefuckingweather.com/?where=%s&unit=c" % location)

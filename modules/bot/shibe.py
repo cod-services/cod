@@ -52,6 +52,8 @@ def destroyModule(cod):
     cod.delBotCommand("SHIBE")
 
 def wowSuchImplementation(cod, line, splitline, source, destination):
+    "Wow, such shibe, very argument give, very color and spacing"
+
     cod.reply(source, destination, "%s%s" %\
             (gen_prefix(), " ".join(splitline[1:])))
 
