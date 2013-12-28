@@ -71,6 +71,10 @@ def youtubeLookup(cod, line):
 def youtubeSearch(cod, line, splitline, source, destination):
     "Params: string to query youtube for"
 
+    if len(splitline) < 2:
+        cod.reply(source, destination, "Params: string to query youtube for")
+        return
+
     search = " ".join(splitline[1:])
 
     try:
