@@ -50,6 +50,9 @@ class Client():
 
         self.isOper = self.modes.find("o") != -1
 
+        if self.modes.find("S") != -1:
+            self.isOper = False
+
     def __str__(self):
         """
         Output : Client UID
