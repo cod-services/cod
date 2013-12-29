@@ -124,7 +124,7 @@ class Channel():
         self.name = name
         self.ts = ts
         self.clients = {}
-        self.lists = {'b': [], 'e': [], 'I': [], 'q': []}
+        self.lists = {'b': [], 'e': [], 'I': [], 'q': [], 'u': []}
         self.modes = ""
 
     def listAdd(self, chanlist, mask):
