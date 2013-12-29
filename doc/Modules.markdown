@@ -73,6 +73,7 @@ Announces RESV use and logs it.
 | `say` | `SAY` | Yes | Lets an oper have the main client send arbitrary text to an arbitrary channel or user. |
 | `sendfile` | `SENDFILE` | Yes | Lets an oper send the contents of a text file to a user or channel. Useful in sharing ascii art. |
 | `shibe` | `SHIBE` | No | Generates shibe text from user input. |
+| `source` | `SOURCE` | No | Shows information about running version, protocol module and github source repository. |
 | `tfw` | `TFW` | No | Does weather lookups from http://thefuckingweather.com |
 | `weather` | `WEATHER` | No | Does weather lookups via http://worldweatheronline.com (API key needed, see configuration document). |
 | `whoami` | `WHOAMI` | No | Shows what Cod knows about you. |
