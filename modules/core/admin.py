@@ -256,7 +256,7 @@ def commandUPGRADE(cod, line, splitline, source, destination):
     output, stderrdata = p.communicate()
 
     if type(output) == type(""):
-        cod.reply(source, destination, (output.strip())
+        cod.reply(source, destination, (output.strip()))
     else:
         for line in output:
             cod.reply(source, destination, (line.strip()))
