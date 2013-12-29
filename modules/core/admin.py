@@ -259,7 +259,7 @@ def commandUPGRADE(cod, line, splitline, source, destination):
         cod.servicesLog(output.strip())
     else:
         for line in output:
-            cod.reply(source, destination, (line.strip())
+            cod.reply(source, destination, (line.strip()))
 
     cod.servicesLog("%s: UPGRADE" % source.nick)
 
