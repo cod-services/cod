@@ -18,12 +18,7 @@ def nrolls(count, n):
     "roll an n-sided die count times"
     if n == "F":
         return [random.randint(-1, 1) for x in xrange(min(count, 100))]
-    if n < 2:  # it's a coin
-        if count < 5000:
-            return [random.randint(0, 1) for x in xrange(count)]
-        else:  # fake it
-            return [int(random.normalvariate(.5*count, (.75*count)**.5))]
-    else:
+    if n != 0:  # 0 sides is not a valid number of sides
         if count < 5000:
             return [random.randint(1, n) for x in xrange(count)]
         else:  # fake it
@@ -41,6 +36,9 @@ def dice(inp):
 
     if "d" not in inp:
         return
+
+    if "d0" in inp:
+        return "you cannot roll a zero-sided die"
 
     spec = whitespace_re.sub('', inp)
     if not valid_diceroll_re.match(spec):
