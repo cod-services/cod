@@ -107,6 +107,7 @@ not show up to users and are surrounded by parentheses.
 | `derpibooru` | http://derpibooru.org | Grabs the tags and SFW-ness of a link from Derpibooru. |
 | `eqbeats` | http://eqbeats.org | Grabs artist and track name of a link from EQBeats. |
 | `reddit` | http://reddit.com | Grabs the name and link (if applicable) of a post on reddit. |
+| `soundcloud` | http://soundcloud.com | Grabs the artist and title of a song from soundcloud. |
 | `twitchtv` | http://twitch.tv | Grabs the stream info from a twitch.tv stream. |
 | `youtube` | http://youtube.com | Grabs youtube video information and defines a simple search command `YT` |
 
