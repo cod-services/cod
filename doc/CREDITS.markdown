@@ -3,7 +3,8 @@
 Please do not delete names from this list.
 
  - Sam Dodrill (lyska)
- - Jessica Williams (Heartmender)
+ - Jessica Williams (Heartmender/Quora)
+ - Purlox
  - \#tlponies on Quakenet
   - The beta testers and general botspam wizards:
     - Cane
