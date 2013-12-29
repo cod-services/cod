@@ -187,6 +187,8 @@ def commandMODLOAD(cod, line, splitline, source, destination):
 
     cod.servicesLog("MODLOAD:%s: %s" % (target, source.nick))
 
+    cod.reply(source, destination, "%s loaded." % target)
+
 def commandMODUNLOAD(cod, line, splitline, source, destination):
     "Makes Cod unload a module."
 
@@ -209,6 +211,8 @@ def commandMODUNLOAD(cod, line, splitline, source, destination):
     deletefromDB(cod, "DELETE FROM Moduleautoload WHERE Name = \"%s\";" % target)
 
     cod.servicesLog("MODUNLOAD:%s: %s" % (target, source.nick))
+
+    cod.reply(source, destination, "%s unloaded." % target)
 
 def commandLISTCHANS(cod, line, splitline, source, destination):
     "Lists all the channels Cod is set to autojoin."
