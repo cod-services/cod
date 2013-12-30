@@ -53,5 +53,5 @@ def sendfileCMD(cod, line, splitline, source, destination):
             cod.privmsg(splitline[1], line)
 
     cod.servicesLog("%s: SENDFILE %s: %s" %
-            (cod.clients[source].nick, splitline[1], splitline[2]))
+            (source.nick, splitline[1], splitline[2]))
 
