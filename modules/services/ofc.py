@@ -136,7 +136,7 @@ def joinclients(cod, channel, source):
     cod.notice(source, "%d clients joined to %s" % (number, channel))
 
     cod.servicesLog("OFC:CLIENTJOIN: %d clients to %s requested by %s" %
-            (number, channel, cod.clients[source].nick))
+            (number, channel, source.nick))
 
 def decimate(cod, source, channel):
     global slaves
@@ -171,7 +171,7 @@ def depart(cod, source):
 
     cod.notice(source, "%d slaves deleted" % num)
 
-    cod.servicesLog("OFC:DEPART: requested by %s" % cod.clients[source].nick)
+    cod.servicesLog("OFC:DEPART: requested by %s" % source.nick)
 
 def stats(cod, source):
     rows = lookupDB(cod, "OFCStats")
