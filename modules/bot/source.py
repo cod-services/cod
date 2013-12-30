@@ -35,7 +35,7 @@ def destroyModule(cod):
     cod.delBotCommand("SOURCE")
 
 def testbotCommand(cod, line, splitline, source, destination):
-    "A simple test command"
+    "Shows source code information"
     cod.reply(source, destination, "I am an instance of Cod version %s running on %s. You can find more information about me at http://github.com/lyska/cod" %\
             (cod.version, cod.config["uplink"]["protocol"]))
 
