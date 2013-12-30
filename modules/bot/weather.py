@@ -70,5 +70,5 @@ def commandWEATHER(cod, line, splitline, source, destination):
 
     except:
         cod.reply(source, destination, "%s: %s doesn't seem to be a valid location" %\
-                (cod.clients[source].nick, location))
+                (source.nick, location))
 
