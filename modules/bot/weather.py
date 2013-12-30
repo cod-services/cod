@@ -47,6 +47,10 @@ def commandWEATHER(cod, line, splitline, source, destination):
 
     location = " ".join(splitline[1:])
 
+    if location == "":
+        cod.reply(source, destination, "Params: location to look up")
+        return
+
     try:
         #XXX: There has got to be a better way to do this.
         html = requests.get("http://thefuckingweather.com/?where=%s&unit=c" % location)
