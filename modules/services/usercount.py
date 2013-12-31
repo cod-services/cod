@@ -29,6 +29,9 @@ from pyrrd.rrd import DataSource, RRA, RRD
 timer = None
 myRRD = None
 
+NAME="User counter"
+DESC="Tracks the number of users on the network"
+
 def initModule(cod):
     global myRRD
 
