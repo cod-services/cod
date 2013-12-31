@@ -160,7 +160,10 @@ def commandMODLIST(cod, line, splitline, source, destination):
     "Sends information about currently running modules to the oper requesting it."
 
     for module in cod.modules:
-        cod.notice(source, "%s: %s" % (cod.modules[module].NAME, cod.modules[module].DESC))
+        try:
+            cod.notice(source, "%s: %s" % (module, cod.modules[module].DESC))
+        except:
+            cod.servicesLog("%s does not have a DESC! BUG!" % module)
 
     cod.notice(source, "End of module list, %d modules loaded" % len(cod.modules))
 
