@@ -5,6 +5,9 @@ simulates dicerolls
 This is from skybot.
 """
 
+NAME="Dice roll generator"
+DESC="Sumilates dice rolls"
+
 import re
 import random
 
