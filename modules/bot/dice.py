@@ -22,7 +22,7 @@ def nrolls(count, n):
     if n == "F":
         return [random.randint(-1, 1) for x in xrange(min(count, 100))]
     if n != 0:  # 0 sides is not a valid number of sides
-        if count < 5000:
+        if count < 128:
             return [random.randint(1, n) for x in xrange(count)]
         else:  # fake it
             return [int(random.normalvariate(.5*(1+n)*count,
