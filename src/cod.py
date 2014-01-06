@@ -31,6 +31,7 @@ from niilib import log
 from niilib.message import IRCMessage
 from niilib.b36 import *
 from select import select
+from textwrap import wrap
 
 import socket
 import os
@@ -308,7 +309,15 @@ class Cod():
         if source is None:
             source = self.client
 
-        self.sendLine(":%s PRIVMSG %s :%s" % (self.client.uid, target, line))
+        lines = []
+
+        if len(line) > 450:
+            lines = wrap(line, 450)
+        else:
+            lines = [line]
+
+        for thatline in lines:
+            self.sendLine(":%s PRIVMSG %s :%s" % (self.client.uid, target, thatline))
 
     def notice(self, target, line, source=None):
         """
