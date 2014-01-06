@@ -287,6 +287,13 @@ class Cod():
         if self.config["etc"]["debug"]:
             self.log(line, ">>>")
 
+        # Check for \r\n in message, closes issue #17
+        if "\r" in line:
+            "".join(line.split("\r"))
+
+        if "\n" in line:
+            "".join(line.split("\n"))
+
         self.link.send("%s\r\n" % line)
 
     def privmsg(self, target, line, source=None):
