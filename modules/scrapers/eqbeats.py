@@ -28,7 +28,7 @@ import re
 NAME="EQBeats lookups"
 DESC="EQBeats song info lookups"
 
-EQBEATS_REGEX = re.compile('(eqbeats.org/track/)([\w-]+)')
+EQBEATS_REGEX = re.compile('http://(eqbeats.org/track/)([\w-]+)')
 
 def initModule(cod):
     cod.s2scommands["PRIVMSG"].append(eqbeatsLookup)

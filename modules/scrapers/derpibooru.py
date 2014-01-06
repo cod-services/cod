@@ -28,7 +28,7 @@ import re
 NAME="Derpibooru lookups"
 DESC="Derpibooru image info lookups"
 
-DERPI_REGEX = re.compile('(derpiboo(ru.org|.ru)/)([\w-]+)')
+DERPI_REGEX = re.compile('http://(derpiboo(ru.org|.ru)/)([\w-]+)')
 
 def initModule(cod):
     cod.s2scommands["PRIVMSG"].append(derpiLookup)

@@ -29,7 +29,7 @@ NAME="Reddit lookups"
 DESC="Reddit post info lookups"
 
 # http://www.reddit.com/r/technology/comments/1tey5l/a_solar_boom_in_hawaii_proved_so_successful_that/
-REDDIT_REGEX = re.compile('reddit.com/r/([\w-]+)/comments/([\w-]+)')
+REDDIT_REGEX = re.compile('http://reddit.com/r/([\w-]+)/comments/([\w-]+)')
 
 def initModule(cod):
     cod.s2scommands["PRIVMSG"].append(redditLookup)

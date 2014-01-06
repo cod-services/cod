@@ -28,7 +28,7 @@ import re
 NAME="Danbooru lookups"
 DESC="Danbooru image info lookups"
 
-DANBOORU_REGEX = re.compile('(danbooru.donmai.us/posts/)([\w-]+)')
+DANBOORU_REGEX = re.compile('http://(danbooru.donmai.us/posts/)([\w-]+)')
 
 def initModule(cod):
     cod.s2scommands["PRIVMSG"].append(danboLookup)

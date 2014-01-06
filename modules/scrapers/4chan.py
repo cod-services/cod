@@ -28,7 +28,7 @@ import re
 NAME="4chan lookups"
 DESC="4chan post info lookups"
 
-FOURCHAN_REGEX = re.compile('(.+boards\.)4chan\.org\/([a-z0-9]+)\/res\/([1-9][0-9]+)')
+FOURCHAN_REGEX = re.compile('http://(.+boards\.)4chan\.org\/([a-z0-9]+)\/res\/([1-9][0-9]+)')
 
 def initModule(cod):
     cod.s2scommands["PRIVMSG"].append(fourchanLookup)
