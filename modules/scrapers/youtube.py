@@ -28,7 +28,7 @@ import re
 NAME="Youtube lookups"
 DESC="Youtube searching and title lookups"
 
-YOUTUBE_REGEX = re.compile('http://(youtube.com/watch\S*v=|youtu.be/)([\w-]+)')
+YOUTUBE_REGEX = re.compile('(youtube.com/watch\S*v=|youtu.be/)([\w-]+)')
 
 def initModule(cod):
     cod.s2scommands["PRIVMSG"].append(youtubeLookup)

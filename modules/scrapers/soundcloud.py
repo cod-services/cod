@@ -28,7 +28,7 @@ import re
 NAME="Soundcloud lookups"
 DESC="Soundcloud song info lookups"
 
-SOUNDCLOUD_REGEX = re.compile('http://(soundcloud.com/)([\w-]+)/([\w-]+)')
+SOUNDCLOUD_REGEX = re.compile('(soundcloud.com/)([\w-]+)/([\w-]+)')
 
 def initModule(cod):
     cod.s2scommands["PRIVMSG"].append(soundcloudLookup)

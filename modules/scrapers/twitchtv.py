@@ -28,7 +28,7 @@ import re
 NAME="Twitch.tv lookups"
 DESC="Twitch.tv stream info lookups"
 
-TWITCH_REGEX = re.compile('http://(twitch.tv/)([\w-]+)')
+TWITCH_REGEX = re.compile('(twitch.tv/)([\w-]+)')
 
 def initModule(cod):
     cod.s2scommands["PRIVMSG"].append(twitchLookup)
