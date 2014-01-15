@@ -28,12 +28,12 @@ PYTHON=python
 #     distribution.
 
 function testmodule {
-if $PYTHON -c "import $1" > /dev/null; then
-	true
-else
-	echo "!!! library $1 not found. Please install $1 from system package repositories"
-	exit
-fi
+	if $PYTHON -c "import $1" > /dev/null; then
+		true
+	else
+		echo "!!! library $1 not found. Please install $1 from system package repositories"
+		exit
+	fi
 }
 
 echo "--- Updating niilib"
