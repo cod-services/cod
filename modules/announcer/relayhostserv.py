@@ -42,13 +42,21 @@ def destroyModule(cod):
 def rehash():
     pass
 
+def anyOf(things, check):
+    for thing in things:
+        if thing in check:
+            return True
+
+    return False
+
 def relayHostServToOpers(cod, line):
     global TLDLIST
 
     if line.args[0] == cod.config["etc"]["snoopchan"]:
         if cod.clients[line.source].nick == "HostServ":
-            cod.sendLine(cod.client.privmsg(cod.config["etc"]["staffchan"],
-                "HostServ: " + line.args[-1]))
+            if anyOf(["TAKE", "REQUEST", "REJECT", "ASSIGN", "LISTVHOST"], line.args[-1]):
+                cod.sendLine(cod.client.privmsg(cod.config["etc"]["staffchan"],
+                    "HostServ: " + line.args[-1]))
 
             splitline = line.args[-1].split()
 
