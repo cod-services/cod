@@ -50,6 +50,9 @@ def sendfileCMD(cod, line, splitline, source, destination):
             elif line.endswith("\r"):
                 line = line[:-1]
 
+            if line == "":
+                line = " "
+
             cod.privmsg(splitline[1], line)
 
     cod.servicesLog("%s: SENDFILE %s: %s" %
