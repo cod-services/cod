@@ -50,6 +50,7 @@ def initModule(cod):
     cod.s2scommands["STATS"] = [handleSTATS]
     cod.s2scommands["PING"] = [handlePING]
     cod.s2scommands["ERROR"] = [handleERROR]
+    cod.s2scommands["SQUIT"] = [handleSQUIT]
 
     cod.s2scommands["PRIVMSG"].append(handlePRIVMSG)
 
@@ -76,6 +77,7 @@ def destroyModule(cod):
     del cod.s2scommands["STATS"]
     del cod.s2scommands["PING"]
     del cod.s2scommands["ERROR"]
+    del cod.s2scommands["SQUIT"]
 
     cod.s2scommands["PRIVMSG"].remove(handlePRIVMSG)
 
@@ -91,7 +93,7 @@ def login(cod):
 
     cod.sendLine("PASS %s TS 6 :%s" % \
             (cod.config["uplink"]["pass"], cod.sid))
-    cod.sendLine("CAPAB :EX IE KLN UNKLN ENCAP SERVICES EUID EOPMOD")
+    cod.sendLine("CAPAB :QS EX IE KLN UNKLN ENCAP SERVICES EUID EOPMOD")
     cod.sendLine("SERVER %s 1 :%s" % \
             (cod.config["me"]["name"], cod.config["me"]["desc"]))
 
@@ -136,6 +138,20 @@ def handleQUIT(cod, line):
     """
 
     cod.clients.pop(line.source)
+
+def handleSQUIT(cod, line):
+    """
+    Handles a server quitting from the network.
+    """
+    # <<< SQUIT 6LO :by shadowh511: shadowh511
+
+    tokill = line.args[0]
+
+    cod.servers.pop(tokill)
+
+    for client in cod.clients:
+        if client.sid == tokill:
+            cod.clients.pop(client.uid)
 
 def handleJOIN(cod, line):
     """
