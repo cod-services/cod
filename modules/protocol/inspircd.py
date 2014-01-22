@@ -240,6 +240,16 @@ def handlePRIVMSG(cod, line):
         for impl in cod.botcommands[command]:
             try:
                 if pm:
+                    impl(cod, line, splitline, source, source)
+                else:
+                    impl(cod, line, splitline, source, destination)
+            except Exception as e:
+                cod.servicesLog("%s: %s" % (type(e), e.message))
+    except KeyError as e:
+        return
+    except Exception as e:
+        cod.servicesLog("%s: %s" % (type(e), e.message))
+
 
 def handleKILL(cod, line):
     if line.args[0] != cod.client.uid:
