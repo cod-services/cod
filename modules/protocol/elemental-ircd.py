@@ -348,6 +348,7 @@ def handleKILL(cod, line):
     """
 
     if line.args[0] != cod.client.uid:
+        cod.clients.pop(line.args[0])
         return
 
     cod.sendLine(cod.client.burst())
