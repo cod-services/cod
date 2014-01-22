@@ -60,6 +60,11 @@ def rehash():
 def handleCloak(cod, line):
     #Check user's IP in the autocloak list
     if line.args[6] in cod.config["autocloak"]["list"]:
+        #If they are authed, they probably have a vhost or are getting re-bursted
+        #so it would be a Bad Idea to cloak them
+        if line.args[-2] != "*":
+            return
+
         cloaksuffix = cod.config["autocloak"]["list"][line.args[6]]
         ident = line.args[4]
 
