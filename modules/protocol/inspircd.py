@@ -1,5 +1,5 @@
 """
-Copyright (c) 2013, Sam Dodrill
+Copyright (c) 2013-2014, Sam Dodrill
 All rights reserved.
 
 This software is provided 'as-is', without any express or implied
@@ -41,7 +41,6 @@ def initModule(cod):
     cod.s2scommands["QUIT"] = [handleQUIT]
     cod.s2scommands["FJOIN"] = [handleSJOIN]
     cod.s2scommands["NICK"] = [handleNICK]
-    cod.s2scommands["BMASK"] = [handleBMASK]
     cod.s2scommands["MODE"] = [handleMODE]
     cod.s2scommands["CHGHOST"] = [handleCHGHOST]
     cod.s2scommands["WHOIS"] = [handleWHOIS]
@@ -64,7 +63,6 @@ def destroyModule(cod):
     del cod.s2scommands["QUIT"]
     del cod.s2scommands["FJOIN"]
     del cod.s2scommands["NICK"]
-    del cod.s2scommands["BMASK"]
     del cod.s2scommands["MODE"]
     del cod.s2scommands["CHGHOST"]
     del cod.s2scommands["WHOIS"]
@@ -84,9 +82,12 @@ def destroyModule(cod):
 def rehash():
     pass
 
-def burstClient(cod, nick, user, host, real, uid):
+def burstClient(cod, nick, user, host, real, uid=None):
+    if uid is None:
+        uid = cod.getUID()
+
     cod.sendLine(":%s UID %s %d %s 127.0.0.1 %s %s 127.0.0.1 %d +kio :%s" %
-            (cod.config["uplink"]["sid"], uid, int(time.time()), nick, host,
+            (cod.sid, uid, int(time.time()), nick, host,
                 user, int(time.time()), real))
 
 def login(cod):
@@ -100,70 +101,68 @@ def login(cod):
     cod.sendLine(":%s BURST " % cod.config["uplink"]["sid"] + str(int(time.time())))
     cod.sendLine("ENDBURST")
 
-def nullCommand(cod, line, splitline, source):
+def nullCommand(cod, line):
     pass
 
-def handleSERVER(cod, line, splitline, source):
+def handleSERVER(cod, line):
     cod.sendLine(":%s BURST &d" % (cod.config["uplink"]["sid"], time.time()))
 
-def handleUID(cod, line, splitline, source):
+def handleUID(cod, line):
     #UID <uid> <age> <nick> <host> <dhost> <ident> <ip> <signon> +<modes> :realname
     # 0    1     2     3      4      5        6     7      8        9
-    client = Client(splitline[3], splitline[1], splitline[2], splitline[9],
-            splitline[6], splitline[5], splitline[7], "*", ":".join(line.split(":")[2:]))
+    client = Client(line.args[2], line.args[0], line.args[1], line.args[8],
+            line.args[5], line.args[4], line.args[6], "*", line.args[-1])
 
     cod.clients[client.uid] = client
 
-def handleQUIT(cod, line, splitline, source):
+def handleQUIT(cod, line):
     cod.clients.pop(source)
 
-def handleJOIN(cod, line, splitline, source):
-    channel = cod.channels[splitline[3]]
+def handleJOIN(cod, line):
+    # :<uuid> JOIN <#channel>{,<#channel>} <timestamp>
+    channel = cod.channels[line.args[0]]
 
     channel.clientAdd(cod.clients[source])
 
-def handlePART(cod, line, splitline, source):
-    channel = cod.channels[splitline[3]]
+def handlePART(cod, line):
+    channel = cod.channels[line.args[0]]
 
     channel.clients.pop(source)
 
-def handleSJOIN(cod, line, splitline, source):
+def handleSJOIN(cod, line):
+    # :<sid> FJOIN <channel> <timestamp> +[<modes> {mode params}] [:<[statusmodes],uuid> {<[statusmodes],uuid>}]
     try:
-        cod.channels[splitline[3]]
+        cod.channels[line.args[0]]
     except KeyError as e:
-        cod.channels[splitline[3]] = Channel(splitline[3], splitline[2])
+        cod.channels[line.args[0]] = Channel(line.args[0], line.args[1])
     finally:
+        channel = cod.channels[line.args[0]]
+
         #Set channel modes
-        cod.channels[splitline[3]].modes = splitline[4]
+        channel.modes = line.args[2]
 
         #Join users to channel
-        uids = line.split(":")[2].split(" ")
+        uids = line.args[-1].split()
         for uid in uids:
-            #Extremely pro implementation
-
-            prefix = uid[:-9]
-            uid = uid[-9:]
+            #The only thing Spanning Tree gets right
+            prefix, uid = uid.split(",")
 
             client = cod.clients[uid]
 
-            cod.channels[splitline[3]].clientAdd(client, prefix)
+            channel.clientAdd(client, prefix)
 
-def handleNICK(cod, line, splitline, source):
-    cod.clients[source].nick = splitline[2]
+def handleNICK(cod, line):
+    cod.clients[source].nick = line.args[0]
 
-def handleSID(cod, line, splitline, source):
-    cod.servers[source] = Server(source, splitline[2], splitline[3], ":".join(line.split(":")[2:]))
+def handleSID(cod, line):
+    #SERVER <servername> <password> 0 <id> :<description>
+    #:<local server id> SERVER <remote server> * <distance> <id> :<description>
+    cod.servers[line.args[3]] = Server(line.args[3], line.args[0], 0,
+            line.args[-1])
 
-def handleBMASK(cod, line, splitline, source):
-    list = splitline[4]
-
-    #The channel will be a valid channel
-    channel = cod.channels[splitline[3]]
-
-    channel.lists[list].append([n for n in line.split(":")[2].split(" ")])
-
-def handleMODE(cod, line, splitline, source):
-    extparam = line.split(":")[2]
+def handleMODE(cod, line):
+    source = line.source
+    extparam = line.args[-1]
 
     if extparam.find("o") != -1:
         if extparam[0] == "+":
@@ -171,11 +170,12 @@ def handleMODE(cod, line, splitline, source):
         else:
             cod.clients[source].isOper = False
 
-def handleCHGHOST(cod, line, splitline, source):
-    cod.clients[splitline[2]].host = splitline[3]
+def handleCHGHOST(cod, line):
+    cod.clients[line.args[0].host = line.args[1]
 
-def handleWHOIS(cod, line, splitline, source):
-    service = splitline[2]
+def handleWHOIS(cod, line):
+    service = line.args[0]
+    source = line.source
 
     client = cod.clients[service]
 
@@ -190,9 +190,14 @@ def handleWHOIS(cod, line, splitline, source):
     cod.sendLine(":{0} 318 {1} {2} :End of /WHOIS list.".format(
         cod.config["uplink"]["sid"], source, client.nick))
 
-def handlePRIVMSG(cod, line, splitline, source):
-    destination = splitline[2]
-    line = ":".join(line.split(":")[2:])
+def handlePRIVMSG(cod, line):
+    """
+    Handle PRIVMSG
+    """
+
+    destination = line.args[0]
+    source = cod.clients[line.source]
+    line = line.args[-1]
     splitline = line.split()
 
     command = ""
@@ -213,22 +218,32 @@ def handlePRIVMSG(cod, line, splitline, source):
         return
 
     else:
-        command = command = splitline[0].upper()
+        destination = cod.clients[destination]
+        command = splitline[0].upper()
 
+    #Guido, I am sorry.
     try:
+        if source.isOper:
+            for impl in cod.opercommands[command]:
+                try:
+                    if pm:
+                        impl(cod, line, splitline, source, source)
+                    else:
+                        impl(cod, line, splitline, source, destination)
+                except Exception as e:
+                    cod.servicesLog("%s: %s" % (type(e), e.message))
+                    continue
+        else:
+            raise KeyError
+
+    except KeyError as e:
         for impl in cod.botcommands[command]:
             try:
                 if pm:
-                    impl(cod, line, splitline, source, source)
-                else:
-                    impl(cod, line, splitline, source, destination)
-            except Exception as e:
-                cod.servicesLog("%s: %s" % (type(e), e))
-    except KeyError as e:
-        pass
 
-def handleKILL(cod, line, splitline, source):
-    if splitline[2] != cod.client.uid:
+def handleKILL(cod, line):
+    if line.args[0] != cod.client.uid:
+        cod.clients.pop(line.args[0])
         return
 
     cod.sendLine(cod.client.burst())
@@ -236,9 +251,10 @@ def handleKILL(cod, line, splitline, source):
     for channel in cod.client.channels:
         cod.join(channel)
 
-    cod.servicesLog("KILL'd by %s " % cod.clients[source].nick)
+    cod.servicesLog("KILL'd by %s " % line.source.nick)
 
-def handleSTATS(cod, line, splitline, source):
+def handleSTATS(cod, line):
+    source = line.source
     if splitline[2] == "v":
         cod.notice(source, "Cod version %s" % cod.version)
 
@@ -259,8 +275,8 @@ def handleSTATS(cod, line, splitline, source):
 
     cod.notice(source, "End of /STATS report")
 
-def handlePING(cod, line, splitline, source):
+def handlePING(cod, line):
     cod.sendLine(":%s PONG %s :%s" %
             (cod.config["uplink"]["sid"], cod.config["me"]["name"],
-                source))
+                line.source))
 
