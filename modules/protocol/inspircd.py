@@ -31,10 +31,8 @@ NAME="inspircd protocol module"
 DESC="Handles login and protocol commands for inspircd"
 
 def initModule(cod):
-    cod.log("Lol not updated", "!!!")
-    sys.exit(-1)
-
     cod.loginFunc = login
+    cod.join = join
     cod.burstClient = burstClient
 
     cod.s2scommands["UID"] = [handleUID]
@@ -56,9 +54,6 @@ def initModule(cod):
     cod.s2scommands["AWAY"] = [nullCommand]
 
 def destroyModule(cod):
-    del cod.loginFunc
-    cod.loginFunc = None
-
     del cod.s2scommands["UID"]
     del cod.s2scommands["QUIT"]
     del cod.s2scommands["FJOIN"]
@@ -81,6 +76,18 @@ def destroyModule(cod):
 
 def rehash():
     pass
+
+# Monkey-patch join because inspircd is weird
+def join(self, channel, client=None):
+    if client is None:
+        client = self.client
+
+    if channel not in self.channels:
+        self.channels[channel] = Channel(channel, int(time.time()))
+
+    channel = self.channels[channel]
+
+    self.sendLine(":%s JOIN %s %s" % (client.uid, channel.name, channel.ts))
 
 def burstClient(cod, nick, user, host, real, uid=None):
     if uid is None:
