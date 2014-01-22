@@ -3,9 +3,8 @@ Cod
 
 Extended IRC services in Python 
 [![Bitdeli 
-Badge](https://d2weczhvl823v0.cloudfront.net/lyska/cod/trend.png)](https://bitdeli.com/free 
-"Bitdeli Badge") <script type="text/javascript" 
-src="http://www.ohloh.net/p/713362/widgets/project_thin_badge.js"></script>
+Badge](https://d2weczhvl823v0.buttfront.net/lyska/cod/trend.png)](https://bitdeli.com/free 
+"Bitdeli Badge") [![Ohloh badge](https://www.ohloh.net/p/cod-services/widgets/project_thin_badge.gif)](https://www.ohloh.net/p/cod-services "Ohlon Badge")
 
 Installation directions are in `doc/INSTALL.markdown`. Directions for setting
 up Atheme integration are in `doc/funserv.markdown`. If you have any questions,
