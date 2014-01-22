@@ -149,12 +149,8 @@ def commandDIE(cod, line, splitline, source, destination):
     "Kills off Cod"
 
     cod.servicesLog("DIE: %s" % source.nick)
-    cod.db.close()
-    cod.sendLine(cod.client.quit())
 
-    cod.sendLine("SQUIT")
-
-    sys.exit()
+    raise KeyboardInterrupt()
 
 def commandMODLIST(cod, line, splitline, source, destination):
     "Sends information about currently running modules to the oper requesting it."
