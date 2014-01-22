@@ -59,6 +59,17 @@
 		"apikey": "asdfasdf"
 	},
 
+	"autocloak": {
+		"nick": "Gatekeeper",
+		"user": "cloakbot",
+		"host": "services.example.com",
+		"gecos": "Automatic cloaker",
+
+		"list": {
+			"127.45.123.69": "bnc.example.com"
+		}
+	},
+
 	"apikeys": {
 		"worldweatheronline": "asdfasdfasdfasdf"
 	}
