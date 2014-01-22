@@ -331,7 +331,7 @@ class Cod():
         if source is None:
             source = self.client
 
-        self.sendLine(":%s NOTICE %s :%s" % (self.client.uid, target, line))
+        self.sendLine(":%s NOTICE %s :%s" % (source.uid, target, line))
 
     def kill(self, target, source=None, message="Connection has been terminated."):
         """
