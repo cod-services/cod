@@ -69,7 +69,7 @@ def redditLookup(cod, line):
         if url in chatline:
             link = ""
 
-        string = "^ Reddit: %s posted to %s: %s%s" %\
+        string = "^ Reddit: %s posted to /r/%s: %s%s" %\
                 (author, board, title, link)
 
         cod.privmsg(line.args[0], string)
