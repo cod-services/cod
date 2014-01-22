@@ -84,7 +84,7 @@ class Client():
         """
         uid = self.uid
 
-        return "SJOIN %s %s + %s" % (channel.ts, channel.name, uid)
+        return ":%s JOIN %s %s +" % (uid, channel.ts, channel.name)
 
     def burst(self):
         """
