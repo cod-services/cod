@@ -468,15 +468,16 @@ class Cod():
 
                 for s in inputready:
                     self.sockhandlers[s]([cod, s])
+
             except KeyboardInterrupt:
                 print " <-- Control-C pressed, dying"
-                self.servicesLog("DIE: KEYBOARD")
+                self.servicesLog("See you on the other side.")
 
                 self.db.close()
                 self.sendLine(self.client.quit())
 
                 for module in self.modules:
-                    if module == "elemental-ircd":
+                    if module == "elemental-ircd" or module == "inspircd":
                         continue
                     elif module == "admin":
                         continue
@@ -488,9 +489,7 @@ class Cod():
                 self.sendLine("SQUIT :Killed.")
 
                 os.system("killall %d" % self.pid)
-
                 sys.exit()
-
 
         self.log("Oh, I am slain.")
 
