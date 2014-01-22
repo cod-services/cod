@@ -67,8 +67,9 @@ def fourchanLookup(cod, line):
         text = text.replace('<span class="quote">&gt;', ">")
         text = text.replace("</span>", "")
 
-        string = "^ 4chan: %s on /%s/ - %s" %\
-                (info["posts"][0]["name"], board, text)
+        string = "^ 4chan: %s on /%s/ - %s%s - %s" %\
+                (info["posts"][0]["name"], board, info["posts"][0]["filename"],
+                        info["posts"][0]["ext"], text)
 
         cod.privmsg(line.args[0], string)
     except Exception as e:
