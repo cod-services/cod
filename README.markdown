@@ -1,8 +1,6 @@
 Cod
 ===
 
-#### This code will soon be replaced
-
 Extended IRC services in Python [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/lyska/cod/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 Installation directions are in `doc/INSTALL.markdown`. Directions for setting
