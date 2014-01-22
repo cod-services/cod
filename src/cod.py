@@ -536,6 +536,10 @@ class Cod():
                         self.bursted = True
                     continue
 
+                if lineobj.verb == "ERROR":
+                    #If ERROR is sent, it's already fatal.
+                    raise KeyboardInterrupt
+
             #Handle server commands
             try:
                 for impl in self.s2scommands[lineobj.verb]:
