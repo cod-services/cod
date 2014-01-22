@@ -71,5 +71,5 @@ def handleCloak(cod, line):
         host = "%s.%s" % (unique.upper(), cloaksuffix)
 
         cod.sendLine(":%s CHGHOST %s %s" % (client.uid, line.args[7], host))
-        cod.notice(line.args[7], "Your vhost has been uniquely randomized as a part of a policy set by your BNC host and network staff.", client)
+        cod.notice(line.args[7], "Your vhost has been uniquely randomized as a part of a policy set by your BNC host and network staff. If your desired vhost doesn't show up, please re-activate it using /msg HostServ ON", client)
 
