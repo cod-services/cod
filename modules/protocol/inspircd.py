@@ -252,6 +252,10 @@ def handlePRIVMSG(cod, line):
 
 
 def handleKILL(cod, line):
+    """
+    The KILL message, for when someone hasn't done something bad enough to be G:Lined
+    """
+
     if line.args[0] != cod.client.uid:
         cod.clients.pop(line.args[0])
         return
@@ -264,6 +268,10 @@ def handleKILL(cod, line):
     cod.servicesLog("KILL'd by %s " % line.source.nick)
 
 def handleSTATS(cod, line):
+    """
+    The Server to Server STATS command. Does inspircd even support this?
+    """
+
     source = line.source
     if splitline[2] == "v":
         cod.notice(source, "Cod version %s" % cod.version)
@@ -286,6 +294,11 @@ def handleSTATS(cod, line):
     cod.notice(source, "End of /STATS report")
 
 def handlePING(cod, line):
+    """
+    Summary: if you get a ping, swap the last two params and send it back on
+    the connection it came from. Don't ask why, just do.
+    """
+
     cod.sendLine(":%s PONG %s :%s" %
             (cod.config["uplink"]["sid"], cod.config["me"]["name"],
                 line.source))
