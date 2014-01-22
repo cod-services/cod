@@ -2,6 +2,7 @@ Cod
 ===
 
 Extended IRC services in Python 
+
 [![Bitdeli 
 Badge](https://d2weczhvl823v0.buttfront.net/lyska/cod/trend.png)](https://bitdeli.com/free 
 "Bitdeli Badge") [![Ohloh badge](https://www.ohloh.net/p/cod-services/widgets/project_thin_badge.gif)](https://www.ohloh.net/p/cod-services "Ohlon Badge")
