@@ -37,7 +37,8 @@ function testmodule {
 }
 
 echo "--- Updating niilib"
-git submodule update 2> /dev/null > /dev/nul
+git submodule update
+(cd src/niilib && git pull && git checkout master)
 
 #Download the TLD list
 echo "--- Getting TLD list"
@@ -67,9 +68,9 @@ else
 fi
 
 echo "--- Installing venv dependencies"
-env/bin/pip install -r requirements.txt > /dev/null
-
 source env/bin/activate
+
+env/bin/pip install -r requirements.txt
 
 if [ -x "$(which pypy-c)" ]; then
 	PYTHON=pypy-c
