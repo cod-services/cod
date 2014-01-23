@@ -48,7 +48,7 @@ def initModule(cod):
     cod.addBotCommand("VERSION", commandVERSION, True)
     cod.addBotCommand("UPGRADE", commandUPGRADE, True)
 
-    cod.s2scommands["ENCAP"] = [logREHASH]
+    cod.s2scommands["ENCAP"].append(logREHASH)
     cod.s2scommands["MOTD"] = [handleMOTD]
 
     initDBTable(cod, "Moduleautoload", "Id INTEGER PRIMARY KEY, Name TEXT")
