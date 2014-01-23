@@ -32,8 +32,8 @@ DESC="Handles login and protocol commands for inspircd"
 
 def initModule(cod):
     cod.loginFunc = login
-    cod.join = join
     cod.burstClient = burstClient
+    cod.tsSecond = True
 
     cod.s2scommands["UID"] = [handleUID]
     cod.s2scommands["QUIT"] = [handleQUIT]
@@ -120,8 +120,8 @@ def handleENDBURST(cod, line):
     cod.loadmod("admin")
     cod.loadmod("help")
 
-    cod.join(cod, cod.config["etc"]["staffchan"])
-    cod.join(cod, cod.config["etc"]["snoopchan"])
+    cod.join(cod.config["etc"]["staffchan"])
+    cod.join(cod.config["etc"]["snoopchan"])
 
     cod.privmsg("NickServ", "IDENTIFY %s" % cod.config["me"]["servicespass"])
 

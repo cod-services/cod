@@ -35,6 +35,7 @@ CHANMODES=["eIbq", "k" ,"flj" ,"CDEFGJKLMOPQTcdgimnpstz", "yaohv"]
 def initModule(cod):
     cod.loginFunc = login
     cod.burstClient = burstClient
+    cod.tsSecond = False
 
     cod.s2scommands["EUID"] = [handleEUID]
     cod.s2scommands["QUIT"] = [handleQUIT]

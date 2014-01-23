@@ -364,7 +364,10 @@ class Cod():
 
         channel = self.channels[channel]
 
-        self.sendLine(client.join(channel))
+        if self.tsSecond:
+            self.sendLine(":%s JOIN %s %s" % (client.uid, channel.name, channel.ts))
+        else:
+            self.sendLine(client.join(channel))
 
         client.channels.append(channel.name)
 
