@@ -497,7 +497,7 @@ class Cod():
         tbuf = self.link.recv(2048)
         tbuf = self.buf + tbuf
 
-        lines = tbuf.split("\r\n")
+        lines = tbuf.split("\n")
 
         self.buf = lines[-1]
         lines = lines[:-1]
@@ -511,11 +511,21 @@ class Cod():
         """
 
         for line in lines:
+            if len(line) == 0:
+                continue
+
+            if line[-1] == "\r":
+                line = line[:-1]
+
             lineobj = IRCMessage(line)
 
             #debug output
             if self.config["etc"]["debug"]:
                 self.log(line, "<<<")
+                #print "source: %s" % lineobj.source
+                #print "verb: %s" % lineobj.verb
+                #print "args: %s" % lineobj.args
+
 
             splitline = line.split()
 
@@ -534,11 +544,10 @@ class Cod():
                         self.loadmod("admin") #Required to be hard-coded
 
                         self.bursted = True
-                    continue
 
-                if lineobj.verb == "ERROR":
-                    #If ERROR is sent, it's already fatal.
-                    raise KeyboardInterrupt
+            if lineobj.verb == "ERROR":
+                #If ERROR is sent, it's already fatal.
+                raise KeyboardInterrupt
 
             #Handle server commands
             try:
