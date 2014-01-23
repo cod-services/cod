@@ -141,7 +141,6 @@ def handleUID(cod, line):
     cod.clients[client.uid] = client
 
 def handleOPERTYPE(cod, line):
-    print line.source, "tried to be an oper"
     cod.clients[line.source].isOper = True
 
 def handleQUIT(cod, line):
