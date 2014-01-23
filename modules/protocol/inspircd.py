@@ -50,6 +50,7 @@ def initModule(cod):
     cod.s2scommands["SERVER"] = [handleSERVER]
     cod.s2scommands["ENDBURST"] = [handleENDBURST]
     cod.s2scommands["OPERTYPE"] = [handleOPERTYPE]
+    cod.s2scommands["METADATA"] = [handleMETADATA]
 
     cod.s2scommands["PRIVMSG"].append(handlePRIVMSG)
 
@@ -131,6 +132,15 @@ def nullCommand(cod, line):
 
 def handleSERVER(cod, line):
     cod.sendLine(":%s BURST &d" % (cod.config["uplink"]["sid"], time.time()))
+
+def handleMETADATA(cod, line):
+    #<<< :3AX METADATA 818AAAAAB accountname :Xe
+    #<<< :3AX METADATA 818AAAAAB accountname :
+
+    if line.args[-1] == "":
+        line.args[-1] = "*"
+
+    cod.clients[line.args[2]].login = line.args[-1]
 
 def handleUID(cod, line):
     #UID <uid> <age> <nick> <host> <dhost> <ident> <ip> <signon> +<modes> :realname
