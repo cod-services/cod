@@ -35,6 +35,11 @@ def initModule(cod):
     cod.join = join
     cod.burstClient = burstClient
 
+    cod.loadmod("help")
+    cod.loadmod("admin")
+
+    cod.terminator = "\n"
+
     cod.s2scommands["UID"] = [handleUID]
     cod.s2scommands["QUIT"] = [handleQUIT]
     cod.s2scommands["FJOIN"] = [handleSJOIN]
@@ -87,7 +92,8 @@ def join(self, channel, client=None):
 
     channel = self.channels[channel]
 
-    self.sendLine(":%s JOIN %s %s" % (client.uid, channel.name, channel.ts))
+    self.sendLine(":%s FJOIN %s %s + ,%s" % (cod.sid, channel.name, channel.ts,
+        client.uid))
 
 def burstClient(cod, nick, user, host, real, uid=None):
     if uid is None:
@@ -101,12 +107,13 @@ def login(cod):
     #>> SERVER services-dev.chatspike.net password 0 666 :Description here
     cod.sendLine("SERVER %s %s 0 %s :%s" %
             (cod.config["me"]["name"], cod.config["uplink"]["pass"],
-                cod.config["uplink"]["sid"], cod.config["me"]["desc"]))
+                cod.sid, cod.config["me"]["desc"]))
     cod.sendLine("CAPAB START 1202")
     cod.sendLine("CAPAB CAPABILITIES :PROTOCOL=1202")
     cod.sendLine("CAPAB END")
-    cod.sendLine(":%s BURST " % cod.config["uplink"]["sid"] + str(int(time.time())))
+    cod.sendLine(":%s BURST " % cod.sid + str(int(time.time())))
     cod.sendLine("ENDBURST")
+    cod.bursted = True
 
 def nullCommand(cod, line):
     pass
@@ -178,7 +185,7 @@ def handleMODE(cod, line):
             cod.clients[source].isOper = False
 
 def handleCHGHOST(cod, line):
-    cod.clients[line.args[0].host = line.args[1]
+    cod.clients[line.args[0]].host = line.args[1]
 
 def handleWHOIS(cod, line):
     service = line.args[0]
