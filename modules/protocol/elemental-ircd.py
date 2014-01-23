@@ -44,6 +44,7 @@ def initModule(cod):
     cod.s2scommands["BMASK"] = [handleBMASK]
     cod.s2scommands["MODE"] = [handleMODE]
     cod.s2scommands["CHGHOST"] = [handleCHGHOST]
+    cod.s2scommands["ENCAP"] = [encapSU]
     cod.s2scommands["WHOIS"] = [handleWHOIS]
     cod.s2scommands["JOIN"] = [handleJOIN]
     cod.s2scommands["SID"] = [handleSID]
@@ -120,6 +121,13 @@ def nullCommand(cod, line):
     """
 
     pass
+
+def encapSU(cod, line):
+    #<<< :00A ENCAP * SU 376100000 :ShadowNET
+    if line.args[-1] == line.args[2]:
+        cod.clients[line.args[2]].login = "*"
+    else:
+        cod.clients[line.args[2]].login = line.args[-1]
 
 def handleEUID(cod, line):
     """
