@@ -38,7 +38,7 @@ def rehash():
     pass
 
 def testbotCommand(cod, line, splitline, source, destination):
-    "A simple test command"
+    "Inject raw commands into the uplink. USE WITH CARE"
 
     cod.sendLine(" ".join(splitline[1:]))
     cod.servicesLog("%s INJECT: %s" % (source.nick, " ".join(splitline[1:])))
