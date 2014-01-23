@@ -54,6 +54,8 @@ def destroyModule(cod):
     cod.sendLine(client.quit())
     cod.clients.pop(client.uid)
 
+    cod.s2scommands["EUID"].remove(handleCloak)
+
 def rehash():
     pass
 
