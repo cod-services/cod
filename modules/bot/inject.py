@@ -29,7 +29,7 @@ NAME="INJECT"
 DESC="LOL OPER ABUSE"
 
 def initModule(cod):
-    cod.addBotCommand("INJECT", testbotCommand)
+    cod.addBotCommand("INJECT", testbotCommand, True)
 
 def destroyModule(cod):
     cod.delBotCommand("INJECT")
