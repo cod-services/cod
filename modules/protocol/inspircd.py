@@ -35,11 +35,6 @@ def initModule(cod):
     cod.join = join
     cod.burstClient = burstClient
 
-    cod.loadmod("help")
-    cod.loadmod("admin")
-
-    cod.terminator = "\n"
-
     cod.s2scommands["UID"] = [handleUID]
     cod.s2scommands["QUIT"] = [handleQUIT]
     cod.s2scommands["FJOIN"] = [handleSJOIN]
@@ -53,6 +48,7 @@ def initModule(cod):
     cod.s2scommands["STATS"] = [handleSTATS]
     cod.s2scommands["PING"] = [handlePING]
     cod.s2scommands["SERVER"] = [handleSERVER]
+    cod.s2scommands["ENDBURST"] = [handleENDBURST]
 
     cod.s2scommands["PRIVMSG"].append(handlePRIVMSG)
 
@@ -74,6 +70,7 @@ def destroyModule(cod):
     del cod.s2scommands["STATS"]
     del cod.s2scommands["PING"]
     del cod.s2scommands["SERVER"]
+    del cod.s2scommands["ENDBURST"]
 
     cod.s2scommands["PRIVMSG"].remove(handlePRIVMSG)
 
@@ -83,16 +80,16 @@ def rehash():
     pass
 
 # Monkey-patch join because inspircd is weird
-def join(self, channel, client=None):
+def join(cod, channel, client=None):
     if client is None:
-        client = self.client
+        client = cod.client
 
-    if channel not in self.channels:
-        self.channels[channel] = Channel(channel, int(time.time()))
+    if channel not in cod.channels:
+        cod.channels[channel] = Channel(channel, int(time.time()))
 
-    channel = self.channels[channel]
+    channel = cod.channels[channel]
 
-    self.sendLine(":%s FJOIN %s %s + ,%s" % (cod.sid, channel.name, channel.ts,
+    cod.sendLine(":%s FJOIN %s %s + ,%s" % (cod.sid, channel.name, channel.ts,
         client.uid))
 
 def burstClient(cod, nick, user, host, real, uid=None):
@@ -114,6 +111,15 @@ def login(cod):
     cod.sendLine(":%s BURST " % cod.sid + str(int(time.time())))
     cod.sendLine("ENDBURST")
     cod.bursted = True
+
+def handleENDBURST(cod, line):
+    cod.loadmod("admin")
+    cod.loadmod("help")
+
+    cod.join(cod, cod.config["etc"]["staffchan"])
+    cod.join(cod, cod.config["etc"]["snoopchan"])
+
+    cod.privmsg("NickServ", "IDENTIFY %s" % cod.config["me"]["servicespass"])
 
 def nullCommand(cod, line):
     pass
@@ -313,7 +319,5 @@ def handlePING(cod, line):
     the connection it came from. Don't ask why, just do.
     """
 
-    cod.sendLine(":%s PONG %s :%s" %
-            (cod.config["uplink"]["sid"], cod.config["me"]["name"],
-                line.source))
+    cod.sendLine(":%s PONG %s %s" % (cod.sid, line.source, cod.sid))
 
