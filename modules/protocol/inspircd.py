@@ -40,7 +40,7 @@ def initModule(cod):
     cod.s2scommands["FJOIN"] = [handleSJOIN]
     cod.s2scommands["NICK"] = [handleNICK]
     cod.s2scommands["MODE"] = [handleMODE]
-    cod.s2scommands["CHGHOST"] = [handleCHGHOST]
+    cod.s2scommands["FHOST"] = [handleCHGHOST]
     cod.s2scommands["WHOIS"] = [handleWHOIS]
     cod.s2scommands["JOIN"] = [handleJOIN]
     cod.s2scommands["SID"] = [handleSID]
@@ -49,6 +49,7 @@ def initModule(cod):
     cod.s2scommands["PING"] = [handlePING]
     cod.s2scommands["SERVER"] = [handleSERVER]
     cod.s2scommands["ENDBURST"] = [handleENDBURST]
+    cod.s2scommands["OPERTYPE"] = [handleOPERTYPE]
 
     cod.s2scommands["PRIVMSG"].append(handlePRIVMSG)
 
@@ -60,7 +61,7 @@ def destroyModule(cod):
     del cod.s2scommands["FJOIN"]
     del cod.s2scommands["NICK"]
     del cod.s2scommands["MODE"]
-    del cod.s2scommands["CHGHOST"]
+    del cod.s2scommands["FHOST"]
     del cod.s2scommands["WHOIS"]
     del cod.s2scommands["NOTICE"]
     del cod.s2scommands["JOIN"]
@@ -71,6 +72,7 @@ def destroyModule(cod):
     del cod.s2scommands["PING"]
     del cod.s2scommands["SERVER"]
     del cod.s2scommands["ENDBURST"]
+    del cod.s2scommands["OPERTYPE"]
 
     cod.s2scommands["PRIVMSG"].remove(handlePRIVMSG)
 
@@ -88,6 +90,8 @@ def join(cod, channel, client=None):
         cod.channels[channel] = Channel(channel, int(time.time()))
 
     channel = cod.channels[channel]
+
+    client.channels.append(channel.name)
 
     cod.sendLine(":%s FJOIN %s %s + ,%s" % (cod.sid, channel.name, channel.ts,
         client.uid))
@@ -134,6 +138,10 @@ def handleUID(cod, line):
             line.args[5], line.args[4], line.args[6], "*", line.args[-1])
 
     cod.clients[client.uid] = client
+
+def handleOPERTYPE(cod, line):
+    print line.source, "tried to be an oper"
+    cod.clients[line.source].isOper = True
 
 def handleQUIT(cod, line):
     cod.clients.pop(source)
