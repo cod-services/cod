@@ -319,5 +319,7 @@ def handlePING(cod, line):
     the connection it came from. Don't ask why, just do.
     """
 
-    cod.sendLine(":%s PONG %s %s" % (cod.sid, line.source, cod.sid))
+    args = (line.args[-1], line.args[-2])
+
+    cod.sendLine(":%s PONG %s %s" % (cod.sid, args[0], args[1]))
 
