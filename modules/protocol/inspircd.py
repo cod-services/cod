@@ -53,6 +53,7 @@ def initModule(cod):
 
     cod.s2scommands["PRIVMSG"].append(handlePRIVMSG)
 
+    cod.s2scommands["ENCAP"] = [nullCommand]
     cod.s2scommands["AWAY"] = [nullCommand]
 
 def destroyModule(cod):
