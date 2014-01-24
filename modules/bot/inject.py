@@ -29,7 +29,7 @@ NAME="INJECT"
 DESC="LOL OPER ABUSE"
 
 def initModule(cod):
-    cod.addBotCommand("INJECT", testbotCommand, True)
+    cod.addBotCommand("INJECT", inject, True)
 
 def destroyModule(cod):
     cod.delBotCommand("INJECT")
@@ -37,7 +37,7 @@ def destroyModule(cod):
 def rehash():
     pass
 
-def testbotCommand(cod, line, splitline, source, destination):
+def inject(cod, line, splitline, source, destination):
     "Inject raw commands into the uplink. USE WITH CARE"
 
     cod.sendLine(" ".join(splitline[1:]))
