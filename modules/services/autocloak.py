@@ -46,7 +46,7 @@ def initModule(cod):
 
     cod.s2scommands["EUID"].append(handleCloak)
 
-    cod.sendLine(client.join(cod.channels[cod.config["etc"]["snoopchan"]]))
+    cod.join(cod.config["etc"]["snoopchan"], client)
 
 def destroyModule(cod):
     global client
