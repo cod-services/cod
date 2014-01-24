@@ -126,12 +126,29 @@ class Channel():
         self.clients = {}
         self.lists = {'b': [], 'e': [], 'I': [], 'q': [], 'u': []}
         self.modes = ""
+        self.msgbuffer = []
 
     def listAdd(self, chanlist, mask):
         self.lists[chanlist].append(mask)
 
     def clientAdd(self, client, prefix = ""):
         self.clients[client.uid] = ChanUser(client)
+
+    def addMessage(self, line):
+        if len(self.msgbuffer) == 5:
+            self.msgbuffer.pop(0)
+
+        try:
+            fakeline = FakeLine(line)
+
+            self.msgbuffer.append(fakeline)
+        except Exception as e:
+            print type(e), e.message
+
+class FakeLine():
+    def __init__(self, line):
+        self.nick = line.source.nick
+        self.message = line.args[-1]
 
 class ChanUser():
     """
