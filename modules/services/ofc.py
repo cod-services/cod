@@ -128,8 +128,8 @@ def joinclients(cod, channel, source):
 
         slave = makeClient(uid, user, uid, "CareFriend", uid)
         slaves.append(slave)
-        cod.sendLine(slave.burst())
-        cod.sendLine(slave.join(cod.channels[channel]))
+        cod.burstClient(cod, slave.nick, slave.user, slave.host, slave.gecos, slave.uid)
+        cod.join(channel, slave)
 
         cod.clients[slave.uid] = slave
 
