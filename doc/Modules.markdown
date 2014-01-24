@@ -120,3 +120,43 @@ not show up to users and are surrounded by parentheses.
 | `funservjoin` | Listens for FunServ commands to join channels and gives users information about how to use Cod as a bot. |
 | `ofc` | The Orbital Friendship Cannon. A stress tester. See `OFC HELP` for usage. |
 
+#### `autocloak`
+
+`autocloak` allows administrators to specify specific IP addresses that are 
+bouncer hosts and to apply a randomly generated vhost on connect.
+
+As this is a pesudoclient-introducing module, it requires a nick, user, gecos 
+and host configuration as well as the list of bouncers.
+
+An example using `bnc.im` and IRCCloud's public IP addresses is shown below:
+
+```javascript
+    "autocloak": {
+        "nick": "Gatekeeper",
+        "user": "guardian",
+        "host": "services.example.com",
+		"gecos": "The gatekeeper",
+
+		"list": {
+			"172.246.127.154": "bnc.im",
+			"172.246.127.176": "bnc.im",
+			"172.246.127.177": "bnc.im",
+			"172.246.127.178": "bnc.im",
+			"172.246.127.179": "bnc.im",
+			"88.150.203.213": "bnc.im",
+			"88.150.203.196": "bnc.im",
+			"198.52.200.15": "bnc.im",
+			"198.52.200.16": "bnc.im",
+			"198.52.199.84": "bnc.im",
+			"198.52.199.85": "bnc.im",
+			"213.138.108.24": "bnc.im",
+			"213.138.108.247": "bnc.im",
+            "192.184.9.108": "irccloud.com",
+			"192.184.9.110": "irccloud.com",
+			"192.184.9.112": "irccloud.com",
+			"192.184.9.114": "irccloud.com"
+		}
+	},
+
+```
+
