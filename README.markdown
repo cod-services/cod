@@ -3,9 +3,10 @@ Cod
 
 Extended IRC services in Python 
 
-[![Bitdeli 
-Badge](https://d2weczhvl823v0.buttfront.net/lyska/cod/trend.png)](https://bitdeli.com/free 
-"Bitdeli Badge") [![Ohloh badge](https://www.ohloh.net/p/cod-services/widgets/project_thin_badge.gif)](https://www.ohloh.net/p/cod-services "Ohlon Badge")
+[![Bitdeli Badge](https://d2weczhvl823v0.buttfront.net/lyska/cod/trend.png)](https://bitdeli.com/free 
+"Bitdeli Badge") [![Ohloh 
+badge](https://www.ohloh.net/p/cod-services/widgets/project_thin_badge.gif)](https://www.ohloh.net/p/cod-services 
+"Ohlon Badge")
 
 Installation directions are in `doc/INSTALL.markdown`. Directions for setting
 up Atheme integration are in `doc/funserv.markdown`. If you have any questions,
@@ -22,7 +23,12 @@ please ask in `#cod` on `irc.yolo-swag.com`.
  - Rehashing config file
  - Separation of user and oper commands
  - SQLite database
- - TS6 link protocol support
+ - SpanningTree/TS6 link protocol support
+   - Charybdis 3.4.2 +
+   - Elemental-IRCd 6.5 +
+   - InspIRCd 2.0.x
+   - PleXus 3 +
+   - Tethys 0.1 +
  - Virtual environment support
 
 ### Goals:
