@@ -97,10 +97,8 @@ def login(cod):
     cod.sendLine("SERVER %s 1 :%s" % \
             (cod.config["me"]["name"], cod.config["me"]["desc"]))
 
-def burstClient(cod, nick, user, host, real, uid=None):
+def burstClient(cod, client):
     """
-    XXX: Have this actually do what it says it does
-
     Some TS6-compatible IRC servers use different syntaxes for bursting clients,
     Thus, the protocol module needs to handle this.
 
@@ -108,10 +106,7 @@ def burstClient(cod, nick, user, host, real, uid=None):
     a UID if none is given.
     """
 
-    if uid == None:
-        uid = cod.getUID()
-
-    cod.sendLine(cod.clients[uid].burst())
+    cod.sendLine(client.burst())
 
 def nullCommand(cod, line):
     """
@@ -394,6 +389,17 @@ def handlePING(cod, line):
     """
     Pongs remote servers to end bursting
     """
+
+    if not cod.bursted:
+        #Join staff and snoop channels
+        cod.join(cod.config["etc"]["staffchan"])
+        cod.join(cod.config["etc"]["snoopchan"])
+        cod.privmsg("NickServ", "IDENTIFY %s" % cod.config["me"]["servicespass"])
+
+        #Load admin module
+        cod.loadmod("admin") #Required to be hard-coded
+
+        cod.bursted = True
 
     cod.sendLine(":%s PONG %s :%s" %
             (cod.sid, cod.config["me"]["name"],

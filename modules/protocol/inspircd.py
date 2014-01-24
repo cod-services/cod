@@ -98,13 +98,10 @@ def join(cod, channel, client=None):
     cod.sendLine(":%s FJOIN %s %s + ,%s" % (cod.sid, channel.name, channel.ts,
         client.uid))
 
-def burstClient(cod, nick, user, host, real, uid=None):
-    if uid is None:
-        uid = cod.getUID()
-
+def burstClient(cod, client):
     cod.sendLine(":%s UID %s %d %s 127.0.0.1 %s %s 127.0.0.1 %d +kio :%s" %
-            (cod.sid, uid, int(time.time()), nick, host,
-                user, int(time.time()), real))
+            (cod.sid, client.uid, int(time.time()), client.nick, client.host,
+                client.user, int(time.time()), client.gecos))
 
 def login(cod):
     #>> SERVER services-dev.chatspike.net password 0 666 :Description here

@@ -150,8 +150,7 @@ class Cod():
 
         self.clients[self.client.uid] = self.client
 
-        self.burstClient(self, self.client.nick, self.client.user,
-                self.client.host, self.client.gecos, self.client.uid)
+        self.burstClient(self, self.client)
 
         self.log("done")
 
@@ -531,22 +530,6 @@ class Cod():
 
 
             splitline = line.split()
-
-            #Ping handler.
-            if lineobj.source == None:
-                if lineobj.verb == "PING":
-                    self.sendLine("PONG %s" % splitline[1:][0])
-
-                    if not self.bursted:
-                        #Join staff and snoop channels
-                        self.join(self.config["etc"]["staffchan"])
-                        self.join(self.config["etc"]["snoopchan"])
-                        cod.privmsg("NickServ", "IDENTIFY %s" % cod.config["me"]["servicespass"])
-
-                        #Load admin module
-                        self.loadmod("admin") #Required to be hard-coded
-
-                        self.bursted = True
 
             if lineobj.verb == "ERROR":
                 #If ERROR is sent, it's already fatal.
