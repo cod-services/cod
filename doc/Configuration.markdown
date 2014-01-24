@@ -40,7 +40,7 @@ Information about the uplink ircd
 | `port` | Portnumber to connect to | `6667` | integer |
 | `pass` | Password to send to the remote ircd | `"dev"` | string |
 | `ssl` | If we are supposed to connect over SSL | `false` | boolean |
-| `protocol` | Do not change this from the default. | `elemental-ircd` | string |
+| `protocol` | What protocol is being used. | `elemental-ircd` | string |
 
 ### `etc`
 
@@ -65,6 +65,34 @@ syntax `level::name` expands to:
 	"name": "foo"
 }
 ```
+
+## `bot`
+
+| Name | Command | Oper-only? | Description |
+|:---- |:------- |:---------- |:----------- |
+| `bf` | `BF` | No | A simple brainfuck interepreter for one-line experimentation. |
+| `btc` | `BTC` | No | Grabs the latest prices from MTGox. |
+| `choice` | `CHOICE` | No | Randomly chooses from a list of one or more comma-seperated choices. |
+| `dice` | `DICE` | No | Simulates dice rolls |
+| `dnsbl` | `RBL` | Yes | Does DNSBL lookups on arbitrary users or IP addresses. |
+| `fibbonacci` | `FIB` | No | A memoizing fibbonacci calculator. |
+| `fpdtest` | `FPDTEST` | Yes | A flash policy daemon tester. |
+| `hubstats` | `OSRC` | No | Shows Github stats on the Open Source Report Card.
+| `immature` | `IMMATURE` | No | A smart immature phrase appender. |
+| `memusage` | `MEM` | Yes | Shows memory usage statistics. |
+| `mpdclient` | `MPD` | Some parts | A simple MPD client, shows currently 
+playing song and lets opers control next/previous. |
+| `opname` | `OPNAME` | No | Bad 80's B-movie style military operation name generator. |
+| `ponify` | `PONIFY` | No | Makes text easy to read so everypony can understand it by removing all those weird "human" terms. |
+| `say` | `SAY` | Yes | Lets an oper have the main client send arbitrary text to an arbitrary channel or user. |
+| `sendfile` | `SENDFILE` | Yes | Lets an oper send the contents of a text file to a user or channel. Useful in sharing ascii art. |
+| `shibe` | `SHIBE` | No | Generates shibe text from user input. |
+| `source` | `SOURCE` | No | Shows information about running version, protocol module and github source repository. |
+| `svsoper` | `SVSOPER` | Yes | Forcibly opers someone using SVSOPER. |
+| `tfw` | `TFW` | No | Does weather lookups from http://thefuckingweather.com |
+| `weather` | `WEATHER` | No | Does weather lookups via http://worldweatheronline.com (API key needed, see configuration document). |
+| `whoami` | `WHOAMI` | No | Shows what Cod knows about you. |
+
 
 ### `bot/mpdclient`
 
