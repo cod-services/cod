@@ -51,7 +51,7 @@ def ponifyCMD(cod, line, splitline, source, destination):
     line = " ".join(splitline[1:])
 
     cod.reply(source, destination, "%s: %s" %
-            (cod.clients[source].nick, replace(line, list_of_finds)))
+            (source.nick, replace(line, list_of_finds)))
 
 def map_each(replacements, f):
     return list(list(map(f, entry)) for entry in replacements)
