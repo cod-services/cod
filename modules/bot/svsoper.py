@@ -39,13 +39,17 @@ def rehash():
 def svsoper(cod, line, splitline, source, destination):
     "Forcibly opers a user"
 
+    if "charybdis" in cod.modules:
+        cod.notice(source, "Error, module does not work on this IRC daemon")
+        return
+
     target = splitline[1]
     opertype = splitline[2]
 
     target = cod.findClientByNick(target)
 
-    cod.sendLine(":%s SVSOPER %s :%s" % (cod.sid, target.uid, opertype))
+    cod.sendLine(":%s ENCAP %s SVSOPER %s :%s" % (cod.sid, target.sid, target.uid, opertype))
 
-    cod.servicesLog("SVSOPER: %s as %s" %
-            (source.nick, splitline[1]))
+    cod.servicesLog("SVSOPER: %s: %s as %s" %
+            (source.nick, splitline[1], splitline[-1]))
 
