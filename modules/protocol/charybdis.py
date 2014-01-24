@@ -398,6 +398,7 @@ def handlePING(cod, line):
 
         #Load admin module
         cod.loadmod("admin") #Required to be hard-coded
+        cod.loadmod("help")
 
         cod.bursted = True
 
