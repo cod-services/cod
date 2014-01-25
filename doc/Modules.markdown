@@ -61,6 +61,7 @@ Announces RESV use and logs it.
 | `bf` | `BF` | No | A simple brainfuck interepreter for one-line experimentation. |
 | `btc` | `BTC` | No | Grabs the latest prices from MTGox. |
 | `choice` | `CHOICE` | No | Randomly chooses from a list of one or more comma-seperated choices. |
+| `ctcp` | None | No | Replies to CTCP version requests. |
 | `dice` | `DICE` | No | Simulates dice rolls |
 | `dnsbl` | `RBL` | Yes | Does DNSBL lookups on arbitrary users or IP addresses. |
 | `fibbonacci` | `FIB` | No | A memoizing fibbonacci calculator. |
@@ -110,6 +111,7 @@ not show up to users and are surrounded by parentheses.
 | `reddit` | http://reddit.com | Grabs the name and link (if applicable) of a post on reddit. |
 | `soundcloud` | http://soundcloud.com | Grabs the artist and title of a song from soundcloud. |
 | `twitchtv` | http://twitch.tv | Grabs the stream info from a twitch.tv stream. |
+| `vimeo` | http://vimeo.com | Grabs video information from Vimeo. |
 | `youtube` | http://youtube.com | Grabs youtube video information and defines a simple search command `YT` |
 
 ## `services`
@@ -118,45 +120,7 @@ not show up to users and are surrounded by parentheses.
 |:---- |:----------- |
 | `faq` | Stores and spits out FAQ entries. |
 | `funservjoin` | Listens for FunServ commands to join channels and gives users information about how to use Cod as a bot. |
-| `ofc` | The Orbital Friendship Cannon. A stress tester. See `OFC HELP` for usage. |
-
-#### `autocloak`
-
-`autocloak` allows administrators to specify specific IP addresses that are 
-bouncer hosts and to apply a randomly generated vhost on connect.
-
-As this is a pesudoclient-introducing module, it requires a nick, user, gecos 
-and host configuration as well as the list of bouncers.
-
-An example using `bnc.im` and IRCCloud's public IP addresses is shown below:
-
-```javascript
-    "autocloak": {
-        "nick": "Gatekeeper",
-        "user": "guardian",
-        "host": "services.example.com",
-		"gecos": "The gatekeeper",
-
-		"list": {
-			"172.246.127.154": "bnc.im",
-			"172.246.127.176": "bnc.im",
-			"172.246.127.177": "bnc.im",
-			"172.246.127.178": "bnc.im",
-			"172.246.127.179": "bnc.im",
-			"88.150.203.213": "bnc.im",
-			"88.150.203.196": "bnc.im",
-			"198.52.200.15": "bnc.im",
-			"198.52.200.16": "bnc.im",
-			"198.52.199.84": "bnc.im",
-			"198.52.199.85": "bnc.im",
-			"213.138.108.24": "bnc.im",
-			"213.138.108.247": "bnc.im",
-            "192.184.9.108": "irccloud.com",
-			"192.184.9.110": "irccloud.com",
-			"192.184.9.112": "irccloud.com",
-			"192.184.9.114": "irccloud.com"
-		}
-	},
-
-```
+| `ofc` | The Orbital Friendship Cannon. A stress tester. See `OFC HELP` for 
+usage. |
+| `replayserv` | Replays the last 5 lines of chat in a channel to new members.|
 

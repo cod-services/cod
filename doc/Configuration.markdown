@@ -66,34 +66,6 @@ syntax `level::name` expands to:
 }
 ```
 
-## `bot`
-
-| Name | Command | Oper-only? | Description |
-|:---- |:------- |:---------- |:----------- |
-| `bf` | `BF` | No | A simple brainfuck interepreter for one-line experimentation. |
-| `btc` | `BTC` | No | Grabs the latest prices from MTGox. |
-| `choice` | `CHOICE` | No | Randomly chooses from a list of one or more comma-seperated choices. |
-| `dice` | `DICE` | No | Simulates dice rolls |
-| `dnsbl` | `RBL` | Yes | Does DNSBL lookups on arbitrary users or IP addresses. |
-| `fibbonacci` | `FIB` | No | A memoizing fibbonacci calculator. |
-| `fpdtest` | `FPDTEST` | Yes | A flash policy daemon tester. |
-| `hubstats` | `OSRC` | No | Shows Github stats on the Open Source Report Card.
-| `immature` | `IMMATURE` | No | A smart immature phrase appender. |
-| `memusage` | `MEM` | Yes | Shows memory usage statistics. |
-| `mpdclient` | `MPD` | Some parts | A simple MPD client, shows currently 
-playing song and lets opers control next/previous. |
-| `opname` | `OPNAME` | No | Bad 80's B-movie style military operation name generator. |
-| `ponify` | `PONIFY` | No | Makes text easy to read so everypony can understand it by removing all those weird "human" terms. |
-| `say` | `SAY` | Yes | Lets an oper have the main client send arbitrary text to an arbitrary channel or user. |
-| `sendfile` | `SENDFILE` | Yes | Lets an oper send the contents of a text file to a user or channel. Useful in sharing ascii art. |
-| `shibe` | `SHIBE` | No | Generates shibe text from user input. |
-| `source` | `SOURCE` | No | Shows information about running version, protocol module and github source repository. |
-| `svsoper` | `SVSOPER` | Yes | Forcibly opers someone using SVSOPER. |
-| `tfw` | `TFW` | No | Does weather lookups from http://thefuckingweather.com |
-| `weather` | `WEATHER` | No | Does weather lookups via http://worldweatheronline.com (API key needed, see configuration document). |
-| `whoami` | `WHOAMI` | No | Shows what Cod knows about you. |
-
-
 ### `bot/mpdclient`
 
 The `mpdclient` module uses a `mpd` block for its configuration parameters.
@@ -158,4 +130,45 @@ Example:
     "gecos": "FAQ Service"
 },
 ```
+
+#### `services/autocloak`
+
+`autocloak` allows administrators to specify specific IP addresses that are 
+bouncer hosts and to apply a randomly generated vhost on connect.
+
+As this is a pesudoclient-introducing module, it requires a nick, user, gecos 
+and host configuration as well as the list of bouncers.
+
+An example using `bnc.im` and IRCCloud's public IP addresses is shown below:
+
+```javascript
+    "autocloak": {
+        "nick": "Gatekeeper",
+        "user": "guardian",
+        "host": "services.example.com",
+		"gecos": "The gatekeeper",
+
+		"list": {
+			"172.246.127.154": "bnc.im",
+			"172.246.127.176": "bnc.im",
+			"172.246.127.177": "bnc.im",
+			"172.246.127.178": "bnc.im",
+			"172.246.127.179": "bnc.im",
+			"88.150.203.213": "bnc.im",
+			"88.150.203.196": "bnc.im",
+			"198.52.200.15": "bnc.im",
+			"198.52.200.16": "bnc.im",
+			"198.52.199.84": "bnc.im",
+			"198.52.199.85": "bnc.im",
+			"213.138.108.24": "bnc.im",
+			"213.138.108.247": "bnc.im",
+            "192.184.9.108": "irccloud.com",
+			"192.184.9.110": "irccloud.com",
+			"192.184.9.112": "irccloud.com",
+			"192.184.9.114": "irccloud.com"
+		}
+	},
+
+```
+
 
