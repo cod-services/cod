@@ -1,5 +1,20 @@
 # Setup
 
+### Dependencies:
+
+Debian or similar:
+
+```
+$ sudo apt-get install python-dev python-pip python-virtualenv
+$ sudo apt-get build-dep python-lxml
+```
+
+Alpine:
+
+```
+$ sudo apk add py-pip py-virtualenv python-dev libxml2-dev libxslt-dev
+```
+
 ### Installation:
 
 1. Set up an IRC network using Charybdis, Tethys, ShadowIRCD, Elemental-IRCd, 
