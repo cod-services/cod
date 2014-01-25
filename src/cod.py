@@ -317,7 +317,16 @@ class Cod():
             lines = [line]
 
         for thatline in lines:
-            self.sendLine(":%s PRIVMSG %s :%s" % (self.client.uid, target, thatline))
+            to_send = ":%s PRIVMSG %s :%s" % (source.uid, target, thatline)
+
+            if target[0] == "#":
+                fl = IRCMessage(to_send)
+                fl.source = source
+                cod.channels[target].addMessage(fl, 5)
+
+            self.sendLine(to_send)
+
+        #
 
     def notice(self, target, line, source=None):
         """
