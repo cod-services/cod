@@ -27,6 +27,7 @@ Basic configuration about Cod
 | `host` | vhost of pseudoclient | `blub.blub` | string |
 | `servicespass` | NickServ password of pesudoclient. Make this complicated and hard to guess | `"yoloswag420"` | string |
 | `prefix` | Channel command prefix, suggested to be `@` or `;`. Will not work if more than one character | `"@"` | string |
+| `netname` | The name of your network. | `ShadowNET` | string |
 | `motd` | MOTD message for a remote /MOTD | `"etc/cod.motd"` | string |
 | `dbpath` | path to the SQLite database that Cod uses internally | `"var/cod.db"` | string |
 

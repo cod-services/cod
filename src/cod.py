@@ -53,7 +53,6 @@ class Cod():
         client tables, and other variables needed for Cod to work
         properly are initialized here.
         """
-        self.version = VERSION
 
         self.link = socket.socket()
 
@@ -79,6 +78,8 @@ class Cod():
 
         #Load config file
         self.config = config.Config(configpath).config
+
+        self.version = "%s-%s" % (VERSION, self.config["me"]["netname"])
 
         #logger instance
         self.logger = log.Logger(self.config["etc"]["logfile"])

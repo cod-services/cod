@@ -1,6 +1,6 @@
 {
 	"me": {
-		"name": "ardreth.shadownet.int",
+		"name": "cod.int",
 		"desc": "Cod fishy",
 		"nick": "Cod",
 		"user": "fish",
@@ -8,6 +8,7 @@
 		"servicespass": "FsmaCapyRCfZzeRndmHBteGdm1jGpnOPmLNHMINiulmZTDDNDPEiJHajLEJFeeGbTcDNrGqsEEthkrJGTGEDF3pyjFgiYMxCJJeX",
 
 		"prefix": "@",
+		"netname": "ShadowNET",
 
 		"motd": "etc/cod.motd",
 		"dbpath": "var/cod.db"
@@ -21,21 +22,6 @@
 		"protocol": "elemental-ircd"
 	},
 
-	"dns": {
-		"pool": "irc.example.com",
-		"name": "example.com",
-		"nick": "DNSServ",
-		"user": "DNSServ",
-		"host": "services.example.com",
-		"gecos": "DNS Services"
-	},
-
-	"mpd": {
-		"host": "127.0.0.1",
-		"port": 6600,
-		"channel": "#sparkleradio"
-	},
-
 	"etc": {
 		"debug": false,
 		"production": true,
@@ -46,31 +32,4 @@
 		"suffixfile": "etc/suffix.txt",
 		"logfile": "var/cod.log"
 	},
-
-	"faq": {
-		"nick": "FAQServ",
-		"user": "faq",
-		"host": "services.example.com",
-		"gecos": "FAQ Service"
-	},
-
-	"tortoiselabs": {
-		"username": "herpenderp",
-		"apikey": "asdfasdf"
-	},
-
-	"autocloak": {
-		"nick": "Gatekeeper",
-		"user": "cloakbot",
-		"host": "services.example.com",
-		"gecos": "Automatic cloaker",
-
-		"list": {
-			"127.45.123.69": "bnc.example.com"
-		}
-	},
-
-	"apikeys": {
-		"worldweatheronline": "asdfasdfasdfasdf"
-	}
 }
