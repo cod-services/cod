@@ -24,6 +24,8 @@ freely, subject to the following restrictions:
 
 from structures import makeService
 
+DESC="Replays the last 5 lines of chat in a channel"
+
 global my_client
 
 def initModule(cod):
