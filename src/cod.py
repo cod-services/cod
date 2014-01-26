@@ -60,6 +60,7 @@ class Cod():
         self.channels = {}
         self.servers = {}
         self.modules = {}
+        self.hooks = {}
 
         self.socks = [self.link]
         self.sockhandlers = {self.link: self.process}
@@ -257,6 +258,31 @@ class Cod():
             del self.botcommands[command]
         except KeyError:
             del self.opercommands[command]
+
+    def addHook(self, name, func):
+        """
+        Adds a hook to the hook table.
+        """
+
+        if name not in self.hooks:
+            self.hooks[name] = []
+
+        self.hooks[name].append(func)
+
+    def delHook(self, name, func):
+        """
+        Deletes a hook from the hook table.
+        """
+
+        self.hooks[name].remove(func)
+
+    def runHooks(self, name, args):
+        """
+        Runs a hook with arguments as a list
+        """
+
+        for func in self.hooks[name]:
+            func(self, *args)
 
     def rehash(self):
         """
