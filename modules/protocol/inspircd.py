@@ -147,6 +147,8 @@ def handleUID(cod, line):
 
     cod.clients[client.uid] = client
 
+    cod.runHooks("newclient", [client])
+
 def handleOPERTYPE(cod, line):
     cod.clients[line.source].isOper = True
 
@@ -158,6 +160,8 @@ def handleJOIN(cod, line):
     channel = cod.channels[line.args[0]]
 
     channel.clientAdd(cod.clients[source])
+
+    cod.runHooks("join", [line.source, channel])
 
 def handlePART(cod, line):
     channel = cod.channels[line.args[0]]
@@ -185,6 +189,9 @@ def handleSJOIN(cod, line):
             client = cod.clients[uid]
 
             channel.clientAdd(client, prefix)
+
+            if not cod.bursted:
+                cod.runHooks("join", [client, channel])
 
 def handleNICK(cod, line):
     cod.clients[source].nick = line.args[0]
@@ -230,8 +237,15 @@ def handlePRIVMSG(cod, line):
     Handle PRIVMSG
     """
 
+    line.source = cod.clients[line.source]
+
+    if destination[0] == "#":
+        cod.runHooks("chanmsg", [line.args[0], line])
+    else:
+        cod.runHooks("privmsg", [cod.clients[line.args[0]], line])
+
     destination = line.args[0]
-    source = cod.clients[line.source]
+    source = line.source
     line = line.args[-1]
     splitline = line.split()
 

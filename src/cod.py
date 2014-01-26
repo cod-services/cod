@@ -278,11 +278,18 @@ class Cod():
 
     def runHooks(self, name, args):
         """
-        Runs a hook with arguments as a list
+        Runs a hook with arguments passed through. Be sure the argument types
+        match up or weird things may happen.
         """
 
+        if name not in self.hooks:
+            return
+
         for func in self.hooks[name]:
-            func(self, *args)
+            try:
+                func(self, *args)
+            except Exception as e:
+                cod.servicesLog("%s %s" % (type(e), e.message))
 
     def rehash(self):
         """

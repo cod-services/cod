@@ -134,6 +134,8 @@ def handleEUID(cod, line):
 
     cod.clients[client.uid] = client
 
+    cod.runHooks("newclient", [client])
+
 def handleQUIT(cod, line):
     """
     Handles a client quitting from the network
@@ -280,8 +282,16 @@ def handlePRIVMSG(cod, line):
     Handle PRIVMSG
     """
 
+    line.source = cod.clients[line.source]
+
     destination = line.args[0]
-    source = cod.clients[line.source]
+
+    if destination[0] == "#":
+        cod.runHooks("chanmsg", [line.args[0], line])
+    else:
+        cod.runHooks("privmsg", [cod.clients[line.args[0]], line])
+
+    source = line.source
     line = line.args[-1]
     splitline = line.split()
 
