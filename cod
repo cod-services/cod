@@ -37,7 +37,7 @@ function testmodule {
 }
 
 echo "--- Updating niilib"
-git submodule update
+git submodule update --init
 (cd src/niilib && git pull && git checkout master)
 
 #Download the TLD list
