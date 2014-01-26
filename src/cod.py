@@ -374,7 +374,8 @@ class Cod():
         channel = self.channels[channel]
 
         if self.tsSecond:
-            self.sendLine(":%s JOIN %s" % (client.uid, channel.name))
+            self.sendLine(":%s FJOIN %s %s + :,%s" % (self.sid, channel.name, channel.ts,
+                client.uid))
         else:
             self.sendLine(client.join(channel))
 
