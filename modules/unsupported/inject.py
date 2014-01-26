@@ -29,16 +29,23 @@ NAME="INJECT"
 DESC="LOL OPER ABUSE"
 
 def initModule(cod):
-    cod.addBotCommand("INJECT", inject, True)
+    if not cod.config["etc"]["production"]:
+        cod.addBotCommand("INJECT", inject, True)
+    else:
+        cod.servicesLog("Cowardly refusing to load INJECT with production mode on")
 
 def destroyModule(cod):
-    cod.delBotCommand("INJECT")
+    if not cod.config["etc"]["production"]:
+        cod.delBotCommand("INJECT")
 
 def rehash():
     pass
 
 def inject(cod, line, splitline, source, destination):
     "Inject raw commands into the uplink. USE WITH CARE"
+
+    if failIfNotOper(cod, source, destination):
+        return
 
     cod.sendLine(" ".join(splitline[1:]))
     cod.servicesLog("%s INJECT: %s" % (source.nick, " ".join(splitline[1:])))
