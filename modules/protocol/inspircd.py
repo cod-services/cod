@@ -190,7 +190,7 @@ def handleSJOIN(cod, line):
 
             channel.clientAdd(client, prefix)
 
-            if not cod.bursted:
+            if cod.bursted:
                 cod.runHooks("join", [client, channel])
 
 def handleNICK(cod, line):

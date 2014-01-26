@@ -166,6 +166,8 @@ def handleJOIN(cod, line):
 
     channel.clientAdd(cod.clients[source])
 
+    cod.runHooks("join", [line.source, channel])
+
 def handlePART(cod, line):
     """
     Handles a raw S2S PART, this removes a client from a channel.
@@ -201,6 +203,9 @@ def handleSJOIN(cod, line):
             client = cod.clients[uid]
 
             channel.clientAdd(client, prefix)
+
+            if cod.bursted:
+                cod.runHooks("join" [client, channel])
 
 def handleNICK(cod, line):
     """
