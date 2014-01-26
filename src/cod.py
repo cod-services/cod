@@ -60,6 +60,7 @@ class Cod():
         self.channels = {}
         self.servers = {}
         self.modules = {}
+        self.hooks = {}
 
         self.socks = [self.link]
         self.sockhandlers = {self.link: self.process}
@@ -262,6 +263,38 @@ class Cod():
         except KeyError:
             del self.opercommands[command]
             self.log("%s deleted as OPERCOMMAND" % command, "CMD")
+
+    def addHook(self, name, func):
+        """
+        Adds a hook to the hook table.
+        """
+
+        if name not in self.hooks:
+            self.hooks[name] = []
+
+        self.hooks[name].append(func)
+
+    def delHook(self, name, func):
+        """
+        Deletes a hook from the hook table.
+        """
+
+        self.hooks[name].remove(func)
+
+    def runHooks(self, name, args):
+        """
+        Runs a hook with arguments passed through. Be sure the argument types
+        match up or weird things may happen.
+        """
+
+        if name not in self.hooks:
+            return
+
+        for func in self.hooks[name]:
+            try:
+                func(self, *args)
+            except Exception as e:
+                cod.servicesLog("%s %s" % (type(e), e.message))
 
     def rehash(self):
         """
