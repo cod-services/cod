@@ -44,7 +44,7 @@ def initModule(cod):
     cod.sendLine(client.burst())
     cod.log("Bursting autocloak client", "!!!")
 
-    cod.s2scommands["EUID"].append(handleCloak)
+    cod.addHook("newclient", handleCloak)
 
     cod.join(cod.config["etc"]["snoopchan"], client)
 
@@ -54,31 +54,31 @@ def destroyModule(cod):
     cod.sendLine(client.quit())
     cod.clients.pop(client.uid)
 
-    cod.s2scommands["EUID"].remove(handleCloak)
+    cod.delHook("newclient", handleCloak)
 
 def rehash():
     pass
 
-def handleCloak(cod, line):
+def handleCloak(cod, newclient):
     #Check user's IP in the autocloak list
-    if line.args[6] in cod.config["autocloak"]["list"]:
+    if newclient.ip in cod.config["autocloak"]["list"]:
         #If they are authed, they probably have a vhost or are getting re-bursted
         #so it would be a Bad Idea to cloak them
-        if line.args[-2] != "*":
+        if newclient.login != "*":
             return
 
-        cloaksuffix = cod.config["autocloak"]["list"][line.args[6]]
-        ident = line.args[4]
+        cloaksuffix = cod.config["autocloak"]["list"][newclient.ip]
+        ident = newclient.user + cod.config["me"]["netname"]
 
         m = md5.new()
         m.update(ident)
 
-        unique = m.hexdigest()[:16]
+        unique = m.hexdigest()[:12]
 
-        host = "%s.%s" % (unique.upper(), cloaksuffix)
+        host = "%s-%s.%s" % (cod.config["me"]["netname"], unique.upper(), cloaksuffix)
 
-        cod.clients[line.args[7]].host = host
+        cod.clients[newclient.uid].host = host
 
-        cod.sendLine(":%s CHGHOST %s %s" % (client.uid, line.args[7], host))
-        cod.notice(line.args[7], "Your vhost has been uniquely randomized as a part of a policy set by your BNC host and network staff. If your desired vhost doesn't show up, please re-activate it using /msg HostServ ON", client)
+        cod.sendLine(":%s CHGHOST %s %s" % (client, newclient, host))
+        cod.notice(newclient.uid, "Your vhost has been uniquely randomized as a part of a policy set by your BNC host and network staff. If your desired vhost doesn't show up, please re-activate it using /msg HostServ ON", client)
 
