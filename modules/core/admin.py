@@ -109,7 +109,7 @@ def commandJOIN(cod, line, splitline, source, destination):
             cod.notice(source, "I don't know about %s" % channel)
             return
 
-        cod.join(channel, cod.client)
+        cod.join(channel)
 
         client = source
         cod.servicesLog("JOIN %s: %s" % (channel, client.nick))
