@@ -244,6 +244,9 @@ class Cod():
 
         if oper:
             wheretoadd = self.opercommands
+            self.log("%s added as OPERCOMMAND" % command, "CMD")
+        else:
+            self.log("%s added as USERCOMMAND" % command, "CMD")
 
         wheretoadd[command] = [func]
 
@@ -255,8 +258,10 @@ class Cod():
 
         try:
             del self.botcommands[command]
+            self.log("%s deleted as USERCOMMAND" % command, "CMD")
         except KeyError:
             del self.opercommands[command]
+            self.log("%s deleted as OPERCOMMAND" % command, "CMD")
 
     def rehash(self):
         """
