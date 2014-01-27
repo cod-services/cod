@@ -22,6 +22,20 @@ freely, subject to the following restrictions:
     distribution.
 """
 
+"""
+To use this module, add a 4chanserv block to your config.json. The one I use
+is below:
+
+    "4chanserv": {
+        "nick": "4ChanServ",
+        "user": "moot",
+        "host": "4chan.org",
+        "gecos": "4chan Relay",
+        "prefix": "<"
+    },
+
+"""
+
 import htmllib
 import threading
 import time
