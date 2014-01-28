@@ -134,14 +134,14 @@ class Channel():
     def clientAdd(self, client, prefix = ""):
         self.clients[client.uid] = ChanUser(client)
 
-    def addMessage(self, line, pos=4):
+    def addMessage(self, line):
         if len(self.msgbuffer) == 5:
             self.msgbuffer.pop(0)
 
         try:
             fakeline = FakeLine(line)
 
-            self.msgbuffer.insert(pos, fakeline)
+            self.msgbuffer.append(fakeline)
         except Exception as e:
             print type(e), e.message
 
