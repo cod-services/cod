@@ -208,6 +208,8 @@ class ThreadMonitor(threading.Thread):
                 else:
                     string += "Anonymous "
 
+                string += "(%s) " % post["no"]
+
                 if "filename" in post:
                     string += "posted %s%s and " % (post["filename"], post["ext"])
                 if "com" in post:
