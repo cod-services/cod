@@ -207,7 +207,7 @@ class ThreadMonitor(threading.Thread):
             for post in newposts:
                 string = "/%s/%s: New post: " % (self.board, self.threadid)
                 if "name" in post:
-                    string += "%s " % post["name"]
+                    string += "%s " % remove_html_markup(post["name"])
                 else:
                     string += "Anonymous "
 
