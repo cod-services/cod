@@ -52,8 +52,10 @@ DESC="Live-feeds 4chan threads to a channel"
 def initModule(cod):
     global client
 
-    client = makeService(cod.config["4chanserv"]["nick"], cod.config["4chanserv"]["user"],
-            cod.config["4chanserv"]["host"], cod.config["4chanserv"]["gecos"],
+    client = makeService(cod.config["4chanserv"]["nick"],
+            cod.config["4chanserv"]["user"],
+            cod.config["4chanserv"]["host"],
+            cod.config["4chanserv"]["gecos"],
             cod.getUID())
 
     cod.clients[client.uid] = client
@@ -107,10 +109,10 @@ def handleCommands(cod, target, line):
     if splitline[0][0] == cod.config["4chanserv"]["prefix"]:
         command = splitline[0][1:].upper()
 
-        if not line.source.isOper:
-            return
-
         if command == "JOIN":
+            if not line.source.isOper:
+                return
+
             channel = splitline[1]
 
             if channel in cod.channels:
@@ -125,7 +127,6 @@ def handleCommands(cod, target, line):
         elif command == "MONITOR":
             board = splitline[1]
             thread = splitline[2]
-            channel = splitline[3]
 
             #Sanity check
             if len(board) > 4:
@@ -149,7 +150,7 @@ def handleCommands(cod, target, line):
 
                 cod.notice(target, "Stopped monitoring /%s/%s at the request of %s" %
                         (board, thread, line.source.nick), client)
-                cod.servicesLog("%s MONITOR:STOP:/%s/%s to %s" %\
+                cod.servicesLog("%s MONITOR:STOP:/%s/%s to %s" %
                         (line.source.nick, board, thread, target), client)
 
             else:
@@ -158,9 +159,9 @@ def handleCommands(cod, target, line):
 
         elif command == "HELP":
             cod.notice(line.source.uid, "HELP:", client)
-            cod.notice(line.source.uid, "JOIN: <channel> - Joins a channel", client)
-            cod.notice(line.source.uid, "MONITOR: <board> <thread> <channel> - monitors 4chan <board> <thread> to #channel", client)
-            cod.notice(line.source.uid, "DEMONITOR: <board> <thread> - disabled monitoring to a channel", client)
+            cod.notice(line.source.uid, "JOIN:      <channel>        - Joins a channel. Oper-only.", client)
+            cod.notice(line.source.uid, "MONITOR:   <board> <thread> - monitors 4chan <board> <thread> to the channel this command is run from", client)
+            cod.notice(line.source.uid, "DEMONITOR: <board> <thread> - disables monitoring of a thread", client)
 
 def unescape(comment):
     p = htmllib.HTMLParser(None)
