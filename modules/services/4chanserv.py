@@ -234,6 +234,14 @@ class ThreadMonitor(threading.Thread):
                 self.checkThread()
             except ValueError as e:
                 self.slay()
+                self.cod.notice(self.target, "Montioring stopped for /%s/%s: %s %s. Did the thread die?" %\
+                        (self.board, self.threadid, type(e), e.message))
+            except Exception as e:
+                self.slay()
+                self.cod.notice(self.target, "Thread monitoring for /%s/%s stopped for an unknown reason." %\
+                        (self.board, self.threadid), client)
+                self.cod.servicesLog("Monitoring broken for /%s/%s to %s because %s %s" %\
+                        (self.board, self.threadid, self.target, type(e), e.message), client)
 
             for n in range(self.interval):
                 time.sleep(1)
