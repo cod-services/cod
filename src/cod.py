@@ -581,7 +581,7 @@ class Cod():
                     try:
                         impl(cod, lineobj)
                     except Exception as e:
-                        cod.servicesLog(type(e) + " " + e.message)
+                        cod.servicesLog("%s %s" %(type(e), e.message))
                         continue
             except KeyError:
                 pass
