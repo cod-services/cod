@@ -213,7 +213,7 @@ class ThreadMonitor(threading.Thread):
                 if "filename" in post:
                     string += "posted %s%s and " % (post["filename"], post["ext"])
                 if "com" in post:
-                    comment = post["com"].replace("<br>", "  ")
+                    comment = post["com"].replace("<br>", " \ ")
                     comment = remove_html_markup(comment)
                     comment = unescape(comment)
 
