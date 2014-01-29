@@ -238,13 +238,13 @@ def handlePRIVMSG(cod, line):
     """
 
     line.source = cod.clients[line.source]
+    destination = line.args[0]
 
     if destination[0] == "#":
         cod.runHooks("chanmsg", [line.args[0], line])
     else:
         cod.runHooks("privmsg", [cod.clients[line.args[0]], line])
 
-    destination = line.args[0]
     source = line.source
     line = line.args[-1]
     splitline = line.split()
@@ -288,6 +288,7 @@ def handlePRIVMSG(cod, line):
     except KeyError as e:
         for impl in cod.botcommands[command]:
             try:
+                print command
                 if pm:
                     impl(cod, line, splitline, source, source)
                 else:
