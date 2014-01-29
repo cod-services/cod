@@ -580,6 +580,8 @@ class Cod():
                 for impl in self.s2scommands[lineobj.verb]:
                     try:
                         impl(cod, lineobj)
+                    except KeyError as e:
+                        continue
                     except Exception as e:
                         cod.servicesLog("%s %s" %(type(e), e.message))
                         continue
