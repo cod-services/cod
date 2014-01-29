@@ -74,6 +74,8 @@ def destroyModule(cod):
     cod.sendLine(client.quit())
     cod.clients.pop(client.uid)
 
+    cod.delHook("chanmsg", handleCommands)
+
 # https://stackoverflow.com/questions/753052/strip-html-from-strings-in-python
 def remove_html_markup(s):
     tag = False
