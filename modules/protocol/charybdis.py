@@ -205,7 +205,7 @@ def handleSJOIN(cod, line):
             channel.clientAdd(client, prefix)
 
             if cod.bursted:
-                cod.runHooks("join" [client, channel])
+                cod.runHooks("join", [client, channel])
 
 def handleNICK(cod, line):
     """
