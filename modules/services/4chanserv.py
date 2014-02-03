@@ -205,7 +205,7 @@ class ThreadMonitor(threading.Thread):
             newposts = filter((lambda x: x["no"] > self.lastpostid), json["posts"])
 
             for post in newposts:
-                string = "/%s/%s: New post: " % (self.board, self.threadid)
+                string = "/%s/%s: " % (self.board, self.threadid)
                 if "name" in post:
                     string += "%s " % remove_html_markup(post["name"])
                 else:
@@ -235,6 +235,8 @@ class ThreadMonitor(threading.Thread):
         while not self.dying:
             try:
                 self.checkThread()
+            except UnicodeError:
+                pass
             except ValueError as e:
                 self.slay()
                 self.cod.notice(self.target, "Montioring stopped for /%s/%s: %s %s. Did the thread die?" %\
