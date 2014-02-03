@@ -57,7 +57,7 @@ def eqbeatsLookup(cod, line):
     try:
         info = requests.get("http://eqbeats.org/track/%s/json" % songid).json()
 
-        string = "^ EQBeats: %s by %s" %\
+        string = "^ EQBeats: %s -- %s" %\
                 (info["artist"]["name"], info["title"])
 
         cod.privmsg(line.args[0], string)
