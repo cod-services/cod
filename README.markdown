@@ -35,6 +35,7 @@ licensed per file as appropriate.
 ### Goals:
  - DNS record editing (Tortoise Labs)
  - Feature-completeness with skybot
+ - Multiple clients that do the same thing, like BotServ
  - MPD playlist manipulation
  - User statistics collection
    - Follow anonyminity standards of the Tor Project
