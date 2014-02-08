@@ -28,9 +28,6 @@ from structures import *
 from utils import *
 from protocol import TS6ServerConn
 
-from niilib.b36 import base36encode
-from textwrap import wrap
-
 NAME="TS6 protocol module"
 DESC="Handles login and protocol commands for TS6 servers"
 

@@ -24,6 +24,8 @@ freely, subject to the following restrictions:
 
 from structures import *
 from utils import *
+from protocol import TS6ServerConn
+
 import time
 import sys
 
@@ -34,6 +36,8 @@ def initModule(cod):
     cod.loginFunc = login
     cod.burstClient = burstClient
     cod.tsSecond = True
+
+    cod.protocol = TS6ServerConn(cod)
 
     cod.s2scommands["UID"] = [handleUID]
     cod.s2scommands["QUIT"] = [handleQUIT]
