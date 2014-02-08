@@ -27,6 +27,9 @@ import sys
 from structures import *
 from utils import *
 
+from niilib.b36 import base36encode
+from textwrap import wrap
+
 NAME="TS6 protocol module"
 DESC="Handles login and protocol commands for TS6 servers"
 
@@ -34,6 +37,7 @@ def initModule(cod):
     cod.loginFunc = login
     cod.burstClient = burstClient
     cod.tsSecond = False
+    cod.protocol = TS6ServerConn(cod)
 
     cod.s2scommands["EUID"] = [handleEUID]
     cod.s2scommands["QUIT"] = [handleQUIT]
@@ -420,4 +424,74 @@ def handlePING(cod, line):
     cod.sendLine(":%s PONG %s :%s" %
             (cod.sid, cod.config["me"]["name"],
                 line.source))
+
+class TS6ServerConn():
+    """
+    Manages a TS6 connection
+    """
+
+    def __init__(self, cod):
+        self.umodes = "+Sio"
+
+        self.cod = cod
+
+        self.last_uid = 60466176 # 100000 in base 36
+
+    def gen_uid(self):
+        uid = base36encode(self.last_uid)
+
+        self.last_uid = self.last_uid + 1
+
+        return self.numeric + uid
+
+    def send_line(self, line):
+        self.cod.sendLine(line)
+
+    def send_line_sname(self, line):
+        self.send_line(":%s %s" % (self.numeric, line))
+
+    def add_client(self, client):
+        now = int(time.time())
+
+        self.send_line_sname("EUID %s 1 %d %s %s %s 0 %s * * :%s" %\
+                (client.nick, now, client.modes, client.user, client.host,
+                    client.uid, client.gecos))
+
+    def quit(self, client, reason):
+        self.send_line(":%s QUIT :%s" % (client.uid, reason))
+
+    def change_nick(self, client, nick):
+        now = int(time.time())
+
+        self.send_line(":%s NICK %s :%d" % (client.uid, nick, now))
+
+    def _msg_like(self, type, client, target, message):
+        lines = []
+
+        if len(message) > 450:
+            lines = wrap(line, 450)
+        else:
+            lines = [message]
+
+        for thatline in lines:
+            self.send_line(":%s %s %s :%s" %
+                            (client.uid, type, target, thatline))
+
+    def privmsg(self, client, target, message):
+        self._msg_like("PRIVMSG", client, target, message)
+
+    def notice(self, client, target, message):
+        self._msg_like("NOTICE", client, target, message)
+
+    def join_client(self, client, channel):
+        self.send_line(":%s JOIN %s %s" %\
+                (client.uid, channel.ts, channel.name))
+
+    def kill(self, killer, target, reason):
+        self.send_line(":%s KILL %s :spacing %s" %\
+                (killer.uid, target.uid, reason))
+
+    def snote(self, line, mask="d"):
+        self.send_line(":%s ENCAP * SNOTE %s :%s" % \
+                (self.numeric, mask, line))
 
