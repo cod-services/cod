@@ -124,9 +124,12 @@ class Channel():
         self.name = name
         self.ts = ts
         self.clients = {}
-        self.lists = {'b': [], 'e': [], 'I': [], 'q': [], 'u': []}
+        self.lists = {'b': [], 'e': [], 'I': [], 'q': []}
         self.modes = ""
         self.msgbuffer = []
+
+    def __str__(self):
+        return self.name
 
     def listAdd(self, chanlist, mask):
         self.lists[chanlist].append(mask)
