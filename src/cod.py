@@ -75,6 +75,7 @@ class Cod():
 
         self.bursted = False
         self.db = None
+        self.protocol = None
         self.sid = ""
 
         #Load config file
