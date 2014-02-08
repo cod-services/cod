@@ -89,6 +89,10 @@ class TS6ServerConn():
         self.send_line(":%s JOIN %s %s" %\
                 (client.uid, channel.ts, channel.name))
 
+    def part_client(self, client, channel, reason):
+        self.send_line(":%s PART %s" %\
+                (client.uid, channel.name))
+
     def kill(self, killer, target, reason):
         self.send_line(":%s KILL %s :spacing %s" %\
                 (killer.uid, target.uid, reason))
@@ -180,6 +184,9 @@ class P10ServerConn():
 
     def join_client(self, client, channel):
         self.send_line("%s J %s %s" % (client.uid, channel.name, channel.ts))
+
+    def part_client(self, client, channel, reason):
+        self.send_line("%s L %s :%s" % (client.uid, channel.name, reason))
 
     def kill(self, killer, target, reason):
         "Remotely kills a client off a P10 network."
