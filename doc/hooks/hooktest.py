@@ -14,6 +14,7 @@ def initModule(cod):
     cod.addHook("chanmsg", chanmsgHook)
     cod.addHook("newclient", newClientHook)
     cod.addHook("join", joinHook)
+    cod.addHook("part", partHook)
 
     """
     Hooks are executed by cod.runHooks(<hookname>, [<hookargs>]).
@@ -31,12 +32,18 @@ def destroyModule(cod):
     cod.delHook("privmsg", privmsgHook)
     cod.delHook("chanmsg", chanmsgHook)
     cod.delHook("join", joinHook)
+    cod.delHook("part", partHook)
     cod.delHook("newclient", newClientHook)
 
 # A join hook expects the arguments to be the source client instance and the
 # destination channel instance.
 def joinHook(cod, client, channel):
     cod.log("%s joined to %s" % (client.nick, channel.name))
+
+# A part hook expects the arguments to be the source client instance and the
+# destination channel instance.
+def partHook(cod, client, channel):
+    cod.log("%s parted from %s" % (client.nick, channel.name))
 
 # A newclient hook expects that the argument will be a client instance of the
 # client that just connected to the network.

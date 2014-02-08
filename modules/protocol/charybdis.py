@@ -37,6 +37,7 @@ def initModule(cod):
 
     cod.s2scommands["EUID"] = [handleEUID]
     cod.s2scommands["QUIT"] = [handleQUIT]
+    cod.s2scommands["PART"] = [handlePART]
     cod.s2scommands["SJOIN"] = [handleSJOIN]
     cod.s2scommands["NICK"] = [handleNICK]
     cod.s2scommands["BMASK"] = [handleBMASK]
@@ -64,6 +65,7 @@ def destroyModule(cod):
 
     del cod.s2scommands["EUID"]
     del cod.s2scommands["QUIT"]
+    del cod.s2scommands["PART"]
     del cod.s2scommands["SJOIN"]
     del cod.s2scommands["NICK"]
     del cod.s2scommands["BMASK"]
@@ -166,7 +168,7 @@ def handleJOIN(cod, line):
 
     channel.clientAdd(cod.clients[source])
 
-    cod.runHooks("join", [line.source, channel])
+    cod.runHooks("join", [cod.clients[line.source], channel])
 
 def handlePART(cod, line):
     """
@@ -174,7 +176,9 @@ def handlePART(cod, line):
     """
     channel = cod.channels[line.args[0]]
 
-    channel.clients.pop(source)
+    channel.clients.pop(line.source)
+
+    cod.runHooks("part", [cod.clients[line.source], channel])
 
 def handleSJOIN(cod, line):
     """
