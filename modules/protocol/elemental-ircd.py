@@ -51,7 +51,7 @@ def login(cod):
 
     cod.sendLine("PASS %s TS 6 :%s" % \
             (cod.config["uplink"]["pass"], cod.sid))
-    cod.sendLine("CAPAB :QS EX IE KLN UNKLN ENCAP SERVICES EUID EOPMOD")
+    cod.sendLine("CAPAB :QS EX IE KLN UNKLN ENCAP SERVICES EUID EOPMOD RSFNC")
     cod.sendLine("SERVER %s 1 :%s" % \
             (cod.config["me"]["name"], cod.config["me"]["desc"]))
 
