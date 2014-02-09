@@ -36,11 +36,15 @@ def initModule(cod):
     cod.loginFunc = login
     cod.burstClient = burstClient
 
+    cod.s2scommands["UID"] = [handleUID]
+
     cod.loadmod("charybdis")
 
 def destroyModule(cod):
     del cod.loginFunc
     cod.loginFunc = None
+
+    del cod.s2scommands["UID"]
 
 def rehash():
     pass
@@ -55,6 +59,15 @@ def login(cod):
     cod.sendLine("CAPAB :QS EX CHW IE EOB KLN UNKLN GLN HUB KNOCK TBURST PARA ENCAP SVS")
     cod.sendLine("SERVER %s 1 :%s" % \
             (cod.config["me"]["name"], cod.config["me"]["desc"]))
+
+def handleUID(cod, line):
+    nick, ts, modes, user, ip, host, uid, gecos = line.args[0], line.args[2], \
+        line.args[3], line.args[4], line.args[5], line.args[6], line.args[8], \
+        line.args[-1]
+
+    client = Client(nick, uid, ts, modes, user. host, ip, "*", gecos)
+
+    cod.clients[uid] = client
 
 def burstClient(cod, client):
     # UplinkSocket::Message(Me) << "UID " << u->nick << " 1 " << u->timestamp << " " << modes << " " << u->GetIdent() << " " << u->host << " 255.255.255.255 " << u->GetUID() << " 0 " << u->host << " :" << u->realname;
