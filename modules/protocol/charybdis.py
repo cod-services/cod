@@ -26,6 +26,7 @@ import sys
 
 from structures import *
 from utils import *
+from protocol import TS6ServerConn
 
 NAME="TS6 protocol module"
 DESC="Handles login and protocol commands for TS6 servers"
@@ -34,6 +35,7 @@ def initModule(cod):
     cod.loginFunc = login
     cod.burstClient = burstClient
     cod.tsSecond = False
+    cod.protocol = TS6ServerConn(cod)
 
     cod.s2scommands["EUID"] = [handleEUID]
     cod.s2scommands["QUIT"] = [handleQUIT]

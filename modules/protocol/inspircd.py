@@ -24,6 +24,8 @@ freely, subject to the following restrictions:
 
 from structures import *
 from utils import *
+from protocol import InspircdServerConn
+
 import time
 import sys
 
@@ -35,9 +37,11 @@ def initModule(cod):
     cod.burstClient = burstClient
     cod.tsSecond = True
 
+    cod.protocol = InspircdServerConn(cod)
+
     cod.s2scommands["UID"] = [handleUID]
     cod.s2scommands["QUIT"] = [handleQUIT]
-    cod.s2scommands["FJOIN"] = [handleSJOIN]
+    cod.s2scommands["FJOIN"] = [handleFJOIN]
     cod.s2scommands["NICK"] = [handleNICK]
     cod.s2scommands["MODE"] = [handleMODE]
     cod.s2scommands["FHOST"] = [handleCHGHOST]
@@ -153,7 +157,7 @@ def handleOPERTYPE(cod, line):
     cod.clients[line.source].isOper = True
 
 def handleQUIT(cod, line):
-    cod.clients.pop(source)
+    cod.clients.pop(line.source)
 
 def handleJOIN(cod, line):
     # :<uuid> JOIN <#channel>{,<#channel>} <timestamp>
@@ -166,9 +170,9 @@ def handleJOIN(cod, line):
 def handlePART(cod, line):
     channel = cod.channels[line.args[0]]
 
-    channel.clients.pop(source)
+    channel.clients.pop(line.source)
 
-def handleSJOIN(cod, line):
+def handleFJOIN(cod, line):
     # :<sid> FJOIN <channel> <timestamp> +[<modes> {mode params}] [:<[statusmodes],uuid> {<[statusmodes],uuid>}]
     try:
         cod.channels[line.args[0]]
