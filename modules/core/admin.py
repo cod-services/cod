@@ -47,6 +47,7 @@ def initModule(cod):
     cod.addBotCommand("LISTCHANS", commandLISTCHANS, True)
     cod.addBotCommand("VERSION", commandVERSION, True)
     cod.addBotCommand("UPGRADE", commandUPGRADE, True)
+    cod.addBotCommand("UPDATE", commandUPGRADE, True)
 
     cod.s2scommands["ENCAP"].append(logREHASH)
     cod.s2scommands["MOTD"] = [handleMOTD]
@@ -89,6 +90,7 @@ def destroyModule(cod):
     cod.delBotCommand("LISTCHANS")
     cod.delBotCommand("VERSION")
     cod.delBotCommand("UPGRADE")
+    cod.delBotCommand("UPDATE")
 
     idx = cod.s2scommands["ENCAP"].index(logREHASH)
     cod.s2scommands.pop(idx)
