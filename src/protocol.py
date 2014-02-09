@@ -24,6 +24,8 @@ freely, subject to the following restrictions:
 This code was originally written for eon, but has been ported to cod.
 """
 
+from textwrap import wrap
+
 class TS6ServerConn():
     """
     Manages a TS6-like connection commands
