@@ -73,7 +73,7 @@ class TS6ServerConn():
         lines = []
 
         if len(message) > 450:
-            lines = wrap(line, 450)
+            lines = wrap(message, 450)
         else:
             lines = [message]
 
