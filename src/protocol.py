@@ -101,6 +101,13 @@ class TS6ServerConn():
         self.send_line(":%s ENCAP * SNOTE %s :%s" % \
                 (self.numeric, mask, line))
 
+class InspircdServerConn(TS6ServerConn):
+    def __init__(self, cod):
+        TS6ServerConn.__init__(self, cod)
+
+    def join_client(self, client, channel):
+        self.send_line(":%s FJOIN %s %s + :,%s" % (self.numeric, channel.name,
+            channel.ts, client.uid))
 
 class P10ServerConn():
     """
