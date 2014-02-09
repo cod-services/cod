@@ -30,14 +30,14 @@ TLDLIST = []
 def initModule(cod):
     global TLDLIST
 
-    cod.s2scommands["PRIVMSG"].append(relayHostServToOpers)
+    cod.addHook("chanmsg", relayHook)
 
     with open("var/tlds-alpha-by-domain.txt", "r") as tlds:
         for line in tlds.readlines():
             TLDLIST.append(line.strip())
 
 def destroyModule(cod):
-    cod.s2scommands["PRIVMSG"].remove(relayHostServToOpers)
+    cod.delHook("chanmsg", relayHook)
 
 def rehash():
     pass
@@ -49,54 +49,43 @@ def anyOf(things, check):
 
     return False
 
-def relayHostServToOpers(cod, line):
+def tld_check(cod, vhost):
     global TLDLIST
 
-    if line.args[0] == cod.config["etc"]["snoopchan"]:
-        if cod.clients[line.source].nick == "HostServ":
+    if vhost.split(".")[0].upper() in TLDLIST:
+        cod.privmsg(cod.findClientByNick("HostServ").uid,
+                "REJECT %s Your chosen VHost (%s) is a real domain name and cannot be chosen as a VHost. Please contact an operator in %s." %\
+                        (requester, vhost, cod.config["etc"]["helpchan"]))
+        return True
+    return False
+
+def lookupVhost(cod, vhost):
+    splithost = vhost.split(".")
+
+    for frag in splithost:
+        #don't look up "to", "a", etc
+        if len(frag) < 3:
+            continue
+
+        if len(frag) < 7:
+            frag = "*%s*" % frag
+        else:
+            frag = "*%s*" % frag[2:-2]
+
+        cod.privmsg(cod.findClientByNick("HostServ").uid,
+                     "LISTVHOST %s" % frag)
+
+def relayHook(cod, target, line):
+    if target.name == cod.config["etc"]["snoopchan"]:
+        if line.source.nick == "HostServ":
             if anyOf(["TAKE", "REQUEST", "REJECT", "ASSIGN", "LISTVHOST"], line.args[-1]):
                 cod.sendLine(cod.client.privmsg(cod.config["etc"]["staffchan"],
                     "HostServ: " + line.args[-1]))
 
-            splitline = line.args[-1].split()
+                splitline = line.args[-1].split()
 
-            if len(splitline) < 3:
-                return
+                vhost = splitline[2][1:-1] if splitline[1] == "REQUEST:" else splitline[3][1:-1]
 
-            vhost = ""
-            place = 0
-
-            if splitline[1] == "REQUEST:":
-                vhost = splitline[2][1:-1] #shuck the vhost
-            elif splitline[2] == "REQUEST:":
-                vhost = splitline[3][1:-1] #shuck the vhost
-                place = 1
-            else:
-                return
-
-            splithost = vhost.split(".")
-
-            print splithost[-1].upper()
-
-            for tld in TLDLIST:
-                if splithost[-1].upper() == tld:
-                    requester = splitline[0]
-
-                    cod.privmsg(cod.findClientByNick("HostServ").uid,
-                               "REJECT %s Your chosen VHost (%s) is a real domain name and cannot be chosen as a VHost. Please contact an operator in %s." %\
-                               (requester, vhost, cod.config["etc"]["helpchan"]))
-                    return
-
-            for frag in splithost:
-                #don't look up "to", "a", etc
-                if len(frag) < 3:
-                    continue
-
-                if len(frag) < 7:
-                    frag = "*%s*" % frag
-                else:
-                    frag = "*%s*" % frag[2:-2]
-
-                cod.privmsg(cod.findClientByNick("HostServ").uid,
-                            "LISTVHOST %s" % frag)
+                if not tld_check(cod, vhost):
+                    lookupVhost(cod, vhost)
 
