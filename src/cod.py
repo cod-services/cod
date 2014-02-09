@@ -348,15 +348,7 @@ class Cod():
         if source is None:
             source = self.client
 
-        lines = []
-
-        if len(line) > 450:
-            lines = wrap(line, 450)
-        else:
-            lines = [line]
-
-        for thatline in lines:
-            self.sendLine(":%s PRIVMSG %s :%s" % (self.client.uid, target, thatline))
+        self.protocol.privmsg(source, target, line)
 
     def notice(self, target, line, source=None):
         """
@@ -370,7 +362,7 @@ class Cod():
         if source is None:
             source = self.client
 
-        self.sendLine(":%s NOTICE %s :%s" % (source.uid, target, line))
+        self.protocol.notice(source, target, line)
 
     def kill(self, target, source=None, message="Connection has been terminated."):
         """
@@ -380,8 +372,7 @@ class Cod():
         if source is None:
             source = self.client
 
-        self.sendLine(":%s KILL %s :spacing %s" % (source.uid,
-            target.uid, message))
+        self.protocol.kill(client, target, message)
 
         self.clients.pop(target.uid)
 
@@ -403,15 +394,11 @@ class Cod():
 
         channel = self.channels[channel]
 
-        if self.tsSecond:
-            self.sendLine(":%s FJOIN %s %s + :,%s" % (self.sid, channel.name, channel.ts,
-                client.uid))
-        else:
-            self.sendLine(client.join(channel))
+        self.protocol.join_client(client, channel)
 
         client.channels.append(channel.name)
 
-    def part(self, channel, message, client=None):
+    def part(self, channel, message="Leaving", client=None):
         """
         Input: channel to part, client to part from the channel (default Cod
         internal client), part message
@@ -420,7 +407,9 @@ class Cod():
         if client is None:
             client = self.client
 
-        self.sendLine(":%s PART %s :%s" % (client.uid, channel, message))
+        channel = self.channels[channel]
+
+        self.protocol.part_client(client, channel, message)
 
         idx = client.channels.index(channel)
         client.channels.pop(idx)
@@ -432,8 +421,8 @@ class Cod():
         This function lets you send out a global server notice matching an
         arbitrary SNOMASK, but the default is the debug SNOMASK.
         """
-        self.sendLine(":%s ENCAP * SNOTE %s :%s" % \
-                (self.sid, mask, line))
+
+        self.protocol.snote(line, mask)
 
     def log(self, message, prefix="---"):
         """
@@ -486,10 +475,9 @@ class Cod():
         """
         Inputs: source of message, destination of message, line to send
 
-        According to the IRC RFC's, bots should use NOTICE to reply to private
-        messages and PRIVMSG to reply to channel messages. This simplifies
-        functions returning data to clients over PRIVMSG/NOTICE to call one
-        function instead of choosing between two.
+        According to the IRC RFC's, bots should use NOTICEs whenever possible.
+        This simplifies functions returning data to clients over PRIVMSG/NOTICE
+        to call one function instead of choosing between two.
         """
         if source == destination:
             #PM

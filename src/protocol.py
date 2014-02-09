@@ -86,7 +86,7 @@ class TS6ServerConn():
         self._msg_like("NOTICE", client, target, message)
 
     def join_client(self, client, channel):
-        self.send_line(":%s JOIN %s %s" %\
+        self.send_line(":%s JOIN %s %s +" %\
                 (client.uid, channel.ts, channel.name))
 
     def part_client(self, client, channel, reason):
