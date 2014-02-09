@@ -103,7 +103,7 @@ def handleCommands(cod, target, line):
     splitline = line.args[-1].split()
     channel = line.args[0]
 
-    if channel not in client.channels:
+    if target.name not in client.channels:
         return
 
     if splitline[0][0] == cod.config["4chanserv"]["prefix"]:
@@ -132,10 +132,10 @@ def handleCommands(cod, target, line):
             if len(board) > 4:
                 cod.notice(line.args[0], "/%s/ is not a board on 4chan.", client)
 
-            cod.notice(channel, "Now monitoring /%s/%s" % (board, thread), client)
-            cod.servicesLog("%s MONITOR:/%s/%s to %s" % (line.source.nick, board, thread, channel))
+            cod.notice(target, "Now monitoring /%s/%s" % (board, thread), client)
+            cod.servicesLog("%s MONITOR:/%s/%s to %s" % (line.source.nick, board, thread, target))
 
-            tm = ThreadMonitor(cod, channel, board, thread)
+            tm = ThreadMonitor(cod, target, board, thread)
             tm.start()
 
             threads[board+thread] = tm

@@ -298,7 +298,7 @@ def handlePRIVMSG(cod, line):
     destination = line.args[0]
 
     if destination[0] == "#":
-        cod.runHooks("chanmsg", [line.args[0], line])
+        cod.runHooks("chanmsg", [cod.channels[line.args[0]], line])
     else:
         cod.runHooks("privmsg", [cod.clients[line.args[0]], line])
 

@@ -53,7 +53,7 @@ def newClientHook(cod, client):
 # A chanmsg hook expects the name of the channel and the IRCMessage line as
 # arguments. It is called when a channel message is recieved.
 def chanmsgHook(cod, target, line):
-    cod.log("%s <%s> %s" % (target, line.source.nick, line.args[-1]))
+    cod.log("%s <%s> %s" % (target.name, line.source.nick, line.args[-1]))
 
 # A privmsg hook sends the client object for the target and the sender as
 # arguments. It is called when a client private messages a services bot
