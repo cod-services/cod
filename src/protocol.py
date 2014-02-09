@@ -100,16 +100,32 @@ class TS6ServerConn():
                 (killer.uid, target.uid, reason))
 
     def snote(self, line, mask="d"):
-        self.send_line(":%s ENCAP * SNOTE %s :%s" % \
-                (self.numeric, mask, line))
+        self.send_line_sname("ENCAP * SNOTE %s :%s" % \
+                (mask, line))
+
+    def add_metadata(self, client, key, value):
+        self.send_line_sname("ENCAP * METADATA ADD %s %s :%s" %
+                (client.uid, key.upper(), value))
 
 class InspircdServerConn(TS6ServerConn):
     def __init__(self, cod):
         TS6ServerConn.__init__(self, cod)
+        self.umodes = "+iok"
 
     def join_client(self, client, channel):
         self.send_line(":%s FJOIN %s %s + :,%s" % (self.numeric, channel.name,
             channel.ts, client.uid))
+
+    def add_metadata(self, client, key, value=""):
+        self.send_line_sname("METADATA %s %s :%s" % (client.uid, key, value))
+
+    def add_client(self, client):
+        client.modes = self.umodes
+
+        self.send_line_sname("UID %s %d %s 127.0.0.1 %s %s 127.0.0.1 %d +kio :%s" %
+                (client.uid, int(time.time()), client.nick, client.host,
+                    client.user, int(time.time()), client.gecos))
+        self.send_line(":%s OPERTYPE Services" % client.uid)
 
 class P10ServerConn():
     """
@@ -202,4 +218,12 @@ class P10ServerConn():
 
         self.send_line("%s D %s :%s!%s (%s)" %\
                 (killer.uid, target.uid, killer.host, killer.nick, reason))
+
+    def snote(self, line, mask="d"):
+        #P10 does not support remote server notices
+        pass
+
+    def add_metadata(self, client, key, value=""):
+        #P10 does not support client/channel metadata
+        pass
 
