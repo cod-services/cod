@@ -49,10 +49,11 @@ fi
 
 wget -O var/tlds-alpha-by-domain.txt http://data.iana.org/TLD/tlds-alpha-by-domain.txt 2> /dev/null > /dev/null
 
-echo "--- Updating GeoIP database"
-
-wget -N http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz -O var/geoip.gz
-gunzip var/geoip.gz var
+if [ ! -e var/geoip ]; then
+	echo "--- Downloading GeoIP database"
+	wget --quiet -N http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz -O var/geoip.gz
+	gunzip var/geoip.gz var
+fi
 
 if [ -d env ]; then
 	echo "--- Virtualenv found"
