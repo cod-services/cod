@@ -31,5 +31,5 @@
 		"prefixfile": "etc/prefix.txt",
 		"suffixfile": "etc/suffix.txt",
 		"logfile": "var/cod.log"
-	},
+	}
 }
