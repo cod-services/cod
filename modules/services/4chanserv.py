@@ -132,7 +132,7 @@ def handleCommands(cod, target, line):
             if len(board) > 4:
                 cod.notice(line.args[0], "/%s/ is not a board on 4chan.", client)
 
-            cod.notice(target, "Now monitoring /%s/%s" % (board, thread), client)
+            cod.privmsg(target, "Now monitoring /%s/%s" % (board, thread), client)
             cod.servicesLog("%s MONITOR:/%s/%s to %s" % (line.source.nick, board, thread, target))
 
             tm = ThreadMonitor(cod, target, board, thread)
@@ -148,7 +148,7 @@ def handleCommands(cod, target, line):
                 target = threads[board+thread].target
                 threads[board+thread].slay()
 
-                cod.notice(target, "Stopped monitoring /%s/%s at the request of %s" %
+                cod.privmsg(target, "Stopped monitoring /%s/%s at the request of %s" %
                         (board, thread, line.source.nick), client)
                 cod.servicesLog("%s MONITOR:STOP:/%s/%s to %s" %
                         (line.source.nick, board, thread, target), client)
@@ -186,7 +186,7 @@ class ThreadMonitor(threading.Thread):
         try:
             self.checkThread()
         except ValueError:
-            cod.notice(target.name, "Thread %s is invalid" % self.threadid,
+            cod.privmsg(target.name, "Thread %s is invalid" % self.threadid,
                     client)
         except Exception as e:
             cod.servicesLog("Monitor on thread /%s/%s failed for %s and %s" %\
@@ -224,7 +224,7 @@ class ThreadMonitor(threading.Thread):
                 else:
                     string += "did not comment."
 
-                self.cod.notice(self.target, string, client)
+                self.cod.privmsg(self.target, string, client)
 
         self.lastpostid = newpostid
 
@@ -239,11 +239,11 @@ class ThreadMonitor(threading.Thread):
                 pass
             except ValueError as e:
                 self.slay()
-                self.cod.notice(self.target, "Montioring stopped for /%s/%s: %s %s. Did the thread die?" %\
+                self.cod.privmsg(self.target, "Montioring stopped for /%s/%s: %s %s. Did the thread die?" %\
                         (self.board, self.threadid, type(e), e.message))
             except Exception as e:
                 self.slay()
-                self.cod.notice(self.target, "Thread monitoring for /%s/%s stopped for an unknown reason." %\
+                self.cod.privmsg(self.target, "Thread monitoring for /%s/%s stopped for an unknown reason." %\
                         (self.board, self.threadid), client)
                 self.cod.servicesLog("Monitoring broken for /%s/%s to %s because %s %s" %\
                         (self.board, self.threadid, self.target, type(e), e.message), client)
