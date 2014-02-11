@@ -86,6 +86,9 @@ def relayHook(cod, target, line):
 
                 vhost = splitline[2][1:-1] if splitline[1] == "REQUEST:" else splitline[3][1:-1]
 
+                if "REQUEST" not in line.args[-1]:
+                    return
+
                 if not tld_check(cod, vhost):
                     lookupVhost(cod, vhost)
 
