@@ -41,7 +41,7 @@ import threading
 import time
 import requests
 
-from structures import makeService
+from structures import makeService, makeClient
 
 client = None
 threads = {}
@@ -65,7 +65,7 @@ def initModule(cod):
     cod.burstClient(cod, client)
     cod.join(client.channels[0], client)
 
-    cod.addHook("chanmsg", handleCommands)
+    cod.addHook("privmsg", handleCommands)
 
 def destroyModule(cod):
     global client
@@ -76,7 +76,7 @@ def destroyModule(cod):
     cod.sendLine(client.quit())
     cod.clients.pop(client.uid)
 
-    cod.delHook("chanmsg", handleCommands)
+    cod.delHook("privmsg", handleCommands)
 
 # https://stackoverflow.com/questions/753052/strip-html-from-strings-in-python
 def remove_html_markup(s):
@@ -103,65 +103,61 @@ def handleCommands(cod, target, line):
     splitline = line.args[-1].split()
     channel = line.args[0]
 
-    if target.name not in client.channels:
+    if target == client.uid:
         return
 
-    if splitline[0][0] == cod.config["4chanserv"]["prefix"]:
-        command = splitline[0][1:].upper()
+    command = splitline[0].upper()
 
-        if command == "JOIN":
-            if not line.source.isOper:
-                return
+    print command
 
-            channel = splitline[1]
+    if command == "MONITOR":
+        board, target, thread = None, None, None
 
-            if channel in cod.channels:
-                cod.join(channel, client)
-                cod.servicesLog("%s JOIN:%s" % (line.source.nick, channel), client)
-
-            else:
-                cod.notice("I don't know about %s" % (channel), client)
-
-            return
-
-        elif command == "MONITOR":
+        try:
             board = splitline[1]
             thread = splitline[2]
+            target = splitline[3]
+        except IndexError:
+            cod.notice(line.args[0], "Insufficient parameters.", client)
 
-            #Sanity check
-            if len(board) > 4:
-                cod.notice(line.args[0], "/%s/ is not a board on 4chan.", client)
+        #Sanity check
+        if len(board) > 4:
+            cod.notice(line.args[0], "/%s/ is not a board on 4chan.", client)
 
-            cod.privmsg(target, "Now monitoring /%s/%s" % (board, thread), client)
-            cod.servicesLog("%s MONITOR:/%s/%s to %s" % (line.source.nick, board, thread, target))
+        cod.notice(target, "Now monitoring /%s/%s" % (board, thread), client)
+        cod.servicesLog("%s MONITOR:/%s/%s to %s" % (line.source.nick, board, thread, target))
 
-            tm = ThreadMonitor(cod, target, board, thread)
-            tm.start()
+        tm = ThreadMonitor(cod, target, board, thread)
+        tm.start()
 
-            threads[board+thread] = tm
+        threads[board+thread] = tm
 
-        elif command == "DEMONITOR":
-            board = splitline[1]
-            thread = thread = splitline[2]
+    elif command == "DEMONITOR":
+        board = splitline[1]
+        thread = thread = splitline[2]
 
-            if board+thread in threads:
-                target = threads[board+thread].target
-                threads[board+thread].slay()
+        if board+thread in threads:
+            target = threads[board+thread].target
+            threads[board+thread].slay()
 
-                cod.privmsg(target, "Stopped monitoring /%s/%s at the request of %s" %
-                        (board, thread, line.source.nick), client)
-                cod.servicesLog("%s MONITOR:STOP:/%s/%s to %s" %
-                        (line.source.nick, board, thread, target), client)
+            cod.notice(target, "Stopped monitoring /%s/%s at the request of %s" %
+                    (board, thread, line.source.nick), client)
+            cod.servicesLog("%s MONITOR:STOP:/%s/%s to %s" %
+                    (line.source.nick, board, thread, target), client)
 
-            else:
-                cod.notice(line.source.uid, "could not find /%s/%s in thread monitor list" %
-                        (board, thread), client)
+        else:
+            cod.notice(line.source.uid, "could not find /%s/%s in thread monitor list" %
+                    (board, thread), client)
 
-        elif command == "HELP":
-            cod.notice(line.source.uid, "HELP:", client)
-            cod.notice(line.source.uid, "JOIN:      <channel>        - Joins a channel. Oper-only.", client)
-            cod.notice(line.source.uid, "MONITOR:   <board> <thread> - monitors 4chan <board> <thread> to the channel this command is run from", client)
-            cod.notice(line.source.uid, "DEMONITOR: <board> <thread> - disables monitoring of a thread", client)
+    elif command == "HELP":
+        cod.notice(line.source.uid, "HELP:", client)
+        #cod.notice(line.source.uid, "JOIN:      <channel>        - Joins a channel. Oper-only.", client)
+        cod.notice(line.source.uid, "MONITOR:   - monitors 4chan <board> <thread> to <channel>", client)
+        cod.notice(line.source.uid, "DEMONITOR: - disables monitoring of a <board> <thread>", client)
+
+    else:
+        cod.notice(line.source.uid, "Invalid command. Use /msg %s HELP or join %s for more help" %
+                (client.nick, cod.config["etc"]["helpchan"]), client)
 
 def unescape(comment):
     p = htmllib.HTMLParser(None)
@@ -183,6 +179,13 @@ class ThreadMonitor(threading.Thread):
         self.lastpostid = 0
         self.dying = False
 
+        self.client = makeClient("[4CS]\%s\%s" % (board, threadid), "monitor", "boards.4chan.org", "4ChanServ monitor", cod.getUID())
+
+        cod.burstClient(cod, self.client)
+        cod.protocol.join_client(self.client, cod.channels[target])
+
+        cod.clients[self.client.uid] = self.client
+
         try:
             self.checkThread()
         except ValueError:
@@ -198,6 +201,19 @@ class ThreadMonitor(threading.Thread):
 
         newpostid = json["posts"][-1]["no"]
 
+        if self.lastpostid == 0:
+            subject = ""
+
+            if "sub" not in json["posts"][0]:
+                subject = json["posts"][0]["com"].split("<br>")[0]
+                subject = remove_html_markup(subject)
+                subject = unescape(subject)
+            else:
+                subject = json["posts"][0]["sub"]
+
+            self.cod.privmsg(self.target, "Subject for /%s/%s: %s" % (self.board,
+                self.threadid, subject), self.client)
+
         self.cod.log("/%s/%s: oldpost=%s, newpostid=%s" %
                 (self.board, self.threadid, self.lastpostid, newpostid), "4CS")
 
@@ -205,13 +221,11 @@ class ThreadMonitor(threading.Thread):
             newposts = filter((lambda x: x["no"] > self.lastpostid), json["posts"])
 
             for post in newposts:
-                string = "/%s/%s: " % (self.board, self.threadid)
+                string = "[%s] " % post["no"]
                 if "name" in post:
-                    string += "%s " % remove_html_markup(post["name"])
+                    string += "%s " % unescape(remove_html_markup(post["name"]))
                 else:
                     string += "Anonymous "
-
-                string += "(%s) " % post["no"]
 
                 if "filename" in post:
                     string += "posted %s%s and " % (post["filename"], post["ext"])
@@ -224,12 +238,15 @@ class ThreadMonitor(threading.Thread):
                 else:
                     string += "did not comment."
 
-                self.cod.privmsg(self.target, string, client)
+                self.cod.privmsg(self.target, string, self.client)
 
         self.lastpostid = newpostid
 
     def slay(self):
         self.dying = True
+
+        self.cod.protocol.quit(self.client, "Monitor stopped.")
+        del self.cod.clients[self.client.uid]
 
     def run(self):
         while not self.dying:

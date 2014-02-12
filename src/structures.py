@@ -48,6 +48,8 @@ class Client():
         self.sid = self.uid[:3]
         self.channels = []
 
+        self.name = self.nick
+
         self.isOper = self.modes.find("o") != -1
 
         if self.modes.find("S") != -1:
