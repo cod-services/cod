@@ -306,10 +306,12 @@ class Cod():
         """
         self.log("Rehashing...")
 
+        self.servicesLog("Rehashing config file.")
+
         self.config = config.Config("config.json").config
 
         for module in self.modules:
-            cod.log("Rehashing %s" % module, "===")
+            #cod.log("Rehashing %s" % module, "===")
             try:
                 self.modules[module].rehash()
             except:

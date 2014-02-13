@@ -178,6 +178,8 @@ def commandMODLOAD(cod, line, splitline, source, destination):
         cod.notice(source, "Module %s is loaded" % target)
         return
 
+    self.rehash()
+
     try:
         cod.loadmod(target)
     except Exception as e:
@@ -202,6 +204,8 @@ def commandMODUNLOAD(cod, line, splitline, source, destination):
     if target not in cod.modules:
         cod.notice(source, "Module %s is not loaded" % target)
         return
+
+    self.rehash()
 
     try:
         cod.unloadmod(target)
