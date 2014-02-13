@@ -39,6 +39,7 @@ import sys
 import ssl
 import gc
 import sqlite3 as lite
+import traceback
 
 from structures import *
 from utils import *
@@ -575,6 +576,7 @@ class Cod():
                         continue
                     except Exception as e:
                         cod.servicesLog("%s %s" %(type(e), e.message))
+                        traceback.print_exc(file=sys.stdout)
                         continue
             except KeyError:
                 pass

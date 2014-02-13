@@ -23,6 +23,7 @@ freely, subject to the following restrictions:
 """
 
 import sys
+import traceback
 
 from structures import *
 from utils import *
@@ -338,6 +339,7 @@ def handlePRIVMSG(cod, line):
                         impl(cod, line, splitline, source, destination)
                 except Exception as e:
                     cod.servicesLog("%s: %s" % (type(e), e.message))
+                    traceback.print_exc(file=sys.stdout)
                     continue
         else:
             raise KeyError

@@ -61,6 +61,9 @@ class Client():
         """
         return self.uid
 
+    def json(self):
+        return '{"nick": "%s", "uid": "%s", "ts": %s, "modes": "%s", "user": "%s", "host": "%s", "ip": "%s", "login": "%s", "gecos": "%s"}' % (self.nick, self.uid, self.ts, self.modes, self.user, self.host, self.ip, self.login, self.gecos)
+
     def privmsg(self, target, message):
         """
         Input: destination of message, message to send

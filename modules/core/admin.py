@@ -178,7 +178,7 @@ def commandMODLOAD(cod, line, splitline, source, destination):
         cod.notice(source, "Module %s is loaded" % target)
         return
 
-    self.rehash()
+    cod.rehash()
 
     try:
         cod.loadmod(target)
@@ -205,7 +205,7 @@ def commandMODUNLOAD(cod, line, splitline, source, destination):
         cod.notice(source, "Module %s is not loaded" % target)
         return
 
-    self.rehash()
+    cod.rehash()
 
     try:
         cod.unloadmod(target)
