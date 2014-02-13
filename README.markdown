@@ -3,8 +3,6 @@ Cod
 
 Extended IRC services in Python
 
-Version 0.1
-
 [![Bitdeli Badge](https://d2weczhvl823v0.buttfront.net/lyska/cod/trend.png)](https://bitdeli.com/free "Bitdeli Badge") [![Ohloh badge](https://www.ohloh.net/p/cod-services/widgets/project_thin_badge.gif)](https://www.ohloh.net/p/cod-services "Ohloh Badge")
 
 Installation directions are in `doc/INSTALL.markdown`. Directions for setting
