@@ -166,7 +166,7 @@ def unescape(comment):
     return p.save_end()
 
 class ThreadMonitor(threading.Thread):
-    def __init__(self, cod, target, board, threadid, interval=60):
+    def __init__(self, cod, target, board, threadid, interval=15):
         global client
 
         threading.Thread.__init__(self)
