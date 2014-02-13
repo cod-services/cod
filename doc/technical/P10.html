@@ -1,0 +1,3811 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>The P10 protocol definition</TITLE>
+<STYLE><!--
+    H1 { font-family: helvetica; font-size: 32pt }
+    H2 { font-family: helvetica; font-size: 24pt }
+    H3 { font-family: helvetica; font-size: 18pt }
+    H4 { font-family: "helvetica narrow", helvetica; font-size: 18pt }
+    H5 { font-family: helvetica; font-size: 14pt }
+    PRE { font-size: 12pt }
+    BODY {
+      background-color: #d0d0c0;
+      margin-left: 40px;
+      margin-right: 80px;
+    }
+    P.pgp {
+      margin-top: 8px;
+    }
+    .syntax {
+      font-family: "courier";
+      font-size: 14pt;
+    }
+    .variable {
+      font-family: "courier";
+      font-style: italic;
+      font-size: 14pt;
+    }
+    P.syntax {
+      font-family: "courier";
+      font-size: 14pt;
+      padding-left: 45pt;
+    }
+    P.tablesyntax {
+      font-family: "courier";
+      font-size: 14pt;
+      padding-left: 36pt;
+    }
+    P.tablevariable {
+      font-family: "courier";
+      font-style: italic;
+      font-size: 14pt;
+      padding-left: 36pt;
+    }
+    P.context-header {
+      margin-left: 24;
+      margin-bottom: 0;
+      font-weight: bold;
+    }
+    .code {
+      font-family: courier;
+      font-size: 14pt;
+    }
+    P.license {
+      font-family: helvetica;
+      font-size: 16pt;
+    }
+    CAPTION {
+      font-weight: bold;
+      margin-bottom: 10;
+    }
+    .image-link {
+      A:link { text-decoration: none; }
+      A:visited { text-decoration: none; }
+      A:active { text-decoration: none; }
+    }
+--></STYLE>
+</HEAD>
+<BODY>
+
+<CENTER>
+<DIV><A HREF="http://ircu.sourceforge.net/" class="image-link">
+<IMG src="../images/ircu-dev.png" border=0></IMG>
+</A></DIV>
+</CENTER>
+
+<H1>The <FONT COLOR="#ff0000">P10</FONT> <I>server-server</I> protocol</H1>
+
+<TABLE border=0 width="40%" cellspacing=0 cellpadding=0>
+  <TR><TD colspan=3><P><B>Copyright</B> &copy; 1998 - 2000</P></TD></TR>
+  <TR><TD colspan=3>&nbsp;</TD></TR>
+    <TR>
+    <TD nowrap><P>Carlo Wood, Run on IRC &nbsp;</P></TD>
+    <TD><DIV><A HREF="../anti/spam/bots/dont/like/deep/dirs/mail2.html?run" class="image-link">
+      <IMG src="../images/carloatalit.gif" border=0></A></DIV></TD>
+    <TD>&nbsp;</TD>
+  </TR>
+    <TR>
+        <TD colspan=2><P class="pgp">RSA-1024&nbsp;0x624ACAD5&nbsp;1997-01-26</P></TD>
+    <TD align=right><P class="pgp">Sign&nbsp;&amp;&nbsp;Encrypt</P></TD>
+  </TR>
+  <TR><TD colspan=3 nowrap>Fingerprint16 = 32 EC A7 B6 AC DB 65 A6  F6 F6 55 DD 1C DC FF 61</TD></TR>
+  <TR><TD colspan=3>&nbsp;</TD></TR>
+</TABLE>
+<TABLE border=2 width=400 cellspacing=2 cellpadding=10>
+    <TR>
+    <TD colspan=3>
+    <P class="license">Permission is granted to keep a local copy for <EM>personal</EM> use only.
+    It is not allowed to modify this document.
+    It is not allowed to distribute this document like for example, but not limited to,
+    putting it on a public web site or a public ftp server.</P>
+    </TD>
+  </TR>
+</TABLE>
+<P>The latest version of this document can be retrieved from
+<A HREF="http://www.xs4all.nl/~carlo17/irc/P10.html">http://www.xs4all.nl/~carlo17/irc/P10.html</A></P>
+<P><IMG src="../images/UnderConstruction.gif" align=left width=247 height=63 border=0><BR clear=left><BR><BR></P>
+
+<A name="General"></A>
+<H2>1. General</H2>
+
+<A name="Connection"></A>
+<H3>1.1 The server-server connection</H3>
+
+<P>The communication between two servers is done by means of a binary stream of octets.&nbsp;
+The stream must be connected, reliable and ordered.</P>
+
+<P>A server that receives a connection must know that the corresponding stream will use the server-server protocol.&nbsp;
+This can for instance be achieved by using a different port number for servers than for other connection types.</P>
+
+<P>A complete stream of octets, from the connection till disconnection, is build up like:</P>
+
+  <P class="syntax"><A HREF="#lines">&lt;lines&gt;</A><A HREF="#junk">&lt;junk&gt;</A><A HREF="#eof">&lt;eof&gt;</A></P>
+
+<P>where</P>
+
+<TABLE border=0 cellspacing=10 cellpadding=0>
+
+  <TR>
+    <A name="lines"></A>
+    <TD width=120 valign=center>
+      <P class="tablesyntax">&lt;lines&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <LI>Nothing</LI> <LI><DIV class="syntax"><A HREF="#line">&lt;line&gt;</A><A HREF="#lines">&lt;lines&gt;</A></DIV></LI>
+    </TD>
+  </TR>
+  <TR>
+    <A name="junk"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;junk&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      Any string of octets that is not a <SPAN class="syntax"><A HREF="#line">&lt;line&gt;</A></SPAN>
+    </TD>
+  </TR>
+  <TR>
+    <A name="eof"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;eof&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      Connection termination (i.e. Calling <SPAN class="code">close()</SPAN>, or <SPAN class="code">read()</SPAN> returning <SPAN class="code">0</SPAN>)
+    </TD>
+  </TR>
+</TABLE>
+
+<P>Notes:</P>
+
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0>  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_blue_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      The <SPAN class="syntax"><A HREF="#junk">&lt;junk&gt;</A></SPAN> octets, if any, are ignored.
+    </TD>
+  </TR>
+  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_blue_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      A server is allowed to terminate a connection itself when it detects that it receives <SPAN class="syntax"><A HREF="#junk">&lt;junk&gt;</A></SPAN>
+      (when it receives a <SPAN class="code">null</SPAN> character or when the message is too long).
+    </TD>
+  </TR>
+</TABLE>
+
+<A name="line"></A>
+<H3>1.2 Line</H3>
+
+<P>A line is build up like</P>
+
+<TABLE border=0 cellspacing=10 cellpadding=0>
+
+  <TR>
+    <TD width=120 valign=center>
+      <P class="tablesyntax">&lt;line&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <SPAN class="syntax"><A HREF="#message">&lt;message&gt;</A><A HREF="#eol">&lt;eol&gt;</A></SPAN>
+    </TD>
+  </TR>
+</TABLE>
+
+<P>where</P>
+
+<A name="eol"></A>
+<P class="context-header">Received line</P>
+
+<TABLE border=0 cellspacing=10 cellpadding=0>
+
+  <TR>
+    <TD width=140 valign=center>
+      <P class="tablesyntax">&lt;message&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/colon.gif"></TD>
+    <TD>
+      A string of octets (type <SPAN class="code">char</SPAN>) not containing any <SPAN class="syntax"><A HREF="#new-line">&lt;new-line&gt;</A></SPAN> or <SPAN class="code">null</SPAN> character.
+    </TD>
+  </TR>
+  <TR>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;eol&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <LI><DIV class="syntax"><A HREF="#new-line">&lt;new-line&gt;</A></DIV></LI> <LI><DIV class="syntax"><A HREF="#carriage-return">&lt;carriage-return&gt;</A><A HREF="#new-line">&lt;new-line&gt;</A></DIV></LI>
+    </TD>
+  </TR>
+</TABLE>
+
+<P class="context-header">Generated line</P>
+
+<TABLE border=0 cellspacing=10 cellpadding=0>
+
+  <TR>
+    <TD width=140 valign=center>
+      <P class="tablesyntax">&lt;message&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/colon.gif"></TD>
+    <TD>
+      A string of octets (type <SPAN class="code">char</SPAN>) not containing any <SPAN class="syntax"><A HREF="#new-line">&lt;new-line&gt;</A></SPAN> or <SPAN class="code">null</SPAN> character,
+      and not ending on a <SPAN class="syntax"><A HREF="#carriage-return">&lt;carriage-return&gt;</A></SPAN>.
+    </TD>
+  </TR>
+  <TR>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;eol&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <SPAN class="syntax"><A HREF="#new-line">&lt;new-line&gt;</A></SPAN>
+    </TD>
+  </TR>
+</TABLE>
+
+<P>and</P>
+
+<TABLE border=0 cellspacing=10 cellpadding=0>
+
+  <TR>
+    <A name="new-line"></A>
+    <TD with=160 valign=center>
+      <P class="tablesyntax">&lt;new-line&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <SPAN class="code">'\n'</SPAN> (ASCII 10)
+    </TD>
+  </TR>
+  <TR>
+    <A name="carriage-return"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;carriage-return&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <SPAN class="code">'\r'</SPAN> (ASCII 13)
+    </TD>
+  </TR>
+</TABLE>
+
+<P>Notes:</P>
+
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0>  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_blue_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      A <SPAN class="syntax"><A HREF="#message">&lt;message&gt;</A></SPAN> may not contain a&nbsp; <SPAN class="code">null</SPAN> character so that messages can be treated as <SPAN class="code">null</SPAN> terminated strings, which
+      in turn allows the use of library calls like <SPAN class="code">strtok()</SPAN> and <SPAN class="code">strchr()</SPAN>.
+    </TD>
+  </TR>
+  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_blue_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      The reason that it is not allowed to generate lines that end on <SPAN class="code">'\r\n'</SPAN> is for compatibility with P11, which will disregard the carriage-return as being special in any way.
+    </TD>
+  </TR>
+</TABLE>
+
+<A name="message"></A>
+<H3>1.3 Message</H3>
+
+<P>Each message is defined as</P>
+
+<P class="context-header">Before authentication</P>
+
+<TABLE border=0 cellspacing=10 cellpadding=0>
+
+  <TR>
+    <TD width=160 valign=center>
+      <P class="tablesyntax">&lt;message&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <LI><DIV class="syntax"><A HREF="#pre_auth_error">&lt;pre_auth_error&gt;</A></DIV></LI>
+      <LI><DIV class="syntax"><A HREF="#pre_auth_pass">&lt;pre_auth_pass&gt;</A></DIV></LI>
+      <LI><DIV class="syntax"><A HREF="#pre_auth_server">&lt;pre_auth_server&gt;</A></DIV></LI>
+    </TD>
+  </TR>
+</TABLE>
+
+<P class="context-header">After authentication</P>
+
+<TABLE border=0 cellspacing=10 cellpadding=0>
+
+  <TR>
+    <TD width=160 valign=center>
+      <P class="tablesyntax">&lt;message&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <LI><DIV class="syntax"><A HREF="#prefix">&lt;prefix&gt;</A><A HREF="#space">&lt;space&gt;</A><A HREF="#cmd">&lt;cmd&gt;</A><A HREF="#space">&lt;space&gt;</A><A HREF="#tokens">&lt;tokens&gt;</A></DIV></LI>
+      <LI><DIV class="syntax"><A HREF="#prefix">&lt;prefix&gt;</A><A HREF="#space">&lt;space&gt;</A><A HREF="#cmd">&lt;cmd&gt;</A><A HREF="#space">&lt;space&gt;</A><A HREF="#tokens">&lt;tokens&gt;</A><A HREF="#space">&lt;space&gt;</A><A HREF="#colon">&lt;colon&gt;</A><A HREF="#last_token">&lt;last_token&gt;</A></DIV></LI>
+      <LI><DIV class="syntax"><A HREF="#prefix">&lt;prefix&gt;</A><A HREF="#space">&lt;space&gt;</A><A HREF="#cmd">&lt;cmd&gt;</A><A HREF="#space">&lt;space&gt;</A><A HREF="#colon">&lt;colon&gt;</A><A HREF="#last_token">&lt;last_token&gt;</A></DIV></LI>
+    </TD>
+  </TR>
+</TABLE>
+
+<P>where</P>
+
+<TABLE border=0 cellspacing=10 cellpadding=0>
+
+  <TR>
+    <TD width=160 valign=center>
+      <P class="tablesyntax">&lt;pre_auth_error&gt;<BR>&lt;pre_auth_pass&gt;<BR>&lt;pre_auth_server&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/colon.gif"></TD>
+    <TD>
+      See <A HREF="#Authentication messages"><B>Authentication messages</B></A>.
+    </TD>
+  </TR>
+  <TR>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;prefix&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/colon.gif"></TD>
+    <TD>
+      A token specifying the origin of the message.&nbsp; See <A HREF="#prefix"><B>Prefix</B></A>.
+    </TD>
+  </TR>
+  <TR>
+    <A name="space"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;space&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <SPAN class="code">' '</SPAN> (ASCII 32)
+    </TD>
+  </TR>
+  <TR>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;cmd&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/colon.gif"></TD>
+    <TD>
+      See <A HREF="#overview"><B>Message overview</B></A>.
+    </TD>
+  </TR>
+  <TR>
+    <A name="tokens"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;tokens&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <LI><DIV class="syntax"><A HREF="#token">&lt;token&gt;</A></DIV></LI> <LI><DIV class="syntax"><A HREF="#token">&lt;token&gt;</A><A HREF="#space">&lt;space&gt;</A><A HREF="#tokens">&lt;tokens&gt;</A></DIV></LI>
+    </TD>
+  </TR>
+  <TR>
+    <A name="colon"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;colon&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <SPAN class="code">':'</SPAN> (ASCII 58)
+    </TD>
+  </TR>
+  <TR>
+    <A name="last_token"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;last_token&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      A string of octets (type <SPAN class="code">char</SPAN>) not containing any <SPAN class="syntax"><A HREF="#new-line">&lt;new-line&gt;</A></SPAN> or <SPAN class="code">null</SPAN> character.
+    </TD>
+  </TR>
+</TABLE>
+
+<P>and</P>
+<TABLE border=0 cellspacing=10 cellpadding=0>
+
+  <TR>
+    <A name="token"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;token&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      A string of octets (type <SPAN class="code">char</SPAN>) not containing any <SPAN class="syntax"><A HREF="#space">&lt;space&gt;</A></SPAN>, <SPAN class="syntax"><A HREF="#new-line">&lt;new-line&gt;</A></SPAN> or <SPAN class="code">null</SPAN> character,
+      and not starting with a <SPAN class="syntax"><A HREF="#colon">&lt;colon&gt;</A></SPAN>.
+    </TD>
+  </TR>
+</TABLE>
+
+<P>Notes:</P>
+
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0>  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_blue_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      Since generated messages may not end on a <SPAN class="syntax"><A HREF="#carriage-return">&lt;carriage-return&gt;</A></SPAN>, &nbsp;&nbsp;
+      <SPAN class="syntax"><A HREF="#last_token">&lt;last_token&gt;</A></SPAN> may also not end on <SPAN class="syntax"><A HREF="#carriage-return">&lt;carriage-return&gt;</A></SPAN>.&nbsp;
+      And if the message ends on a <SPAN class="syntax"><A HREF="#token">&lt;token&gt;</A></SPAN> then this last <SPAN class="syntax"><A HREF="#token">&lt;token&gt;</A></SPAN> may
+      not end on a <SPAN class="syntax"><A HREF="#carriage-return">&lt;carriage-return&gt;</A></SPAN>.
+    </TD>
+  </TR>
+
+  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_blue_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      The minium number of the tokens depends on the actual <SPAN class="syntax"><A HREF="#cmd">&lt;cmd&gt;</A></SPAN>.
+      However, the exact number is unknown because at a specified place
+      it is possible that extra tokens are inserted.&nbsp; These extra tokens
+      should be ignored when received.&nbsp; It makes it necessary however to
+      refer to a token as either &quot;token number x from the
+      beginning&quot; <EM>or</EM> &quot;token number y from the end&quot;.
+      See <A HREF="#overview"><B>Message overview</B></A> for
+      the position that is reserved for insertion of extra tokens in
+      each message respectively.
+    </TD>
+  </TR>
+
+  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_blue_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      The meaning of the tokens depends on the actual <SPAN class="syntax"><A HREF="#cmd">&lt;cmd&gt;</A></SPAN>.&nbsp;
+      But whether or not a specific message uses a <SPAN class="syntax"><A HREF="#colon">&lt;colon&gt;</A></SPAN>
+      in front of the last parameter is unspecified (In order words, it
+      is possible to receive a message of the form
+      <SPAN class="syntax"><A HREF="#prefix">&lt;prefix&gt;</A><A HREF="#space">&lt;space&gt;</A><A HREF="#cmd">&lt;cmd&gt;</A><A HREF="#space">&lt;space&gt;</A><A HREF="#tokens">&lt;tokens&gt;</A><A HREF="#space">&lt;space&gt;</A><A HREF="#colon">&lt;colon&gt;</A><A HREF="#token">&lt;token&gt;</A></SPAN>).
+      However, it is deprecated to use a colon in front of a token that
+      can never contain a space or start with a colon.&nbsp; It is also
+      deprecated <EM>not</EM> to use a colon in front of the last
+      parameter when generating messages that sometimes need the colon
+      because the last parameter contains spaces.
+    </TD>
+  </TR>
+</TABLE>
+
+<A name="prefix"></A>
+<H3>1.4 Prefix</H3>
+
+<P>The prefix of <EM>received</EM> authenticated messages includes more possible formats than what may be <EM>generated</EM>.&nbsp;
+This is for backwards compatibility with P09 and transition versions of &quot;P10&quot; like the ircu2.10.04 implementation.</P>
+
+<H4>Received message</H4>
+<TABLE border=0 cellspacing=10 cellpadding=0>
+
+  <TR>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;prefix&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <LI><DIV class="syntax"><A HREF="#nicknum">&lt;nicknum&gt;</A></DIV></LI> <LI><DIV class="syntax"><A HREF="#servnum">&lt;servnum&gt;</A></DIV></LI> <LI><DIV class="syntax"><A HREF="#colon">&lt;colon&gt;</A><A HREF="#nickname">&lt;nickname&gt;</A></DIV></LI> <LI><DIV class="syntax"><A HREF="#colon">&lt;colon&gt;</A><A HREF="#servname">&lt;servname&gt;</A></DIV></LI>
+    </TD>
+  </TR>
+</TABLE>
+
+<H4>Generated message</H4>
+<TABLE border=0 cellspacing=10 cellpadding=0>
+
+  <TR>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;prefix&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <LI><DIV class="syntax"><A HREF="#nicknum">&lt;nicknum&gt;</A></DIV></LI> <LI><DIV class="syntax"><A HREF="#servnum">&lt;servnum&gt;</A></DIV></LI>
+    </TD>
+  </TR>
+</TABLE>
+
+<P>where</P>
+
+<TABLE border=0 cellspacing=10 cellpadding=0>
+
+  <TR>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;nickname&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/colon.gif"></TD>
+    <TD>
+      See the description of the <A HREF="#m_nick2"><SPAN class="syntax">NICK</SPAN></A> message.
+    </TD>
+  </TR>
+  <TR>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;servname&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/colon.gif"></TD>
+    <TD>
+      See the description of the <A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A> message.
+    </TD>
+  </TR>
+  <TR>
+    <A name="nicknum"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;nicknum&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <SPAN class="syntax"><A HREF="#servnum">&lt;servnum&gt;</A><A HREF="#base64">&lt;base64&gt;</A><A HREF="#base64">&lt;base64&gt;</A></SPAN>&nbsp;&nbsp;; Must be network-wide unique.
+    </TD>
+  </TR>
+  <TR>
+    <A name="servnum"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;servnum&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <SPAN class="syntax"><A HREF="#base64">&lt;base64&gt;</A></SPAN>&nbsp;&nbsp;; Must be network-wide unique.
+    </TD>
+  </TR>
+</TABLE>
+
+<P>and</P>
+
+<TABLE border=0 cellspacing=10 cellpadding=0>
+
+  <TR>
+    <A name="base64"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;base64&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <LI>Any of</LI>
+                <DIV STYLE="margin-left: 10"><SPAN class="code">'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P',</SPAN><BR>
+                <SPAN class="code">'Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f',</SPAN><BR>
+                <SPAN class="code">'g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v',</SPAN><BR>
+                <SPAN class="code">'w','x','y','z','0','1','2','3','4','5','6','7','8','9','[',']'</SPAN></DIV>
+    </TD>
+  </TR>
+</TABLE>
+
+<P>Notes:</P>
+
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0>  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_blue_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      It is easy to detect if a prefix is a numeric or not:
+      A prefix with a <SPAN class="syntax"><A HREF="#nickname">&lt;nickname&gt;</A></SPAN> or a <SPAN class="syntax"><A HREF="#servname">&lt;servname&gt;</A></SPAN> starts with a <SPAN class="syntax"><A HREF="#colon">&lt;colon&gt;</A></SPAN>, while <SPAN class="syntax"><A HREF="#nicknum">&lt;nicknum&gt;</A></SPAN> and <SPAN class="syntax"><A HREF="#servnum">&lt;servnum&gt;</A></SPAN> do not.
+    </TD>
+  </TR>
+  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_blue_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      The value of <SPAN class="syntax"><A HREF="#servnum">&lt;servnum&gt;</A></SPAN> is read from the configuration file on startup of the server.&nbsp;
+      Its uniqueness is the responsibility of the administrator.
+    </TD>
+  </TR>
+  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_blue_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      <A NAME="masked numeric"></A>A <SPAN class="syntax"><A HREF="#base64">&lt;base64&gt;</A></SPAN> corresponds with a number (0..63) as follows: <SPAN class="code">'A'</SPAN> corresponds with 0, <SPAN class="code">'B'</SPAN> corresponds with 1, etc. until <SPAN class="code">']'</SPAN> which corresponds with 63.&nbsp;
+      See the table above.
+      <DIV STYLE="margin-top: 5">The last two <SPAN class="syntax"><A HREF="#base64">&lt;base64&gt;</A></SPAN> characters of a <SPAN class="syntax"><A HREF="#nicknum">&lt;nicknum&gt;</A></SPAN> need to be bitwise OR-ed with
+      the corresponding bits of the <SPAN class="syntax"><A HREF="#base64">&lt;base64&gt;</A></SPAN> of the <SPAN class="syntax"><A HREF="#masknum">&lt;masknum&gt;</A></SPAN> in order to get the <EM>real</EM>, unique
+      identifier of the corresponding client (called the 'masked numeric').</DIV>
+      <DIV STYLE="margin-top: 5">For example, if a server with a numeric value of 43 (and thus a <SPAN class="syntax"><A HREF="#servnum">&lt;servnum&gt;</A></SPAN> of <SPAN class="code">'r'</SPAN>) uses
+      <SPAN class="code">'rD]'</SPAN> in its <A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A> message then the <SPAN class="syntax"><A HREF="#masknum">&lt;masknum&gt;</A></SPAN> (<SPAN class="code">'D]'</SPAN>) corresponds to a value of 255
+      and a <SPAN class="syntax"><A HREF="#nicknum">&lt;nicknum&gt;</A></SPAN> of <SPAN class="code">'9v'</SPAN> (3951) would <EM>collide</EM> with a <SPAN class="syntax"><A HREF="#nicknum">&lt;nicknum&gt;</A></SPAN> of <SPAN class="code">'Nv'</SPAN> (879)
+      because <SPAN class="code">3951&nbsp;&amp;&nbsp;255 == 879&nbsp;&amp;&nbsp;255 (==&nbsp;111)</SPAN>.&nbsp;
+      However, these numerics are not considered to be equivalent in a prefix: if a local client with value 111 exist, then a <SPAN class="syntax"><A HREF="#nicknum">&lt;nicknum&gt;</A></SPAN> like <SPAN class="code">'r9v'</SPAN> in the prefix should be ignored if <A HREF="#ignore prefix">appropriate</A>.</DIV>
+    </TD>
+  </TR>
+</TABLE>
+
+<A name="source"></A>
+<H3>1.5 Source</H3>
+
+<H4>1.5.1 Definition</H4>
+
+<P>The <A HREF="#m_nick2"><SPAN class="syntax">NICK</SPAN></A> and <A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A> messages introduce two identifiers each; a numeric handle and a
+humable readable name (the client-server protocol handle), for respectively a new <I>client</I> or <I>server</I>.&nbsp;
+These two identifiers are the <SPAN class="syntax"><A HREF="#nicknum">&lt;nicknum&gt;</A></SPAN> and <SPAN class="syntax"><A HREF="#nickname">&lt;nickname&gt;</A></SPAN> in the case of the <A HREF="#m_nick2"><SPAN class="syntax">NICK</SPAN></A> message,&nbsp;&nbsp; and <SPAN class="syntax"><A HREF="#servnum">&lt;servnum&gt;</A></SPAN> and
+<SPAN class="syntax"><A HREF="#servname">&lt;servname&gt;</A></SPAN> in the case of the <A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A> message.&nbsp;
+The <I>client</I> or <I>server</I> associated with the identifier in the <SPAN class="syntax"><A HREF="#prefix">&lt;prefix&gt;</A></SPAN> will be called the <I>source</I> of a
+message in the remainder of this document.&nbsp; Note that the <I>source</I> of a message is not in all cases the real origin of
+the message, although it is in most cases and can always be interpreted like that for received messages.</P>
+
+<H4>1.5.2 Direction</H4>
+
+<P>The <I>direction</I> of a <I>source</I> is defined as the <I>link</I> over which the corresponding <A HREF="#m_nick2"><SPAN class="syntax">NICK</SPAN></A> or
+<A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A> message was received, that originally introduced the <I>source</I>.&nbsp; A <I>link</I> is the connection
+with another (authenticated) server.</P>
+
+<A NAME="ignore prefix"></A>
+<H4>1.5.3 Ignoring messages based on the source and direction</H4>
+
+<P>A message should be ignored, as if it was not received, in the following cases:</P>
+
+<UL>
+  <LI><P>No <I>source</I> is associated with the <SPAN class="syntax"><A HREF="#prefix">&lt;prefix&gt;</A></SPAN> (<I>unknown</I>) and <SPAN class="syntax"><A HREF="#cmd">&lt;cmd&gt;</A></SPAN> is <B>not</B> &quot;<SPAN class="syntax">SQUIT</SPAN>&quot;,
+  &quot;<SPAN class="syntax">SQ</SPAN>&quot;, &quot;<SPAN class="syntax">KILL</SPAN>&quot; or &quot;<SPAN class="syntax">D</SPAN>&quot;.</P></LI>
+  <LI><P>The <I>direction</I> of the <I>source</I> associated with the <SPAN class="syntax"><A HREF="#prefix">&lt;prefix&gt;</A></SPAN> differs from the <I>link</I> over which the
+  message was received.</P></LI>
+</UL>
+
+<P>Note:</P>
+
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0>  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_blue_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      If the <I>source</I> is <I>unknown</I> but the message should not be ignored (because <SPAN class="syntax"><A HREF="#cmd">&lt;cmd&gt;</A></SPAN> is &quot;<SPAN class="syntax">SQUIT</SPAN>&quot;,
+      &quot;<SPAN class="syntax">SQ</SPAN>&quot;, &quot;<SPAN class="syntax">KILL</SPAN>&quot; or &quot;<SPAN class="syntax">D</SPAN>&quot;), then the server should pretend that the <I>source</I> of the message is the server
+      directly behind the <I>link</I> the message was received from.
+    </TD>
+  </TR>
+</TABLE>
+
+<H4>1.5.4 KILL for an <I>unknown</I> numeric nick as <I>source</I> in a <SPAN class="syntax">NICK</SPAN> message</H4>
+
+<P>If the <I>source</I> is <I>unknown</I> and <SPAN class="syntax"><A HREF="#cmd">&lt;cmd&gt;</A></SPAN> is &quot;<SPAN class="syntax">NICK</SPAN>&quot; or &quot;<SPAN class="syntax">N</SPAN>&quot;,&nbsp; and <SPAN class="syntax"><A HREF="#prefix">&lt;prefix&gt;</A></SPAN> is a <SPAN class="syntax"><A HREF="#nicknum">&lt;nicknum&gt;</A></SPAN>,&nbsp;
+then the server must send a <A HREF="#m_kill"><SPAN class="syntax">KILL</SPAN></A> message over the <I>link</I> that the message was received from with as target <SPAN class="syntax"><A HREF="#nicknum">&lt;nicknum&gt;</A></SPAN>,
+itself as <I>source</I> and &quot;Unknown numeric nick&quot; as comment.</P>
+
+<P>Note:</P>
+
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0>  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_blue_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      Even if the <I>source</I> is <I>unknown</I> one can see whether
+      or not the <SPAN class="syntax"><A HREF="#prefix">&lt;prefix&gt;</A></SPAN> is a <SPAN class="syntax"><A HREF="#nicknum">&lt;nicknum&gt;</A></SPAN> or not: It does not
+      start with a <SPAN class="syntax"><A HREF="#colon">&lt;colon&gt;</A></SPAN> and is longer than a <SPAN class="syntax"><A HREF="#servnum">&lt;servnum&gt;</A></SPAN>.
+    </TD>
+  </TR>
+</TABLE>
+
+<A name="Authentication procedure"></A>
+<H2>2. Authentication procedure</H2>
+
+<H3>2.1 State of a link</H3>
+
+<P>A server may initiate a connection, or receive a connection.&nbsp;
+In both cases a <I>link</I> structure is created which goes through a
+few different <I>states</I> before reaching the <I>authenticated</I>
+state after which the server starts to accept prefixed messages of
+type <SPAN class="syntax"><A HREF="#message">&lt;message&gt;</A></SPAN>.</P>
+
+<TABLE width=503 border=1 cellpadding=4 cellspacing=0 bordercolor=black>
+<CAPTION>Table 1&nbsp; Initiating a connection</CAPTION>
+<TR>
+  <TH WIDTH=182>Event</TH>
+  <TH WIDTH=204>Action</TH>
+  <TH WIDTH=92>State</TH>
+</TR>
+<TR>
+  <TD WIDTH=182>Connection established</TD>
+  <TD WIDTH=204>Send own <A HREF="#m_pass"><SPAN class="syntax">PASS</SPAN></A> and <A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A></TD>
+  <TD WIDTH=92><I>challenged</I></TD>
+</TR>
+<TR>
+  <TD WIDTH=182><A HREF="#m_pass"><SPAN class="syntax">PASS</SPAN></A> message received</TD>
+  <TD WIDTH=204>&nbsp;</TD>
+  <TD WIDTH=92><I>handshake</I></TD>
+</TR>
+<TR>
+  <TD WIDTH=182><A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A> message received</TD>
+  <TD WIDTH=204>Send <A HREF="#net.burst">net burst</A></TD>
+  <TD WIDTH=92><I>authenticated</I></TD>
+</TR>
+</TABLE>
+
+<BR>
+
+<TABLE width=503 border=1 cellpadding=4 cellspacing=0 bordercolor=black>
+<CAPTION>Table 2&nbsp; Receiving connection</CAPTION>
+<TR>
+  <TH WIDTH=182>Event</TH>
+  <TH WIDTH=204>Action</TH>
+  <TH WIDTH=92>State</TH>
+</TR>
+<TR>
+  <TD WIDTH=182>Connection accepted</TD>
+  <TD WIDTH=204>&nbsp;</TD>
+  <TD WIDTH=92><I>unknown</I></TD>
+</TR>
+<TR>
+  <TD WIDTH=182><A HREF="#m_pass"><SPAN class="syntax">PASS</SPAN></A> message received</TD>
+  <TD WIDTH=204>&nbsp;</TD>
+  <TD WIDTH=92><I>pass</I></TD>
+</TR>
+<TR>
+  <TD WIDTH=182><A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A> message received</TD>
+  <TD WIDTH=204>Send own <A HREF="#m_pass"><SPAN class="syntax">PASS</SPAN></A> and <A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A><BR>Send <A HREF="#net.burst">net burst</A></TD>
+  <TD WIDTH=92><I>authenticated</I></TD>
+</TR>
+</TABLE>
+
+<P>The <A HREF="#m_pass"><SPAN class="syntax">PASS</SPAN></A> and <A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A> message in these tables are respectively the <SPAN class="syntax"><A HREF="#pre_auth_pass">&lt;pre_auth_pass&gt;</A></SPAN> and <SPAN class="syntax"><A HREF="#pre_auth_server">&lt;pre_auth_server&gt;</A></SPAN> messages.&nbsp;
+See <A HREF="#Authentication messages">Message syntax</A> below.</P>
+
+<H3>2.2 <SPAN class="syntax">ERROR</SPAN> handling</H3>
+
+<P>If an error occurs during the authentication procedure (for instance a wrong password)
+then an <A HREF="#m_error"><SPAN class="syntax">ERROR</SPAN></A> message must be sent and the link must be terminated immedeately (after flushing the <A HREF="#m_error"><SPAN class="syntax">ERROR</SPAN></A> message).</P>
+
+<P>If an <A HREF="#m_error"><SPAN class="syntax">ERROR</SPAN></A> message is received then the reaction depends on the state of the link.</P>
+
+<TABLE width=488 border=1 cellpadding=4 cellspacing=0 bordercolor=black>
+<CAPTION>Receiving an <SPAN class="syntax">ERROR</SPAN> message</CAPTION>
+<TR>
+  <TH WIDTH=91>State</TH>
+  <TH WIDTH=209>Action</TH>
+  <TH WIDTH=163>Syntax</TH>
+</TR>
+<TR>
+  <TD WIDTH=91><I>unknown<BR>pass</I></TD>
+  <TD WIDTH=209>Ignored</TD>
+  <TD WIDTH=163><SPAN class="syntax"><A HREF="#pre_auth_error">&lt;pre_auth_error&gt;</A></SPAN></TD>
+</TR>
+<TR>
+  <TD WIDTH=91><I>challenged<BR>handshake</I></TD>
+  <TD WIDTH=209>Send to all local IRC Operators<BR>and terminate link</TD>
+  <TD WIDTH=163><SPAN class="syntax"><A HREF="#pre_auth_error">&lt;pre_auth_error&gt;</A></SPAN></TD>
+</TR>
+<TR>
+  <TD WIDTH=91><I>authenticated</I></TD>
+  <TD WIDTH=209>Send to all local IRC Operators</TD>
+  <TD WIDTH=163>See <A HREF="#m_error"><SPAN class="syntax">ERROR</SPAN></A> message</TD>
+</TR>
+</TABLE>
+
+<P><A HREF="#m_error"><SPAN class="syntax">ERROR</SPAN></A> messages sent <B>before</B> the own <A HREF="#m_pass"><SPAN class="syntax">PASS</SPAN></A> and <A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A> combination must have the <SPAN class="syntax"><A HREF="#pre_auth_error">&lt;pre_auth_error&gt;</A></SPAN> syntax,
+while <A HREF="#m_error"><SPAN class="syntax">ERROR</SPAN></A> messages sent <B>after</B> the own <A HREF="#m_pass"><SPAN class="syntax">PASS</SPAN></A> and <A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A> combination must have a prefix,
+see the description of the <A HREF="#m_error"><SPAN class="syntax">ERROR</SPAN></A> message.</P>
+
+<A name="Authentication messages"></A>
+<H3>2.3 Message syntax</H3>
+
+<A name="pre_auth_error"></A>
+<H4>2.3.1 The pre-authentication <SPAN class="syntax">ERROR</SPAN> message</H4>
+
+<TABLE border=0 cellspacing=10 cellpadding=0>
+
+  <TR>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;pre_auth_error&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <SPAN class="syntax">ERROR</SPAN><SPAN class="syntax"><A HREF="#space">&lt;space&gt;</A><A HREF="#colon">&lt;colon&gt;</A><A HREF="#error_text">&lt;error_text&gt;</A></SPAN>
+    </TD>
+  </TR>
+</TABLE>
+
+<P>where</P>
+
+<TABLE border=0 cellspacing=10 cellpadding=0>
+
+  <TR>
+    <A name="error_text"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;error_text&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <SPAN class="syntax"><A HREF="#last_token">&lt;last_token&gt;</A></SPAN>&nbsp;&nbsp;; describing the cause of rejection.
+    </TD>
+  </TR>
+</TABLE>
+
+<A name="m_pass"></A>
+<A name="pre_auth_pass"></A>
+<H4>2.3.2 The pre-authentication <SPAN class="syntax">PASS</SPAN> message</H4>
+
+<TABLE border=0 cellspacing=10 cellpadding=0>
+
+  <TR>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;pre_auth_pass&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <SPAN class="syntax">PASS</SPAN><SPAN class="syntax"><A HREF="#space">&lt;space&gt;</A><A HREF="#colon">&lt;colon&gt;</A><A HREF="#password">&lt;password&gt;</A></SPAN>
+    </TD>
+  </TR>
+</TABLE>
+
+<P>where</P>
+
+<TABLE border=0 cellspacing=10 cellpadding=0>
+
+  <TR>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;password&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/colon.gif"></TD>
+    <TD>
+      A plain text password to authenticate the server.
+    </TD>
+  </TR>
+</TABLE>
+
+<A name="pre_auth_server"></A>
+<H4>2.3.3 The pre-authentication <SPAN class="syntax">SERVER</SPAN> message</H4>
+
+<TABLE border=0 cellspacing=10 cellpadding=0>
+
+  <TR>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;pre_auth_server&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <SPAN class="syntax">SERVER</SPAN><SPAN class="syntax"><A HREF="#space">&lt;space&gt;</A><A HREF="#servname">&lt;servname&gt;</A><A HREF="#space">&lt;space&gt;</A></SPAN><SPAN class="syntax">1</SPAN><SPAN class="syntax"><A HREF="#space">&lt;space&gt;</A><A HREF="#boot_time">&lt;boot_time&gt;</A><A HREF="#space">&lt;space&gt;</A></SPAN><SPAN class="syntax"><A HREF="#link_time">&lt;link_time&gt;</A><A HREF="#space">&lt;space&gt;</A></SPAN><SPAN class="syntax">J</SPAN><SPAN class="syntax"><A HREF="#protocol">&lt;protocol&gt;</A><A HREF="#space">&lt;space&gt;</A><A HREF="#servnum">&lt;servnum&gt;</A><A HREF="#masknum">&lt;masknum&gt;</A><A HREF="#space">&lt;space&gt;</A></SPAN><SPAN class="syntax">0</SPAN><SPAN class="syntax"><A HREF="#space">&lt;space&gt;</A><A HREF="#colon">&lt;colon&gt;</A><A HREF="#description">&lt;description&gt;</A></SPAN>
+    </TD>
+  </TR>
+</TABLE>
+
+<P>where</P>
+
+<TABLE border=0 cellspacing=10 cellpadding=0>
+
+  <TR>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;servname&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/colon.gif"></TD>
+    <TD>
+      See the <A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A> message.
+    </TD>
+  </TR>
+  <TR>
+    <A name="boot_time"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;boot_time&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <SPAN class="syntax"><A HREF="#time_stamp">&lt;time_stamp&gt;</A></SPAN>&nbsp;&nbsp;; See <A HREF="#bootTS">Boot Time Stamp</A>.
+    </TD>
+  </TR>
+  <TR>
+    <A name="link_time"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;link_time&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <SPAN class="syntax"><A HREF="#time_stamp">&lt;time_stamp&gt;</A></SPAN>&nbsp;&nbsp;; See <A HREF="#linkTS">Link Time Stamp</A>.
+    </TD>
+  </TR>
+  <TR>
+    <A name="protocol"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;protocol&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <B>Received message&nbsp;&nbsp;:</B>&nbsp;<SPAN class="syntax"><A HREF="#digit">&lt;digit&gt;</A><A HREF="#digit">&lt;digit&gt;</A></SPAN><BR><B>Generated message:</B>&nbsp;<SPAN class="syntax">10</SPAN>
+    </TD>
+  </TR>
+  <TR>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;servnum&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/colon.gif"></TD>
+    <TD>
+      See the <A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A> message.
+    </TD>
+  </TR>
+  <TR>
+    <A name="masknum"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;masknum&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <SPAN class="syntax"><A HREF="#base64">&lt;base64&gt;</A><A HREF="#base64">&lt;base64&gt;</A></SPAN>&nbsp;&nbsp;; See the <A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A> message.
+    </TD>
+  </TR>
+  <TR>
+    <A name="description"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;description&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <SPAN class="syntax"><A HREF="#last_token">&lt;last_token&gt;</A></SPAN>&nbsp;&nbsp;; description of the server.&nbsp; See also &sect; 4.2 <A HREF="#jupes">Jupes</A>.
+    </TD>
+  </TR>
+</TABLE>
+
+<P>and</P>
+
+<TABLE border=0 cellspacing=10 cellpadding=0>
+
+  <TR>
+    <A name="time_stamp"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;time_stamp&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <LI><DIV class="syntax"><A HREF="#digit">&lt;digit&gt;</A><A HREF="#digit">&lt;digit&gt;</A><A HREF="#digit">&lt;digit&gt;</A><A HREF="#digit">&lt;digit&gt;</A><A HREF="#digit">&lt;digit&gt;</A><A HREF="#digit">&lt;digit&gt;</A><A HREF="#digit">&lt;digit&gt;</A><A HREF="#digit">&lt;digit&gt;</A><A HREF="#digit">&lt;digit&gt;</A></DIV></LI>
+      <LI><DIV class="syntax"><A HREF="#digit">&lt;digit&gt;</A><A HREF="#digit">&lt;digit&gt;</A><A HREF="#digit">&lt;digit&gt;</A><A HREF="#digit">&lt;digit&gt;</A><A HREF="#digit">&lt;digit&gt;</A><A HREF="#digit">&lt;digit&gt;</A><A HREF="#digit">&lt;digit&gt;</A><A HREF="#digit">&lt;digit&gt;</A><A HREF="#digit">&lt;digit&gt;</A><A HREF="#digit">&lt;digit&gt;</A></DIV></LI>
+    </TD>
+  </TR>
+  <TR>
+    <A name="digit"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;digit&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      One of<BR><SPAN class="syntax">0 1 2 3 4 5 6 7 8 9</SPAN>
+    </TD>
+  </TR>
+</TABLE>
+
+<P>Notes:</P>
+
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0>  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_blue_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      Authentication messages do not start with a prefix.
+      &nbsp;You might want to use a seperate parser routine for not yet authenticated connections.
+    </TD>
+  </TR>
+  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_blue_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      The protocol version <SPAN class="syntax"><A HREF="#protocol">&lt;protocol&gt;</A></SPAN> specifies the protocol version for the prefixed messages but also for this non-prefixed <A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A> message.
+      &nbsp;It is possible to receive a different protocol version in which case the tokens after the <SPAN class="syntax"><A HREF="#protocol">&lt;protocol&gt;</A></SPAN> string may differ.
+    </TD>
+  </TR>
+  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_blue_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      The <SPAN class="syntax"><A HREF="#description">&lt;description&gt;</A></SPAN> should not contain the IP number of the server, the IP number of the server is namely added by its uplink to the description field before propagating the <A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A> message.
+    </TD>
+  </TR>
+  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_blue_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      The <SPAN class="code">'1'</SPAN> and the <SPAN class="code">'J'</SPAN> in the <A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A> message are mandatory for received messages.
+      &nbsp;It is an error if these characters are different.
+    </TD>
+  </TR>
+  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_blue_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      The <SPAN class="code">'0'</SPAN>, just before the description field, is optional for received messages, but mandatory for sent messages.
+      &nbsp;In the future (P11) this will become an unsigned integer (in ascii format).
+    </TD>
+  </TR>
+</TABLE>
+
+<A name="bootTS"></A>
+<H4>2.3.4 Boot Time Stamp</H4>
+
+<P>The <I>Boot Time Stamp</I> is a <SPAN class="code">time_t</SPAN> variable,
+which is initialized to the time in UTC seconds when the server application is (re)started.&nbsp;
+Next it is replaced by the value of a <SPAN class="syntax"><A HREF="#boot_time">&lt;boot_time&gt;</A></SPAN> parameter of received <A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A> messages
+whenever that value is <EM>smaller</EM>.</P>
+
+<A name="linkTS"></A>
+<H4>2.3.5 Link Time Stamp</H4>
+
+<P>The <SPAN class="syntax"><A HREF="#link_time">&lt;link_time&gt;</A></SPAN> parameter of a generated message when <B>initiating</B> a connection represents the current value of
+the <I>TS Clock Time</I>, possibly incremented a few seconds in order to make sure that the server never generates twice
+the same value for a <SPAN class="syntax"><A HREF="#link_time">&lt;link_time&gt;</A></SPAN> (The value must be at least 1 second larger than the last value used in a sent
+<SPAN class="syntax"><A HREF="#pre_auth_server">&lt;pre_auth_server&gt;</A></SPAN> message).</P>
+
+<P>In all other cases (when not initiating the connection), the <SPAN class="syntax"><A HREF="#link_time">&lt;link_time&gt;</A></SPAN> parameter is the same string as received in the
+corresponding <A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A> message for that link.</P>
+
+<H4>2.3.6 TS Clock Time</H4>
+
+<P>The <I>TS Clock Time</I> is the current time in UTC seconds plus an offset which is calculated from the <SPAN class="syntax"><A HREF="#boot_time">&lt;boot_time&gt;</A></SPAN>,
+the <SPAN class="syntax"><A HREF="#link_time">&lt;link_time&gt;</A></SPAN> and the system clock at the moment a <SPAN class="syntax"><A HREF="#pre_auth_server">&lt;pre_auth_server&gt;</A></SPAN> message is received
+(which successfully authenticates) and this application did initiate the connection.&nbsp;
+When the received <SPAN class="syntax"><A HREF="#boot_time">&lt;boot_time&gt;</A></SPAN> is equal to or smaller than the current value of the <I>Boot Time Stamp</I>,
+then the new offset is set such that the resulting <I>TS Clock Time</I> equals the received <SPAN class="syntax"><A HREF="#link_time">&lt;link_time&gt;</A></SPAN>.</P>
+
+<A name="net.burst"></A>
+<H2>3. Net burst</H2>
+
+<A name="relationships"></A>
+<H3>3.1 Objects and relationships</H3>
+
+<P>A complete IRC network exists of several servers each of which
+keeps a copy of a database which contains information about the
+clients and the channels of the network.&nbsp; This copy can be different
+on different servers due to the dynamic nature of the network.&nbsp; We are
+only interested in <I>one</I> copy: The variables on <U>this</U>
+server: the <U>application</U> that is generating and receiving the
+messages described in this document.</P>
+
+<P>The objects refered to in this paragraph are therefore the
+internal variables of <U>this</U> application, <B>not</B> the <B>real</B>
+entities they describe.&nbsp; The difference between the objects in our
+local copy of the database and the real, current, state of the
+relevant entities is what makes the protocol hard to understand if
+one mixes the two up.</P>
+
+<P>There are three classes of objects:</P>
+
+<OL>
+  <LI>Servers</LI>
+  <LI>Clients</LI>
+  <LI>Channels</LI>
+</OL>
+
+<P>There are four different <I>relationships</I> between these objects:</P>
+
+<OL>
+  <LI>A Server can be <I>connected</I> to another Server.</LI>
+  <LI>A Client can be <I>connected</I> to a Server.</LI>
+  <LI>A Client can be <I>joined</I> on a Channel.</LI>
+  <LI>A Client can have several channel dependent flags set (usually for channels on which they are <EM>joined</EM>).</LI>
+</OL>
+
+<P>The state of the Server object and relationship 1. is completely
+determined by the <A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A>,&nbsp; <A HREF="#m_end_of_burst"><SPAN class="syntax">END_OF_BURST</SPAN></A> and the <A HREF="#m_squit"><SPAN class="syntax">SQUIT</SPAN></A> messages.</P>
+
+<P>Likewise, relationship 2. is completely determined by the <A HREF="#m_nick2"><SPAN class="syntax">NICK</SPAN></A> and the <A HREF="#m_quit"><SPAN class="syntax">QUIT</SPAN></A> and <A HREF="#m_kill"><SPAN class="syntax">KILL</SPAN></A> messages,
+while the state of the Client object is additionally determined by the <A HREF="#m_mode1"><SPAN class="syntax">MODE&nbsp;</SPAN><SPAN class="syntax"><A HREF="#nickname">&lt;nickname&gt;</A></SPAN></A>,&nbsp; <A HREF="#m_away"><SPAN class="syntax">AWAY</SPAN></A> and <A HREF="#m_silence"><SPAN class="syntax">SILENCE</SPAN></A> messages.</P>
+
+<P>Relationship 3. is changed by the <A HREF="#m_create"><SPAN class="syntax">CREATE</SPAN></A>,&nbsp; <A HREF="#m_join"><SPAN class="syntax">JOIN</SPAN></A>,&nbsp; <A HREF="#m_kick"><SPAN class="syntax">KICK</SPAN></A>,&nbsp; <A HREF="#m_part"><SPAN class="syntax">PART</SPAN></A> and <A HREF="#m_burst"><SPAN class="syntax">BURST</SPAN></A> messages.</P>
+
+<P>The state of a Channel object is changed by the messages <A HREF="#m_mode2"><SPAN class="syntax">MODE&nbsp;</SPAN><SPAN class="syntax"><A HREF="#channel_name">&lt;channel_name&gt;</A></SPAN></A> and <A HREF="#m_topic"><SPAN class="syntax">TOPIC</SPAN></A>.</P>
+
+<P>Finally, relationship 4. is determined (apart from the messages that determine relationship 3. of course)
+by the messages <A HREF="#m_mode2"><SPAN class="syntax">MODE&nbsp;</SPAN><SPAN class="syntax"><A HREF="#channel_name">&lt;channel_name&gt;</A></SPAN></A>&nbsp;, <A HREF="#m_invite"><SPAN class="syntax">INVITE</SPAN></A> and <A HREF="#m_burst"><SPAN class="syntax">BURST</SPAN></A>.</P>
+
+<P>Notes:</P>
+
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0>  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_blue_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      Commands that change the state of a <I>remote</I> server
+      application are not listed of course: Those messages don't change
+      the state of our own local objects.
+    </TD>
+  </TR>
+  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_blue_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      The local server, the application itself, has a lot more
+      variables - the state of the local server can be changed by
+      several other messages not listed here either.
+    </TD>
+  </TR>
+</TABLE>
+
+<H3>3.2 Creation and destruction of the objects</H3>
+
+<P>The Server object is created when a new server is introduced by means of the <A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A> message
+(provided the server is accepted and the application doesn't send an <A HREF="#m_squit"><SPAN class="syntax">SQUIT</SPAN></A> upstream instead).&nbsp;
+A Server object gets destructed when an <A HREF="#m_squit"><SPAN class="syntax">SQUIT</SPAN></A> message is received causing it to be disconnected from the local Server object.</P>
+
+<P>The Client object is created when introduced with a <A HREF="#m_nick2"><SPAN class="syntax">NICK</SPAN></A> message and destructed when a corresponding <A HREF="#m_quit"><SPAN class="syntax">QUIT</SPAN></A> or <A HREF="#m_kill"><SPAN class="syntax">KILL</SPAN></A> message
+is received for the client <SPAN class="syntax"><A HREF="#nicknum">&lt;nicknum&gt;</A></SPAN>, or when its server Object is destructed.</P>
+
+<P>A Channel object is created when the first client joins the channel (<A HREF="#m_create"><SPAN class="syntax">CREATE</SPAN></A> and <A HREF="#m_join"><SPAN class="syntax">JOIN</SPAN></A>)
+and destructed when the last client leaves the channel (<A HREF="#m_part"><SPAN class="syntax">PART</SPAN></A>,&nbsp; <A HREF="#m_kick"><SPAN class="syntax">KICK</SPAN></A> and <A HREF="#m_join"><SPAN class="syntax">JOIN</SPAN></A><SPAN class="syntax">0</SPAN>).&nbsp;
+When a Client object gets destructed, the client also leaves all channels of course.</P>
+
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0>  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_blue_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      It is not really necessary to destruct the Server and Client
+  objects when an <A HREF="#m_squit"><SPAN class="syntax">SQUIT</SPAN></A> is received, as long as the server hides
+  this fact from the clients.&nbsp; It should appear as if clients that
+  split off (because the side of the network they are connected to
+  disconnects) also leave all channels, and re-join when the net is
+  reconnected.&nbsp; The only gain here would be in the size of the
+  net-burst because only <I>changes</I> in the relationships should
+  be needed to be passed to the servers behind the first server of
+  our side.&nbsp; Realizing this needs a change in the protocol however, probably P11, and this documentation describes P10.&nbsp; Therefore it
+  is reasonable to actually destruct the objects and we will assume
+  that is the case here.
+    </TD>
+  </TR>
+</TABLE>
+
+<H3>3.3 Synchronization and message queueing</H3>
+
+<P>The concept of <I>synchronization</I> in a highly dynamic network
+like an IRC network might be hard to grasp.&nbsp; The main idea is that
+every change in the local state of an application (that is, the local
+server, one of its local clients or a channel due to a message from a
+local client) which is relevant for the corresponding object on the
+remote servers, is represented by a message, sent to these remote
+servers.&nbsp; In order to get full synchronization, this message must
+reach all servers.</P>
+
+<P>However, a message can be rejected somewhere half way by one of
+the receiving servers.&nbsp; In that case a cancelling message needs to be
+sent to all servers that the original message did already reach - in
+order to cancel the change everywhere.</P>
+
+<P>If there is a network congestion and there are more messages being
+sent over a <I>link</I> then the bandwidth allows at that moment,
+then these messages need to be queued.&nbsp; This costs memory, and the
+application can run out of memory, or the lag caused by the size of
+the queue can grow unacceptable large.&nbsp; Therefore it can happen that
+this <I>link</I> breaks, and all queued messages get lost.</P>
+
+<P>Because of the lost messages, a special resynchronization step is
+needed when the two sides of the IRC network reconnect.&nbsp; As said
+before, this is currently done by a <B>full</B> synchronization: All
+state information of the objects and their relationships are (re)sent
+to the connecting side.&nbsp; Well, thats not entirely true: Certain
+information is disregarded on purpose - causing <B>desynchronisation</B>
+between the servers.&nbsp; The reason for disregarding this information is
+to reduce the size of the so called <I>net burst</I>.</P>
+
+<P>The changes represented by the following messages are disregarded:
+<A HREF="#m_away"><SPAN class="syntax">AWAY</SPAN></A>,&nbsp; <A HREF="#m_silence"><SPAN class="syntax">SILENCE</SPAN></A>,&nbsp; <A HREF="#m_topic"><SPAN class="syntax">TOPIC</SPAN></A> and <A HREF="#m_invite"><SPAN class="syntax">INVITE</SPAN></A>.&nbsp; <A HREF="#m_silence"><SPAN class="syntax">SILENCE</SPAN></A> has its own resynchronisation mechanism.&nbsp;
+An invited client that did split off before the invite reached him needs to be re-invited,
+the desynchronisation of the invite-flag in the objects of servers not the local server of the client, is not relevant.&nbsp;
+Not resending the <A HREF="#m_away"><SPAN class="syntax">AWAY</SPAN></A> messages and the channel <A HREF="#m_topic"><SPAN class="syntax">TOPIC</SPAN></A> results in a plain desynchronisation.&nbsp;
+Its the only desynchronisation however that can not be abused.</P>
+
+<P>Because in the current implementation all objects that split off are destructed,
+it is not necessary to resent destructing messages.&nbsp;
+The messages left over are <A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A>,&nbsp; <A HREF="#m_nick2"><SPAN class="syntax">NICK</SPAN></A>,&nbsp; <A HREF="#m_mode1"><SPAN class="syntax">MODE&nbsp;</SPAN><SPAN class="syntax"><A HREF="#nickname">&lt;nickname&gt;</A></SPAN></A>,&nbsp; <A HREF="#m_create"><SPAN class="syntax">CREATE</SPAN></A>,&nbsp; <A HREF="#m_join"><SPAN class="syntax">JOIN</SPAN></A> and <A HREF="#m_mode2"><SPAN class="syntax">MODE&nbsp;</SPAN><SPAN class="syntax"><A HREF="#channel_name">&lt;channel_name&gt;</A></SPAN></A>.&nbsp;
+During the special step of resynhronizing the network after a <I>net.junction</I>, sending the <I>net burst</I>,
+the last four messages are combined into a single message: <A HREF="#m_burst"><SPAN class="syntax">BURST</SPAN></A>.</P>
+
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0>  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_blue_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      Some messages, like the chat messages itself, don't need any
+      synchronization.&nbsp; Those messages don't need to be queued because of
+      synchronisation.&nbsp; Not all messages need to be kept in the same
+      order to garantee synchronization: Messages related to different
+      channels could be mixed up as a function of the bandwidth use per
+      channel for instance.&nbsp; In order to be able to assign priorities to
+      queued messages it is better to queue the messages as objects
+      rather then to queue them as a string of characters in one huge
+      buffer.&nbsp; It is almost certain that this type of queueing will be
+      necessary for P11.
+    </TD>
+  </TR>
+</TABLE>
+
+<H3>3.4 State of an authenticated link</H3>
+
+<P>When two servers connect the state of the link reaches the <I>authenticated</I> state
+at one point (See <A HREF="#Authentication procedure">chapter 2</A>).&nbsp;
+There are multiple authenticated states however.&nbsp; Two more states follow the <I>authenticated</I> state:</P>
+
+<TABLE width=539 border=1 cellpadding=4 cellspacing=0 bordercolor=black>
+<CAPTION>Burst handshake of local connections</CAPTION>
+<TR>
+  <TH WIDTH=243>Event</TH>
+  <TH WIDTH=173>Action</TH>
+  <TH WIDTH=98>State</TH>
+</TR>
+<TR>
+  <TD WIDTH=243>&nbsp;</TD>
+  <TD WIDTH=173>(sending burst)</TD>
+  <TD WIDTH=98><I>authenticated</I></TD>
+</TR>
+<TR>
+  <TD WIDTH=243><A HREF="#m_end_of_burst"><SPAN class="syntax">END_OF_BURST</SPAN></A> message sent</TD>
+  <TD WIDTH=173>&nbsp;</TD>
+  <TD WIDTH=98><I>burst_sent</I></TD>
+</TR>
+<TR>
+  <TD WIDTH=243><A HREF="#m_end_of_burst"><SPAN class="syntax">END_OF_BURST</SPAN></A> message received</TD>
+  <TD WIDTH=173>Send <A HREF="#m_eob_ack"><SPAN class="syntax">EOB_ACK</SPAN></A> message</TD>
+  <TD WIDTH=98><I>burst_received</I></TD>
+</TR>
+<TR>
+  <TD WIDTH=243><A HREF="#m_eob_ack"><SPAN class="syntax">EOB_ACK</SPAN></A> message received</TD>
+  <TD WIDTH=173>&nbsp;</TD>
+  <TD WIDTH=98><I>linked</I></TD>
+</TR>
+</TABLE>
+
+<H3>3.5 State of a remote link</H3>
+
+<P>Servers introduced by local servers are <EM>remote servers</EM>.&nbsp;
+The links via which a remote server is connected also goes through a few states during its net burst.&nbsp;
+If a remote server is introduced with a <A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A> message that has a <SPAN class="syntax">P</SPAN> in its protocol field, then that
+link is immedeately in the state <I>linked</I>.&nbsp;
+However, if the protocol field starts with a <SPAN class="syntax">J</SPAN> (see <SPAN class="syntax"><A HREF="#pre_auth_server">&lt;pre_auth_server&gt;</A></SPAN>), then that link goes through
+the following states:</P>
+
+<TABLE width=539 border=1 cellpadding=4 cellspacing=0 bordercolor=black>
+<CAPTION>Burst handshake of remote connections</CAPTION>
+<TR>
+  <TH WIDTH=243>Event</TH>
+  <TH WIDTH=173>Action</TH>
+  <TH WIDTH=98>State</TH>
+</TR>
+<TR>
+  <TD WIDTH=243>Received <A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A> with <SPAN class="code">J</SPAN> in protocol</TD>
+  <TD WIDTH=173>&nbsp;</TD>
+  <TD WIDTH=98><I>burst</I></TD>
+</TR>
+<TR>
+  <TD WIDTH=243><A HREF="#m_end_of_burst"><SPAN class="syntax">END_OF_BURST</SPAN></A> message received</TD>
+  <TD WIDTH=173>&nbsp;</TD>
+  <TD WIDTH=98><I>burst_received</I></TD>
+</TR>
+<TR>
+  <TD WIDTH=243><A HREF="#m_eob_ack"><SPAN class="syntax">EOB_ACK</SPAN></A> message received</TD>
+  <TD WIDTH=173>&nbsp;</TD>
+  <TD WIDTH=98><I>linked</I></TD>
+</TR>
+</TABLE>
+
+<H3>3.6 Generating the net burst</H3>
+
+<P>The messages that form the net burst must be generated in an order which allows the receiving server to create the objects and
+relationships represented by each message, at the moment the message is received.&nbsp;
+So, first a Server objects must be created and then the Client objects connected to that Server.&nbsp;
+Likewise, a Server that is connected closer must be created first before a Server behind it can be introduced, etc.</P>
+
+<P>Because servers may be rejected as function of which servers are introduced,
+it makes most sense to first introduce <U>all</U> servers before introducing clients.&nbsp;
+This in order to avoid processing parts of a net burst, creating client objects,
+which need to be destructed a second later again.</P>
+
+<P>Therefore, the net burst is constructed as follows:</P>
+
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0>  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_orange_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      All <A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A> messages, one for each Server object - the closest first.
+    </TD>
+  </TR>
+  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_orange_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      All <A HREF="#m_nick2"><SPAN class="syntax">NICK</SPAN></A> messages, one for each Client object.
+    </TD>
+  </TR>
+  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_orange_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      All <A HREF="#m_burst"><SPAN class="syntax">BURST</SPAN></A> messages, one or more for each Channel object.
+    </TD>
+  </TR>
+  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_orange_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      One <A HREF="#m_end_of_burst"><SPAN class="syntax">END_OF_BURST</SPAN></A> message.
+    </TD>
+  </TR>
+</TABLE>
+
+<H2>4. Special server types</H2>
+
+<A name="uworld"></A>
+<H3>4.1 Trusted Services</H3>
+
+<P>Some services are of a special trusted type.&nbsp; Like all services they just
+register as a normal server but they use a <SPAN class="syntax"><A HREF="#servname">&lt;servname&gt;</A></SPAN> that is agreed upon
+by all other servers and services on the network giving them the right to make
+any kind of changes to the state of channels.</P>
+
+<P>Trusted Services are not allowed to introduce other servers <EM>except</EM>
+<A href="#jupes">Jupes</A>.
+
+<A name="jupes"></A>
+<H3>4.2 Jupes</H3>
+
+<P>A Jupe is a server whose info field <SPAN class="syntax"><A HREF="#description">&lt;description&gt;</A></SPAN> starts with the four characters &quot;<SPAN class="syntax">JUPE</SPAN>&quot; (case sensitive).&nbsp;
+Juped servers are not allowed to send any message except the the <A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A> message that introduces themselfs.&nbsp;
+Juped servers can not be SQUIT-ed by other servers (only by Opers).</P>
+
+<H2>5. Nick collisions</H2>
+
+<H3>5.1 Server nick collisions</H3>
+
+<P>Each received <A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A> message introduces a new Server object with a numeric handle <SPAN class="syntax"><A HREF="#servnum">&lt;servnum&gt;</A></SPAN> and a name <SPAN class="syntax"><A HREF="#servname">&lt;servname&gt;</A></SPAN>.&nbsp;
+When a Server object with the same numeric or name already exists, then we have a <I>server nick collision</I>.</P>
+
+<P>In the case of a collision, either an <A HREF="#m_squit"><SPAN class="syntax">SQUIT</SPAN></A> message must be generated to break the <I>loop</I> that is the result
+of this (if server tries to connect (link state <I>pass</I>) and the supplied name and/or numeric collides,
+causing it to be rejected - then an <A HREF="#pre_auth_error"><SPAN class="syntax">ERROR</SPAN></A> message is sent instead of an <A HREF="#m_squit"><SPAN class="syntax">SQUIT</SPAN></A> message of course).</P>
+
+<P>Collision checking for <I>local</I> servers is done <B>after</B> authentication checking.</P>
+
+<H4>5.1.1 Local connection</H4>
+
+<P>If a collision occurs with the name and/or numeric of the server application itself,
+then the <I>local</I> link over which the <A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A> message was received is terminated.</P>
+
+<P>When the existing server is an <A HREF="#uworld">Trusted Service</A>
+then the <I>local</I> connection over which the <A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A> message was received must be terminated.&nbsp;
+Trusted Services are expected to always connect to the same server so that any collision with it makes the
+whole side of the net that introduced the fake service suspicious.</P>
+
+<H4>5.1.2 Introduced server</H4>
+
+<P>The server that is introduced by the received <A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A> message should be rejected in the following cases:</P>
+
+<UL>
+  <LI>The numeric is colliding, but the name of the servers are different.</LI>
+  <LI>The name is colliding, but the numeric of the servers are different.</LI>
+  <LI>When the existing server is a <A HREF="#jupes">Jupe</A>.</LI>
+</UL>
+
+<H4>5.1.3 Existing server</H4>
+
+<P>The existing server is squitted in the following cases:</P>
+
+<UL>
+  <LI>When the existing Server object is a <I>local</I> link with state <I>challenged</I> or <I>handshake</I>
+  (Note that it is not allowed to have more then one connect attempt at a time).</LI>
+  <LI>When the existing Server object is a <I>Ghost</I>.&nbsp; A server is a ghost when the new server that
+  caused the collision is a direct connection.</LI>
+  <LI>When the existing Server object is part of a <I>Ghost loop</I>:
+  when the new server that caused the collision is introduced by a
+  server that caused a Ghost, as part of the same (initial) burst.</LI>
+</UL>
+
+<H4>5.1.4 The second youngest link</H4>
+
+<P>When none of the above causes the collision to be solved, then the
+second youngest link in the loop according to the <I>link time</I>
+must be terminated, or when the third and second youngest link in the
+loop have the same <I>link time</I>, then the link to be terminated
+is determined by the names of the servers: The link that is a
+connection of the server with the largest name (See <SPAN class="code">strcmp(3)</SPAN>).
+If that still doesn't uniquely identify a link (because we have
+A&nbsp;--&nbsp;C&nbsp;--&nbsp;B), then the link with the largest of
+the two remaining server names must be terminated (C&nbsp;--&nbsp;B).</P>
+
+<H4>5.1.5 Configuration rules</H4>
+
+<P>All of the above rules determine where the <I>loop</I> should be broken.&nbsp;
+Independent of that it is possible that the received <A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A> message causes the need for a link termination as a result of a
+<I>Configuration Rule</I> (d:, D:, H: or L: lines).</P>
+
+<P>At all times only <B>one</B> link should be terminated (otherwise
+it is possible that the net ends up in two parts), therefore the
+following rule applies: If the two links that need to be broken (one
+according to &sect; 5.1.1 through &sect; 5.1.4 and one according to a
+Configuration rule) are in the same direction, then only the one that
+is closest is actually broken.&nbsp; If the two links lay in opposite
+directions, then the link in the direction from which we received the
+<A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A> message is broken.</P>
+
+<P>If the link that needs to be broken according to a Configuration rule doesn't lay on the <I>loop</I>,
+then this paragraph does not apply.</P>
+
+<H3>5.2 Client nick collisions</H3>
+
+<P>Each received <A HREF="#m_nick2"><SPAN class="syntax">NICK</SPAN></A> message with a server as source, introduces a new Client object with a numeric
+handle <SPAN class="syntax"><A HREF="#nicknum">&lt;nicknum&gt;</A></SPAN> and a name <SPAN class="syntax"><A HREF="#nickname">&lt;nickname&gt;</A></SPAN>.&nbsp;
+Each <A HREF="#m_nick1"><SPAN class="syntax">NICK</SPAN></A> message with a client as source, changes the name of a given Client object.&nbsp;
+When another Client object with the same <A HREF="#masked numeric">masked numeric</A> or name already exists,
+then we have a <I>client nick collision</I>.</P>
+
+<P>If the collision is with a local client which did not authenticate yet (who is not yet broadcasted to the other servers),
+then this local client is removed.</P>
+
+<P>Otherwise if it is a nick change (the source of the <A HREF="#m_nick1"><SPAN class="syntax">NICK</SPAN></A> message is a client)
+and if the <I>time stamps</I> of the nicks of the two colliding clients are equal,
+or when the <I>time stamp</I> of the incoming nick is larger and the user@hostname differs,
+or when the <I>time stamp</I> of the incoming nick is smaller and the user@hostname is equal
+then send a <A HREF="#m_kill"><SPAN class="syntax">KILL</SPAN></A> message to all outgoing servers for the source client.&nbsp;
+If the collision is with a local client, also send a <A HREF="#m_kill"><SPAN class="syntax">KILL</SPAN></A> upstream
+(this for security reasons and might not really be necessary).</P>
+
+<P>Otherwise, but also when the two <I>time stamps</I> are equal,
+send a <A HREF="#m_kill"><SPAN class="syntax">KILL</SPAN></A> message for the existing client to all outgoing servers.</P>
+
+<A name="overview"></A>
+<H2>6. Message overview</H2>
+
+<A name="resvparam"></A>
+<H3>6.1 Reserved parameter position</H3>
+
+<P>The syntax of the authenticated <SPAN class="syntax"><A HREF="#message">&lt;message&gt;</A></SPAN> is described in <A HREF="#message">&sect; 1.3</A>.</P>
+
+<P>As stated before, there is a position reserved for new parameters:</P>
+
+<P class="syntax"><A HREF="#prefix">&lt;prefix&gt;</A>&nbsp;<A HREF="#cmd">&lt;cmd&gt;</A>&nbsp;<SPAN class="variable">param<SUB>0</SUB></SPAN>&nbsp;<SPAN class="variable">param<SUB>1</SUB></SPAN>&nbsp;...&nbsp;<SPAN class="variable">param<SUB>p-1</SUB></SPAN>[&nbsp;<B><I>reserved</I></B>&nbsp;...]&nbsp;<SPAN class="variable">param<SUB>n-q</SUB></SPAN>&nbsp;<SPAN class="variable">param<SUB>n-q+1</SUB></SPAN>&nbsp;...&nbsp;[<SPAN class="syntax"><A HREF="#colon">&lt;colon&gt;</A></SPAN>]<SPAN class="variable">param<SUB>n-1</SUB></SPAN></P>
+
+<P>where</P>
+
+<TABLE border=0 cellspacing=10 cellpadding=0>
+
+  <TR>
+    <TD valign=center>
+      <P class="tablevariable">p</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/colon.gif"></TD>
+    <TD>
+      Number of defined parameters at the beginning.
+    </TD>
+  </TR>
+  <TR>
+    <TD valign=center>
+      <P class="tablevariable">q</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/colon.gif"></TD>
+    <TD>
+      Number of defined parameters at the end.
+    </TD>
+  </TR>
+  <TR>
+    <TD valign=center>
+      <P class="tablevariable">n</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/colon.gif"></TD>
+    <TD>
+      Number of received parameters.
+    </TD>
+  </TR>
+</TABLE>
+
+<P>If <SPAN class="variable">&nbsp;n &gt; p + q&nbsp;</SPAN> then <SPAN class="variable">&nbsp;<I>param<SUB>p</SUB></I>&nbsp;</SPAN>
+till <SPAN class="variable">&nbsp;<I>param<SUB>n-q-1</SUB></I>&nbsp;</SPAN> must be ignored by P10.&nbsp;&nbsp;
+P10 may or may not propagate the extra parameters, P11 will demand extra parameters to be propagated.</P>
+
+<P>The maximum number of received parameters is 15, in other words <SPAN class="variable">n&nbsp;&lt;&nbsp;16</SPAN>.</P>
+
+<A name="target_types"></A>
+<H3>6.2 Target types</H3>
+
+<P>A lot of commands behave more or less the same in the way they are propagated.&nbsp;
+If neither a server nor one of its locally connect clients is a target of a message, it
+should merely route the message and not change its database state based on the message's content.&nbsp;
+In total we can distinguish six main types:</P>
+
+<PRE>
+<A HREF="#target_wall"><I>wall</I></A>    : Propagate to all servers
+<A HREF="#target_server"><I>server</I></A>  : Target is a server
+<A HREF="#target_client"><I>client</I></A>  : Target is a client
+<A HREF="#target_channel"><I>channel</I></A> : Target is a channel
+<A HREF="#target_umode"><I>umode</I></A>   : Target is all users with a given umode
+<A HREF="#target_catch"><I>catch</I></A>   : Don't propagate
+</PRE>
+
+<A name="target_wall"></A>
+<H4>6.2.1 wall</H4>
+
+<P>This type of message doesn't have a target field.&nbsp;
+It is propagated without change to all servers.&nbsp;
+The application who receives such a message will propagate the message to all other (<I>authenticated</I>) server links it has.</P>
+
+<P>Messages that are not essential for synchronisation can optionally
+be hold back for links that are still exchanging the net.burst
+(states <I>authenticated</I> and <I>burst_sent</I>).</P>
+
+<P>Messages that are propagated as the <I>wall</I> type are <A HREF="#m_away"><SPAN class="syntax">AWAY</SPAN></A>, <A HREF="#m_burst"><SPAN class="syntax">BURST</SPAN></A>,
+<A HREF="#m_create"><SPAN class="syntax">CREATE</SPAN></A>, <A HREF="#m_end_of_burst"><SPAN class="syntax">END_OF_BURST</SPAN></A>, <A HREF="#m_eob_ack"><SPAN class="syntax">EOB_ACK</SPAN></A>, <A HREF="#m_gline2"><SPAN class="syntax">GLINE</SPAN></A>, <A HREF="#m_join"><SPAN class="syntax">JOIN</SPAN></A>, <A HREF="#m_kick"><SPAN class="syntax">KICK</SPAN></A>, <A HREF="#m_kill"><SPAN class="syntax">KILL</SPAN></A>, <A HREF="#m_mode1"><SPAN class="syntax">MODE&nbsp;</SPAN><SPAN class="syntax"><A HREF="#nickname">&lt;nickname&gt;</A></SPAN></A>,
+<A HREF="#m_mode2"><SPAN class="syntax">MODE&nbsp;</SPAN><SPAN class="syntax"><A HREF="#channel_name">&lt;channel_name&gt;</A></SPAN></A>, <A HREF="#m_nick1"><SPAN class="syntax">NICK</SPAN></A>, <A HREF="#m_nick2"><SPAN class="syntax">NICK</SPAN></A>, <A HREF="#m_part"><SPAN class="syntax">PART</SPAN></A>, <A HREF="#m_quit"><SPAN class="syntax">QUIT</SPAN></A>, <A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A>, <A HREF="#m_settime2"><SPAN class="syntax">SETTIME</SPAN></A>, <A HREF="#m_silence"><SPAN class="syntax">SILENCE</SPAN></A>,
+<A HREF="#m_squit"><SPAN class="syntax">SQUIT</SPAN></A> and <A HREF="#m_topic"><SPAN class="syntax">TOPIC</SPAN></A>.</P>
+
+<A name="target_server"></A>
+<H4>6.2.2 server</H4>
+
+<P>This type of message has a server numeric or name as target field.
+It usually has no effect on the internal state of servers that are
+only routing it, until it reaches its destination.</P>
+
+<P>Messages that are propagated as the <I>server</I> type are <A HREF="#m_admin"><SPAN class="syntax">ADMIN</SPAN></A>, <A HREF="#m_connect"><SPAN class="syntax">CONNECT</SPAN></A>,
+<A HREF="#m_gline1"><SPAN class="syntax">GLINE</SPAN></A>, <A HREF="#m_gline2"><SPAN class="syntax">GLINE</SPAN></A>, <A HREF="#m_info"><SPAN class="syntax">INFO</SPAN></A>, <A HREF="#m_links"><SPAN class="syntax">LINKS</SPAN></A>, <A HREF="#m_lusers"><SPAN class="syntax">LUSERS</SPAN></A>, <A HREF="#m_motd"><SPAN class="syntax">MOTD</SPAN></A>, <A HREF="#m_names"><SPAN class="syntax">NAMES</SPAN></A>, <A HREF="#m_ping"><SPAN class="syntax">PING</SPAN></A>, <A HREF="#m_pong"><SPAN class="syntax">PONG</SPAN></A>,
+<A HREF="#m_rping1"><SPAN class="syntax">RPING</SPAN></A>, <A HREF="#m_rping2"><SPAN class="syntax">RPING</SPAN></A>, <A HREF="#m_rpong1"><SPAN class="syntax">RPONG</SPAN></A>, <A HREF="#m_settime1"><SPAN class="syntax">SETTIME</SPAN></A>, <A HREF="#m_stats"><SPAN class="syntax">STATS</SPAN></A>, <A HREF="#m_time"><SPAN class="syntax">TIME</SPAN></A>, <A HREF="#m_trace"><SPAN class="syntax">TRACE</SPAN></A>, <A HREF="#m_uping"><SPAN class="syntax">UPING</SPAN></A>,
+<A HREF="#m_version"><SPAN class="syntax">VERSION</SPAN></A>, <A HREF="#m_whois"><SPAN class="syntax">WHOIS</SPAN></A> and <A HREF="#m_whowas"><SPAN class="syntax">WHOWAS</SPAN></A>.</P>
+
+<A name="target_client"></A>
+<H4>6.2.3 client</H4>
+
+<P>This type of message has a client numeric or name as target field.
+It usually has no effect on the internal state of servers that are
+only routing it, until it reaches its destination: the server of the
+client.</P>
+
+<P>Messages that are propagated as the <I>client</I> type are <A HREF="#m_invite"><SPAN class="syntax">INVITE</SPAN></A>,
+<A HREF="#m_notice"><SPAN class="syntax">NOTICE</SPAN></A>, <A HREF="#m_pong"><SPAN class="syntax">PONG</SPAN></A>, <A HREF="#m_privmsg"><SPAN class="syntax">PRIVMSG</SPAN></A>, <A HREF="#m_rpong2"><SPAN class="syntax">RPONG</SPAN></A>, <A HREF="#m_silence"><SPAN class="syntax">SILENCE</SPAN></A> and <A HREF="#m_trace"><SPAN class="syntax">TRACE</SPAN></A>.</P>
+
+<A name="target_channel"></A>
+<H4>6.2.4 channel</H4>
+
+<P>This type of message is only routed to those servers that have
+clients on this channel.&nbsp; It is not routed over links that are not in
+the <I>linked</I> state however, in order to prevend excessive lag
+build up.&nbsp; These type of messages are never essential for (channel)
+synchronisation, which are of type <A HREF="#target_wall"><I>wall</I></A>.</P>
+
+<P>Messages that are propagated as the <I>channel</I> type are <A HREF="#m_notice"><SPAN class="syntax">NOTICE</SPAN></A>,
+<A HREF="#m_privmsg"><SPAN class="syntax">PRIVMSG</SPAN></A> and <A HREF="#m_wallchops"><SPAN class="syntax">WALLCHOPS</SPAN></A>.</P>
+
+<A name="target_umode"></A>
+<H4>6.2.5 umode</H4>
+
+<P>This type of message is essentially a <A HREF="#target_wall"><I>wall</I></A> type message, but only
+routed over links that have clients behind it with a certain umode
+set.&nbsp; Like the <A HREF="#target_wall"><I>wall</I></A> type message, it does not have a target field.</P>
+
+<P>Messages that are propagated as the <I>umode</I> type are <A HREF="#m_desynch"><SPAN class="syntax">DESYNCH</SPAN></A> and <A HREF="#m_wallops"><SPAN class="syntax">WALLOPS</SPAN></A>.</P>
+
+<A name="target_catch"></A>
+<H4>6.2.6 catch</H4>
+
+<P>This type of message is not routed at all.&nbsp; It has no target
+field, but is considered to be targetted to the application itself.</P>
+
+<P>The only message that are propagated as the <I>catch</I> type is <A HREF="#m_error"><SPAN class="syntax">ERROR</SPAN></A>.</P>
+
+<A name="message_types"></A>
+<H3>6.3 Message types</H3>
+
+<P>A lot of commands behave the same in the way they effect the
+internal state of a server.&nbsp; We have essentially seven main types:</P>
+
+<PRE>
+<A HREF="#type_server">server</A>  : Change internal state of server object
+<A HREF="#type_client">client</A>  : Change internal state of client object
+<A HREF="#type_channel">channel</A> : Change internal state related to channel
+<A HREF="#type_query">query</A>   : Query remote server for information
+<A HREF="#type_remote">remote</A>  : Trigger a different remote action
+<A HREF="#type_notice">notice</A>  : Send a one way notice
+<A HREF="#type_chat">chat</A>    : Communication between two or more users
+</PRE>
+
+<P>The first three change someting in the Server, Client or Channel
+objects respectively, and/or in the <A HREF="#relationships">relationships</A> between these objects.&nbsp;
+These are thus (mostly) of propagation type <A HREF="#target_wall"><I>wall</I></A> because all servers need to be synchronized.&nbsp;
+The exceptions are <A HREF="#m_invite"><SPAN class="syntax">INVITE</SPAN></A> and <A HREF="#m_silence"><SPAN class="syntax">SILENCE</SPAN></A>, the first because it is only needed to know at the server local to
+the invited client that it is invited, and the second because <A HREF="#m_silence"><SPAN class="syntax">SILENCE</SPAN></A> has its own synchronization method.</P>
+
+<P>The last four types don't change anything in the servers they
+pass, until they reach the point of destination.</P>
+
+<A name="type_server"></A>
+<H4>6.3.1 server</H4>
+
+<P>The commands of type <I>server</I> are <A HREF="#m_end_of_burst"><SPAN class="syntax">END_OF_BURST</SPAN></A>, <A HREF="#m_eob_ack"><SPAN class="syntax">EOB_ACK</SPAN></A>, <A HREF="#m_server"><SPAN class="syntax">SERVER</SPAN></A> and <A HREF="#m_squit"><SPAN class="syntax">SQUIT</SPAN></A>.&nbsp;
+These commands change something in one or more Server objects and control relationship 1.</P>
+
+<A name="type_client"></A>
+<H4>6.3.2 client</H4>
+
+<P>The commands of type <I>client</I> are <A HREF="#m_away"><SPAN class="syntax">AWAY</SPAN></A>, <A HREF="#m_kill"><SPAN class="syntax">KILL</SPAN></A>, <A HREF="#m_mode1"><SPAN class="syntax">MODE&nbsp;</SPAN><SPAN class="syntax"><A HREF="#nickname">&lt;nickname&gt;</A></SPAN></A>, <A HREF="#m_nick1"><SPAN class="syntax">NICK</SPAN></A>, <A HREF="#m_quit"><SPAN class="syntax">QUIT</SPAN></A> and <A HREF="#m_silence"><SPAN class="syntax">SILENCE</SPAN></A>.&nbsp;
+These commands change something in a Client object and control relationship 2.</P>
+
+<A name="type_channel"></A>
+<H4>6.3.3 channel</H4>
+
+<P>The commands of type <I>channel</I> are <A HREF="#m_burst"><SPAN class="syntax">BURST</SPAN></A>, <A HREF="#m_create"><SPAN class="syntax">CREATE</SPAN></A>, <A HREF="#m_invite"><SPAN class="syntax">INVITE</SPAN></A>, <A HREF="#m_join"><SPAN class="syntax">JOIN</SPAN></A>, <A HREF="#m_kick"><SPAN class="syntax">KICK</SPAN></A>, <A HREF="#m_kill"><SPAN class="syntax">KILL</SPAN></A>, <A HREF="#m_mode2"><SPAN class="syntax">MODE&nbsp;</SPAN><SPAN class="syntax"><A HREF="#channel_name">&lt;channel_name&gt;</A></SPAN></A>, <A HREF="#m_part"><SPAN class="syntax">PART</SPAN></A> and <A HREF="#m_quit"><SPAN class="syntax">QUIT</SPAN></A>.&nbsp;
+These commands change something in a Channel object and control relationships 3 and 4.&nbsp;
+The <A HREF="#m_part"><SPAN class="syntax">PART</SPAN></A> and <A HREF="#m_quit"><SPAN class="syntax">QUIT</SPAN></A> messages only change these relationships indirectly when the client is on a channel, the code
+for it being hidden behind the removal of the Client object.</P>
+
+<A name="type_query"></A>
+<H4>6.3.4 query</H4>
+
+<P>The commands of type <I>query</I> are <A HREF="#m_admin"><SPAN class="syntax">ADMIN</SPAN></A>, <A HREF="#m_gline1"><SPAN class="syntax">GLINE</SPAN></A>, <A HREF="#m_info"><SPAN class="syntax">INFO</SPAN></A>, <A HREF="#m_links"><SPAN class="syntax">LINKS</SPAN></A>, <A HREF="#m_lusers"><SPAN class="syntax">LUSERS</SPAN></A>,
+<A HREF="#m_motd"><SPAN class="syntax">MOTD</SPAN></A>, <A HREF="#m_names"><SPAN class="syntax">NAMES</SPAN></A>, <A HREF="#m_ping"><SPAN class="syntax">PING</SPAN></A>, <A HREF="#m_rping2"><SPAN class="syntax">RPING</SPAN></A>, <A HREF="#m_stats"><SPAN class="syntax">STATS</SPAN></A>, <A HREF="#m_time"><SPAN class="syntax">TIME</SPAN></A>, <A HREF="#m_trace"><SPAN class="syntax">TRACE</SPAN></A>, <A HREF="#m_version"><SPAN class="syntax">VERSION</SPAN></A>, <A HREF="#m_whois"><SPAN class="syntax">WHOIS</SPAN></A> and <A HREF="#m_whowas"><SPAN class="syntax">WHOWAS</SPAN></A>.&nbsp;
+These commands, when received by the server, send back a reply to the source (<A HREF="#target_client"><I>client</I></A>) of the message.&nbsp;
+The content of the reply may depend on the umode of the client.&nbsp;
+The <SPAN class="syntax"><A HREF="#prefix">&lt;prefix&gt;</A></SPAN> of the reply message(s) must represent the server generating the reply and the
+target must represent the source of the query.&nbsp;
+The <A HREF="#m_trace"><SPAN class="syntax">TRACE</SPAN></A> command is special because every server on its path to the target server does send a reply to the source.</P>
+
+<A name="type_notice"></A>
+<H4>6.3.5 notice</H4>
+
+<P>The commands of type <I>notice</I> are <A HREF="#m_desynch"><SPAN class="syntax">DESYNCH</SPAN></A>, <A HREF="#m_error"><SPAN class="syntax">ERROR</SPAN></A>, <A HREF="#m_notice"><SPAN class="syntax">NOTICE</SPAN></A>, <A HREF="#m_pong"><SPAN class="syntax">PONG</SPAN></A>, <A HREF="#m_rpong2"><SPAN class="syntax">RPONG</SPAN></A> and <A HREF="#m_wallops"><SPAN class="syntax">WALLOPS</SPAN></A>.</P>
+
+<A name="type_chat"></A>
+<H4>6.3.6 chat</H4>
+
+<P>The commands of type <I>chat</I> are <A HREF="#m_privmsg"><SPAN class="syntax">PRIVMSG</SPAN></A> and <A HREF="#m_wallchops"><SPAN class="syntax">WALLCHOPS</SPAN></A>.</P>
+
+<A name="type_remote"></A>
+<H4>6.3.7 remote</H4>
+
+<P>The commands of type <I>remote</I> are <A HREF="#m_connect"><SPAN class="syntax">CONNECT</SPAN></A>, <A HREF="#m_gline1"><SPAN class="syntax">GLINE</SPAN></A> (query), <A HREF="#m_gline2"><SPAN class="syntax">GLINE</SPAN></A> (setting a gline),
+<A HREF="#m_rping1"><SPAN class="syntax">RPING</SPAN></A>, <A HREF="#m_rpong1"><SPAN class="syntax">RPONG</SPAN></A>, <A HREF="#m_settime1"><SPAN class="syntax">SETTIME</SPAN></A> (from client), <A HREF="#m_settime2"><SPAN class="syntax">SETTIME</SPAN></A> (from server) and <A HREF="#m_uping"><SPAN class="syntax">UPING</SPAN></A>.</P>
+
+<H3>6.4 Command overview</H3>
+
+<P>Table 3 gives an overview of the existing commands that can be used in the <SPAN class="syntax"><A HREF="#cmd">&lt;cmd&gt;</A></SPAN> position in a message line.&nbsp;
+<B>Command</B> gives the unabbreviated string while <B>Token</B> gives the abbreviated synonym for the same command.&nbsp;
+The <B>Source</B> field specifies whether the <SPAN class="syntax"><A HREF="#prefix">&lt;prefix&gt;</A></SPAN>
+can refer to a client, server or both as the originator of the
+message.&nbsp; <B>p</B>, <B>q</B> and <B>n</B> are as defined in
+<A HREF="#resvparam">&sect;&nbsp;6.1</A>.&nbsp; The column <B>Spaces in last param</B>
+specifies whether the last parameter is allowed to contain spaces (and thus
+must be preceded by a <SPAN class="syntax"><A HREF="#colon">&lt;colon&gt;</A></SPAN>).&nbsp; <B>Target</B>
+is as described in <A HREF="#target_types">&sect;&nbsp;6.2</A>.&nbsp;
+<B>Modified before propagation</B> specifies if the parameters are
+modified by servers other than the originating server.&nbsp; <B>Type</B>
+spefifies the Message Type, described in <A HREF="#message_types">&sect;&nbsp;6.3</A>.</P>
+
+
+<TABLE width=712 border=1 bordercolor="#000000" cellpadding=4 cellspacing=0>
+<CAPTION>Table 3&nbsp; Command overview.</CAPTION>
+<TR><TH WIDTH=126>Command</TH><TH WIDTH=52>Token</TH><TH WIDTH=59>Source</TH><TH WIDTH=31>p</TH><TH WIDTH=31>q</TH><TH WIDTH=31>n</TH><TH WIDTH=38><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH WIDTH=102>Target</TH><TH WIDTH=60><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH WIDTH=103>Type</TH></TR>
+<TR><TD><A href="#m_admin">ADMIN</A></TD><TD>AD</TD><TD>client</TD><TD>1</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_query">query</A></TD></TR>
+<TR><TD><A href="#m_away">AWAY</A></TD><TD>A</TD><TD>client</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD>0...1</TD><TD>Yes</TD><TD><A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_client">client</A></TD></TR>
+<TR><TD><A href="#m_burst">BURST</A></TD><TD>B</TD><TD>server</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD>4...7</TD><TD>Yes</TD><TD><A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_channel">channel</A></TD></TR>
+<TR><TD><A href="#m_connect">CONNECT</A></TD><TD>CO</TD><TD>client</TD><TD>3</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_remote">remote</A></TD></TR>
+<TR><TD><A href="#m_create">CREATE</A></TD><TD>C</TD><TD>client</TD><TD>2</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_channel">channel</A></TD></TR>
+<TR><TD><A href="#m_desynch">DESYNCH</A></TD><TD>DS</TD><TD>server</TD><TD>0</TD><TD>1</TD><TD>&nbsp;</TD><TD>Yes</TD><TD><A HREF="#target_umode"><I>umode</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_notice">notice</A></TD></TR>
+<TR><TD><A href="#m_end_of_burst">END_OF_BURST</A></TD><TD>EB</TD><TD>server</TD><TD>0</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_server">server</A></TD></TR>
+<TR><TD><A href="#m_eob_ack">EOB_ACK</A></TD><TD>EA</TD><TD>server</TD><TD>0</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_server">server</A></TD></TR>
+<TR><TD><A href="#m_error">ERROR</A></TD><TD>Y</TD><TD>server</TD><TD>0</TD><TD>1</TD><TD>&nbsp;</TD><TD>Yes</TD><TD><A HREF="#target_catch"><I>catch</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_notice">notice</A></TD></TR>
+<TR><TD><A href="#m_gline1">GLINE</A></TD><TD>GL</TD><TD>client</TD><TD>3</TD><TD>0</TD><TD>&nbsp;</TD><TD>Yes</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_query">query</A>&nbsp;/&nbsp;<A HREF="#type_remote">remote</A></TD></TR>
+<TR><TD><A href="#m_gline2">GLINE</A></TD><TD>GL</TD><TD>server</TD><TD>4</TD><TD>0</TD><TD>&nbsp;</TD><TD>Yes</TD><TD><A HREF="#target_wall"><I>wall</I></A>&nbsp;/&nbsp;<A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_remote">remote</A></TD></TR>
+<TR><TD><A href="#m_info">INFO</A></TD><TD>F</TD><TD>client</TD><TD>1</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_query">query</A></TD></TR>
+<TR><TD><A href="#m_invite">INVITE</A></TD><TD>I</TD><TD>client</TD><TD>2</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_client"><I>client</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_channel">channel</A></TD></TR>
+<TR><TD><A href="#m_join">JOIN</A></TD><TD>J</TD><TD>client</TD><TD>2</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_channel">channel</A></TD></TR>
+<TR><TD><A href="#m_kick">KICK</A></TD><TD>K</TD><TD>both</TD><TD>2</TD><TD>1</TD><TD>&nbsp;</TD><TD>Yes</TD><TD><A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_channel">channel</A></TD></TR>
+<TR><TD><A href="#m_kill">KILL</A></TD><TD>D</TD><TD>both</TD><TD>1</TD><TD>1</TD><TD>&nbsp;</TD><TD>Yes</TD><TD>special&nbsp;<A HREF="#target_wall"><I>wall</I></A></TD><TD>Yes</TD><TD><A HREF="#type_client">client</A>&nbsp;&amp;&nbsp;<A HREF="#type_channel">channel</A></TD></TR>
+<TR><TD><A href="#m_links">LINKS</A></TD><TD>LI</TD><TD>client</TD><TD>1...2</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_query">query</A></TD></TR>
+<TR><TD><A href="#m_lusers">LUSERS</A></TD><TD>LU</TD><TD>client</TD><TD>2</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_query">query</A></TD></TR>
+<TR><TD><A href="#m_mode1">MODE</A></TD><TD>M</TD><TD>client</TD><TD>2</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_client">client</A></TD></TR>
+<TR><TD><A href="#m_mode2">MODE</A></TD><TD>M</TD><TD>both</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD>1...9</TD><TD>&nbsp;</TD><TD><A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_channel">channel</A></TD></TR>
+<TR><TD><A href="#m_motd">MOTD</A></TD><TD>MO</TD><TD>client</TD><TD>1</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_query">query</A></TD></TR>
+<TR><TD><A href="#m_names">NAMES</A></TD><TD>E</TD><TD>client</TD><TD>2</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_query">query</A></TD></TR>
+<TR><TD><A href="#m_nick1">NICK</A></TD><TD>N</TD><TD>client</TD><TD>2</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_client">client</A></TD></TR>
+<TR><TD><A href="#m_nick2">NICK</A></TD><TD>N</TD><TD>server</TD><TD>5...6</TD><TD>3</TD><TD>&nbsp;</TD><TD>Yes</TD><TD><A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_client">client</A></TD></TR>
+<TR><TD><A href="#m_notice">NOTICE</A></TD><TD>O</TD><TD>both</TD><TD>1</TD><TD>1</TD><TD>&nbsp;</TD><TD>Yes</TD><TD><A HREF="#target_channel"><I>channel</I></A>&nbsp;/&nbsp;<A HREF="#target_client"><I>client</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_notice">notice</A></TD></TR>
+<TR><TD><A href="#m_part">PART</A></TD><TD>L</TD><TD>client</TD><TD>1</TD><TD>0...1</TD><TD>&nbsp;</TD><TD>Yes</TD><TD><A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_channel">channel</A></TD></TR>
+<TR><TD><A href="#m_ping">PING</A></TD><TD>G</TD><TD>both</TD><TD>1...2</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_query">query</A></TD></TR>
+<TR><TD><A href="#m_pong">PONG</A></TD><TD>Z</TD><TD>server</TD><TD>2</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_client"><I>client</I></A>&nbsp;/&nbsp;<A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_notice">notice</A></TD></TR>
+<TR><TD><A href="#m_privmsg">PRIVMSG</A></TD><TD>P</TD><TD>client</TD><TD>1</TD><TD>1</TD><TD>&nbsp;</TD><TD>Yes</TD><TD><A HREF="#target_channel"><I>channel</I></A>&nbsp;/&nbsp;<A HREF="#target_client"><I>client</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_chat">chat</A></TD></TR>
+<TR><TD><A href="#m_quit">QUIT</A></TD><TD>Q</TD><TD>client</TD><TD>1</TD><TD>1</TD><TD>&nbsp;</TD><TD>Yes</TD><TD><A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_client">client</A>&nbsp;&amp;&nbsp;<A HREF="#type_channel">channel</A></TD></TR>
+<TR><TD><A href="#m_rping1">RPING</A></TD><TD>RI</TD><TD>client</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD>3</TD><TD>Yes</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_remote">remote</A></TD></TR>
+<TR><TD><A href="#m_rping2">RPING</A></TD><TD>RI</TD><TD>server</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD>5</TD><TD>Yes</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_query">query</A></TD></TR>
+<TR><TD><A href="#m_rpong1">RPONG</A></TD><TD>RO</TD><TD>server</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD>4</TD><TD>Yes</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_remote">remote</A></TD></TR>
+<TR><TD><A href="#m_rpong2">RPONG</A></TD><TD>RO</TD><TD>server</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD>4</TD><TD>Yes</TD><TD><A HREF="#target_client"><I>client</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_notice">notice</A></TD></TR>
+<TR><TD><A href="#m_server">SERVER</A></TD><TD>S</TD><TD>server</TD><TD>7</TD><TD>1</TD><TD>&nbsp;</TD><TD>Yes</TD><TD><A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_server">server</A></TD></TR>
+<TR><TD><A href="#m_settime1">SETTIME</A></TD><TD>SE</TD><TD>client</TD><TD>2</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD>special&nbsp;<A HREF="#target_server"><I>server</I></A></TD><TD>Yes</TD><TD><A HREF="#type_remote">remote</A></TD></TR>
+<TR><TD><A href="#m_settime2">SETTIME</A></TD><TD>SE</TD><TD>server</TD><TD>1</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD>special&nbsp;<A HREF="#target_wall"><I>wall</I></A></TD><TD>Yes</TD><TD><A HREF="#type_remote">remote</A></TD></TR>
+<TR><TD><A href="#m_silence">SILENCE</A></TD><TD>U</TD><TD>client</TD><TD>2</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_client"><I>client</I></A>&nbsp;/&nbsp;<A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_client">client</A></TD></TR>
+<TR><TD><A href="#m_squit">SQUIT</A></TD><TD>SQ</TD><TD>both</TD><TD>2</TD><TD>1</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD>special&nbsp;<A HREF="#target_wall"><I>wall</I></A></TD><TD>Yes</TD><TD><A HREF="#type_server">server</A></TD></TR>
+<TR><TD><A href="#m_stats">STATS</A></TD><TD>R</TD><TD>client</TD><TD>2...4</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_query">query</A></TD></TR>
+<TR><TD><A href="#m_time">TIME</A></TD><TD>TI</TD><TD>client</TD><TD>1</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_query">query</A></TD></TR>
+<TR><TD><A href="#m_topic">TOPIC</A></TD><TD>T</TD><TD>client</TD><TD>1</TD><TD>0...1</TD><TD>&nbsp;</TD><TD>Yes</TD><TD><A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_channel">channel</A></TD></TR>
+<TR><TD><A href="#m_trace">TRACE</A></TD><TD>TR</TD><TD>client</TD><TD>2</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_client"><I>client</I></A>&nbsp;/&nbsp;<A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD>special&nbsp;<A HREF="#type_query">query</A></TD></TR>
+<TR><TD><A href="#m_uping">UPING</A></TD><TD>UP</TD><TD>client</TD><TD>4</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_remote">remote</A></TD></TR>
+<TR><TD><A href="#m_version">VERSION</A></TD><TD>V</TD><TD>client</TD><TD>1</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_query">query</A></TD></TR>
+<TR><TD><A href="#m_wallchops">WALLCHOPS</A></TD><TD>WC</TD><TD>client</TD><TD>1</TD><TD>1</TD><TD>&nbsp;</TD><TD>Yes</TD><TD>special&nbsp;<A HREF="#target_channel"><I>channel</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_chat">chat</A></TD></TR>
+<TR><TD><A href="#m_wallops">WALLOPS</A></TD><TD>WA</TD><TD>both</TD><TD>1</TD><TD>0</TD><TD>&nbsp;</TD><TD>Yes</TD><TD><A HREF="#target_umode"><I>umode</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_notice">notice</A></TD></TR>
+<TR><TD><A href="#m_whois">WHOIS</A></TD><TD>W</TD><TD>client</TD><TD>2</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_query">query</A></TD></TR>
+<TR><TD><A href="#m_whowas">WHOWAS</A></TD><TD>X</TD><TD>client</TD><TD>3</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_query">query</A></TD></TR>
+</TABLE>
+
+<H3>6.5 Parameter definitions</H3>
+
+<A name="m_admin"></A>
+<H4>6.5.1 ADMIN</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>ADMIN</TD><TD>AD</TD><TD>client</TD><TD>1</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_query">query</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180><SPAN class="syntax"><A HREF="#servnum">&lt;servnum&gt;</A></SPAN></TD>
+  <TD width=412>Target server numeric.</TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0>  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_yellow_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      The target server replies to the source client with numerics <A href="#numeric_type_1"><SPAN class="code">256</SPAN></A>, <A href="#numeric_type_1"><SPAN class="code">257</SPAN></A>, <A href="#numeric_type_1"><SPAN class="code">258</SPAN></A> and <A href="#numeric_type_1"><SPAN class="code">259</SPAN></A>.
+      <P>The <SPAN class="syntax"><A HREF="#text">&lt;text&gt;</A></SPAN> fields of these numeric replies should describe more or less the following:</P>
+      <OL TYPE=1 START=256>
+      <LI>The text: &laquo;<SPAN class="syntax">Administrative&nbsp;info&nbsp;about&nbsp;</SPAN>&lt;name&nbsp;of&nbsp;the&nbsp;server&gt;&raquo.</LI>
+      <LI>A descriptive name, for instance the name of the company or university running the server.</LI>
+      <LI>The location of the server (city / country or state).</LI>
+      <LI>Contact information for the admin, for instance an email address.</LI>
+      </OL>
+      <P>These four lines are usually specified by the admin in the configuration file of the server.</P>
+    </TD>
+  </TR>
+</TABLE>
+
+<A name="m_away"></A>
+<H4>6.5.2 AWAY</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>AWAY</TD><TD>A</TD><TD>client</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD>0...1</TD><TD>Yes</TD><TD><A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_client">client</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<P>The parameter is optional.</P>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180><SPAN class="syntax"><A HREF="#text">&lt;text&gt;</A></SPAN></TD>
+  <TD width=412>User specified text string.</TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0>  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_yellow_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      When the parameter is present then the source client object is marked as being <I>away</I>.
+    </TD>
+  </TR>
+  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_yellow_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      Without the parameter, the source client object is marked as being <I>not away</I>.
+    </TD>
+  </TR>
+</TABLE>
+
+<A name="m_burst"></A>
+<H4>6.5.3 BURST</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>BURST</TD><TD>B</TD><TD>server</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD>4...7</TD><TD>Yes</TD><TD><A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_channel">channel</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180><SPAN class="syntax"><A HREF="#channel_name">&lt;channel_name&gt;</A></SPAN></TD>
+  <TD width=412>Name of target channel, will never be a local channel (start with an <SPAN class="code">'&amp;'</SPAN>).</TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180><SPAN class="syntax"><A HREF="#time_stamp">&lt;time_stamp&gt;</A></SPAN></TD>
+  <TD width=412>&quot;Creation time&quot; of the channel.&nbsp; See <A HREF="#m_create"><SPAN class="syntax">CREATE</SPAN></A>.</TD>
+</TR>
+</TABLE>
+<P>The meaning of the following parameters depend on their first character.</P>
+<P>If &nbsp;<I>param<SUB>i&nbsp;</SUB></I> starts with a <SPAN class="code">'+'</SPAN> then</P>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>i</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180><SPAN class="syntax">+<A HREF="#modes">&lt;modes&gt;</A></SPAN></TD>
+  <TD width=412>Additive channel modes.&nbsp; Modes <SPAN class="code">'k'</SPAN> and <SPAN class="code">'l'</SPAN> each cause an additional <I>param</I></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>i+1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180><SPAN class="syntax"><A HREF="#channel_key">&lt;channel_key&gt;</A></SPAN></TD>
+  <TD width=412>Channel key (only present when <SPAN class="syntax"><A HREF="#modes">&lt;modes&gt;</A></SPAN> contains a <SPAN class="syntax">k</SPAN>)</TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>i+2</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180><SPAN class="syntax"><A HREF="#channel_limit">&lt;channel_limit&gt;</A></SPAN></TD>
+  <TD width=412>Channel limit (only present when <SPAN class="syntax"><A HREF="#modes">&lt;modes&gt;</A></SPAN> contains a <SPAN class="syntax">l</SPAN>)</TD>
+</TR>
+</TABLE>
+<P>If <SPAN class="variable">&nbsp;param<SUB>i</SUB>&nbsp;</SPAN> starts with a <SPAN class="code">'%'</SPAN>,&nbsp; then <SPAN class="variable">i</SPAN> will equal <SPAN class="variable">n-1</SPAN> and</P>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>i</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180><SPAN class="syntax">%<A HREF="#burst_ban_list">&lt;burst_ban_list&gt;</A></SPAN></TD>
+  <TD width=412>Space seperated list of channel ban masks.</TD>
+</TR>
+</TABLE>
+<P>If &nbsp;<I>param<SUB>i&nbsp;</SUB></I> starts with another character then</P>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>i</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180><SPAN class="syntax"><A HREF="#burst_nick_list">&lt;burst_nick_list&gt;</A></SPAN></TD>
+  <TD width=412>Comma seperated list of channel members and their modes.</TD>
+</TR>
+</TABLE>
+<P>This message uses the following tokens:</P>
+<TABLE border=0 cellspacing=10 cellpadding=0>
+
+  <TR>
+    <A name="modes"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;modes&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <SPAN class="code">[s|p][m][t][i][n][l][k]</SPAN>
+    </TD>
+  </TR>
+  <TR>
+    <A name="burst_ban_list"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;burst_ban_list&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <LI><DIV class="syntax"><A HREF="#ban mask">&lt;ban mask&gt;</A></DIV></LI> <LI><DIV class="syntax"><A HREF="#ban mask">&lt;ban mask&gt;</A><A HREF="#space">&lt;space&gt;</A><A HREF="#burst_ban_list">&lt;burst_ban_list&gt;</A></DIV></LI>
+    </TD>
+  </TR>
+  <TR>
+    <A name="burst_nick_list"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;burst_nick_list&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <LI><DIV class="syntax"><A HREF="#nicknum">&lt;nicknum&gt;</A></DIV></LI> <LI><DIV class="syntax"><A HREF="#nicknum">&lt;nicknum&gt;</A><A HREF="#comma">&lt;comma&gt;</A><A HREF="#burst_nick_list">&lt;burst_nick_list&gt;</A></DIV></LI>
+     <LI><DIV class="syntax"><A HREF="#nicknum">&lt;nicknum&gt;</A><A HREF="#colon">&lt;colon&gt;</A><A HREF="#ucmodes">&lt;ucmodes&gt;</A></DIV></LI> <LI><DIV class="syntax"><A HREF="#nicknum">&lt;nicknum&gt;</A><A HREF="#colon">&lt;colon&gt;</A><A HREF="#ucmodes">&lt;ucmodes&gt;</A><A HREF="#comma">&lt;comma&gt;</A><A HREF="#burst_nick_list">&lt;burst_nick_list&gt;</A></DIV></LI>
+    </TD>
+  </TR>
+</TABLE>
+<P>where</P>
+<TABLE border=0 cellspacing=10 cellpadding=0>
+
+  <TR>
+    <A name="comma"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;comma&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <SPAN class="code">','</SPAN> (ASCII 44)
+    </TD>
+  </TR>
+  <TR>
+    <A name="ucmodes"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;ucmodes&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <LI><DIV><SPAN class="code">'ov'</SPAN> (ASCII 111 and ASCII 118)</DIV></LI>
+                 <LI><DIV><SPAN class="code">'v'</SPAN> (ASCII 118)</DIV></LI>
+		 <LI><DIV><SPAN class="code">'o'</SPAN> (ASCII 111)</DIV></LI>
+    </TD>
+  </TR>
+</TABLE>
+
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0>  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_yellow_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      A <SPAN class="syntax">BURST</SPAN> message from a server directly behind a link in the state <I>burst_received</I>
+      or <I>linked</I> causes the local connection over which this illegal message was received
+      to be terminated except when this server is a <A HREF="#uworld">Trusted Service</A>, in which case the message is accepted (and an appropriate notification is sent to all local +s users).
+    </TD>
+  </TR>
+  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_yellow_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      If the channel object <SPAN class="syntax"><A HREF="#channel_name">&lt;channel_name&gt;</A></SPAN> does not exist then it is created and all its attributes are
+      set appropriately.
+    </TD>
+  </TR>
+  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_yellow_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      If the channel object <SPAN class="syntax"><A HREF="#channel_name">&lt;channel_name&gt;</A></SPAN> already exists and the received <SPAN class="syntax"><A HREF="#time_stamp">&lt;time_stamp&gt;</A></SPAN> is larger
+      than the existing one then all modes and bans are ignored: only the nicks are processed.
+    </TD>
+  </TR>
+  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_yellow_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      If the channel object <SPAN class="syntax"><A HREF="#channel_name">&lt;channel_name&gt;</A></SPAN> already exists and the received <SPAN class="syntax"><A HREF="#time_stamp">&lt;time_stamp&gt;</A></SPAN> is smaller
+      than the existing one then all current users are deopped (and devoiced), the channel modes and bans are
+      synchronized and the new creation time is used.
+    </TD>
+  </TR>
+  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_yellow_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      If the channel object <SPAN class="syntax"><A HREF="#channel_name">&lt;channel_name&gt;</A></SPAN> already exist and the received <SPAN class="syntax"><A HREF="#time_stamp">&lt;time_stamp&gt;</A></SPAN> is equal
+      to the existing one then all incoming modes and bans are added as usual (see <A HREF="#m_mode2"><SPAN class="syntax">MODE</SPAN></A>).
+    </TD>
+  </TR>
+  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_yellow_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      The nicks in the <SPAN class="syntax"><A HREF="#burst_nick_list">&lt;burst_nick_list&gt;</A></SPAN> are processed as follows: if the <SPAN class="syntax"><A HREF="#nicknum">&lt;nicknum&gt;</A></SPAN> is valid
+      and it is from the correct direction, it joins.&nbsp; If it doesn't exist or is from another
+      direction, we have to ignore it.
+    </TD>
+  </TR>
+  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_yellow_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      If all nicks are ignored, we remove the channel again when it is empty and don't propagate the <SPAN class="syntax">BURST</SPAN> message.
+    </TD>
+  </TR>
+</TABLE>
+
+<A name="m_connect"></A>
+<H4>6.5.4 CONNECT</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>CONNECT</TD><TD>CO</TD><TD>client</TD><TD>3</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_remote">remote</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180><SPAN class="syntax"><A HREF="#hostnamemask">&lt;hostnamemask&gt;</A></SPAN></TD>
+  <TD width=412>Mask matching the name of server that is to be connected.</TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180><SPAN class="syntax"><A HREF="#port">&lt;port&gt;</A></SPAN></TD>
+  <TD width=412>TCP/IP port number to connect to.</TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>2</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180><SPAN class="syntax"><A HREF="#servname">&lt;servname&gt;</A></SPAN></TD>
+  <TD width=412>Name of target server.</TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0>  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_yellow_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      A <SPAN class="syntax">CONNECT</SPAN> message is a request to the target server to initiate a connection to another server, whose
+      name matches the given mask.&nbsp; The target server uses its configuration file to find a suitable server to
+      connect to.
+    </TD>
+  </TR>
+</TABLE>
+<H5>Note</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0>  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_blue_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      The target server should broadcast the request using a <A HREF="#m_wallops"><SPAN class="syntax">WALLOPS</SPAN></A>.
+    </TD>
+  </TR>
+  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_blue_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      The destination server may be unable or unwilling to initiate a new connection to the specified mask.&nbsp;
+      In that case it can send a <A HREF="#m_notice"><SPAN class="syntax">NOTICE</SPAN></A> to the source client indicating the reason of failure.&nbsp;
+      It is possible that this message is delayed, for example when the reason for a failure is a connect timeout.
+    </TD>
+  </TR>
+</TABLE>
+
+<A name="m_create"></A>
+<H4>6.5.5 CREATE</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>CREATE</TD><TD>C</TD><TD>client</TD><TD>2</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_channel">channel</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180><SPAN class="syntax"><A HREF="#channels">&lt;channels&gt;</A></SPAN></TD>
+  <TD width=412>Comma-separated list of channel names</TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180><SPAN class="syntax"><A HREF="#time_stamp">&lt;time_stamp&gt;</A></SPAN></TD>
+  <TD width=412>Network time stamp for channel creation</TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0>  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_yellow_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      A <SPAN class="syntax">CREATE</SPAN> message is used for newly created channels.&nbsp; In effect it is equivalent to a <A HREF="#m_join"><SPAN class="syntax">JOIN</SPAN></A> of
+      the source client and granting him channel operator status.
+    </TD>
+  </TR>
+  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_yellow_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      When a <SPAN class="syntax">CREATE</SPAN> message is received for an already existing channel and the received time stamp
+      is smaller than or equal to the creation time of that channel then the creation time of the channel is
+      set to the received creation time and the <SPAN class="syntax">CREATE</SPAN> message is processed as usual.
+    </TD>
+  </TR>
+  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_yellow_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      When a <SPAN class="syntax">CREATE</SPAN> message is received for an already existing channel and the received time stamp
+      is larger than the creation time of that channel then the <SPAN class="syntax">CREATE</SPAN> is processed as a normal
+      <A HREF="#m_join"><SPAN class="syntax">JOIN</SPAN></A> and a deopping <A HREF="#m_mode2"><SPAN class="syntax">MODE</SPAN></A> (with the creation time of the local channel as time stamp) is send
+      upstream to deop the source client.
+    </TD>
+  </TR>
+</TABLE>
+<H5>Note</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0>  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_blue_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      When a <SPAN class="syntax">CREATE</SPAN> message is received for an already existing channel and the received time stamp
+      is <EM>much</EM> larger than the creation time of that channel then it makes more sense to use
+      a time stamp of zero for the deopping <A HREF="#m_mode2"><SPAN class="syntax">MODE</SPAN></A> in order to trigger a <A HREF="#m_desynch"><SPAN class="syntax">DESYNCH</SPAN></A> notice.&nbsp;
+      With &quot;<EM>much</EM> larger&quot; is meant that the difference can not be explained by normal
+      lag and/or clock offsets between servers.
+    </TD>
+  </TR>
+</TABLE>
+
+<A name="m_desynch"></A>
+<H4>6.5.6 DESYNCH</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>DESYNCH</TD><TD>DS</TD><TD>server</TD><TD>0</TD><TD>1</TD><TD>&nbsp;</TD><TD>Yes</TD><TD><A HREF="#target_umode"><I>umode</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_notice">notice</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>n-1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180><SPAN class="syntax"><A HREF="#text">&lt;text&gt;</A></SPAN></TD>
+  <TD width=412>Message describing the desynchronization</TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0>  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_yellow_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      <SPAN class="syntax">DESYNCH</SPAN> is used to notify the network that desynchronization in clock or network state has
+      been detected between two servers.  This may happen for a variety of reasons; the text should be
+      read by humans, but is not intended to be automatically processed by network services.
+    </TD>
+  </TR>
+</TABLE>
+
+<A name="m_end_of_burst"></A>
+<H4>6.5.7 END_OF_BURST</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>END_OF_BURST</TD><TD>EB</TD><TD>server</TD><TD>0</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_server">server</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0>  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_yellow_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      <SPAN class="syntax">END_OF_BURST</SPAN> is sent as the last line it a server's net.burst.  If the originator of
+      this command is a locally connected server, an <A HREF="#m_eob_ack"><SPAN class="syntax">EOB_ACK</SPAN></A> message should be sent to
+      acknowledge the end of the burst.
+    </TD>
+  </TR>
+</TABLE>
+
+<A name="m_eob_ack"></A>
+<H4>6.5.8 EOB_ACK</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>EOB_ACK</TD><TD>EA</TD><TD>server</TD><TD>0</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_server">server</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0>  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_yellow_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      <SPAN class="syntax">EOB_ACK</SPAN> is sent as an acknowledgement of an <A HREF="#m_end_of_burst"><SPAN class="syntax">END_OF_BURST</SPAN></A> message.  After this message
+      is sent, channel <A HREF="#m_privmsg"><SPAN class="syntax">PRIVMSG</SPAN></A> messages may be sent in that direction.
+    </TD>
+  </TR>
+</TABLE>
+
+<A name="m_error"></A>
+<H4>6.5.9 ERROR</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>ERROR</TD><TD>Y</TD><TD>server</TD><TD>0</TD><TD>1</TD><TD>&nbsp;</TD><TD>Yes</TD><TD><A HREF="#target_catch"><I>catch</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_notice">notice</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>n-1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180><SPAN class="syntax"><A HREF="#text">&lt;text&gt;</A></SPAN></TD>
+  <TD width=412>Message describing error</TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0>  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_yellow_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      <SPAN class="syntax">ERROR</SPAN> is sent to indicate that the originating server will disregard any further data sent
+        from the receiving server.  The text argument is meant for human consumption.
+    </TD>
+  </TR>
+</TABLE>
+
+<A name="m_gline1"></A>
+<H4>6.5.10 GLINE</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>GLINE</TD><TD>GL</TD><TD>client</TD><TD>3</TD><TD>0</TD><TD>&nbsp;</TD><TD>Yes</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_query">query</A>&nbsp;/&nbsp;<A HREF="#type_remote">remote</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>2</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_gline2"></A>
+<H4>6.5.11 GLINE</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>GLINE</TD><TD>GL</TD><TD>server</TD><TD>4</TD><TD>0</TD><TD>&nbsp;</TD><TD>Yes</TD><TD><A HREF="#target_wall"><I>wall</I></A>&nbsp;/&nbsp;<A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_remote">remote</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180><SPAN class="syntax"><A HREF="#servnum">&lt;servnum&gt;</A></SPAN></TD>
+  <TD width=412>Target server numeric</TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180>[<SPAN class="syntax"><A HREF="#sign">&lt;sign&gt;</A></SPAN>]<SPAN class="syntax"><A HREF="#short_hostmask">&lt;short_hostmask&gt;</A></SPAN></TD>
+  <TD width=412>G-line operation and target</TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>2</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180><SPAN class="syntax"><A HREF="#duration">&lt;duration&gt;</A></SPAN></TD>
+  <TD width=412>Duration of G-line (in seconds)</TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>3</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180><SPAN class="syntax"><A HREF="#text">&lt;text&gt;</A></SPAN></TD>
+  <TD width=412>Explanation or comment for G-line</TD>
+</TR>
+</TABLE>
+<P>This message uses the following tokens:</P>
+<TABLE border=0 cellspacing=10 cellpadding=0>
+
+  <TR>
+    <A name="sign"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;sign&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <SPAN class="code">+|-</SPAN>
+    </TD>
+  </TR>
+  <TR>
+    <A name="short_hostmask"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;short_hostmask&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <LI><DIV class="syntax"><A HREF="#usermask">&lt;usermask&gt;</A></DIV></LI> <SPAN class="code">@</SPAN> <LI><DIV class="syntax"><A HREF="#hostnamemask">&lt;hostnamemask&gt;</A></DIV></LI>
+    </TD>
+  </TR>
+  <TR>
+    <A name="duration"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;duration&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <LI><DIV class="syntax"><A HREF="#digit">&lt;digit&gt;</A></DIV></LI>+
+    </TD>
+  </TR>
+</TABLE>
+<P>where</P>
+<TABLE border=0 cellspacing=10 cellpadding=0>
+
+  <TR>
+    <A name="usermask"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;usermask&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      Printable characters except for <SPAN class="code">@</SPAN>
+    </TD>
+  </TR>
+  <TR>
+    <A name="hostnamemask"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;hostnamemask&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      Characters valid in host names, plus <SPAN class="code">?</SPAN> and <SPAN class="code">*</SPAN>
+    </TD>
+  </TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0>  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_yellow_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      <SPAN class="syntax">GLINE</SPAN> sets, removes or updates a G-line.  A G-line is a ban on certain clients
+      from connecting to one or more servers.
+    </TD>
+  </TR>
+  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_yellow_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      The target server may be any server's <SPAN class="syntax"><A HREF="#servnum">&lt;servnum&gt;</A></SPAN> or <SPAN class="code">'*'</SPAN> (which indicates
+      all servers).  The <SPAN class="syntax"><A HREF="#sign">&lt;sign&gt;</A></SPAN> before the hostmask indicates whether the G-line should
+      be added/updated or removed; if it is omitted, <SPAN class="code">'+'</SPAN> is assumed.  The <SPAN class="syntax"><A HREF="#duration">&lt;duration&gt;</A></SPAN>
+      is the new duration for the G-line; if an existing G-line has the same <SPAN class="syntax"><A HREF="#short_hostmask">&lt;short_hostmask&gt;</A></SPAN>
+      as this command, its duration is updated with the new value.
+    </TD>
+  </TR>
+</TABLE>
+<P>Notes:</P>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0>  <TR>
+    <TD width=15 valign=top>
+      <IMG src="../images/ball_blue_icon.gif" align=top border=0>
+    </TD>
+    <TD>
+      If the host part of the hostmask is a wildcarded IP mask, then the G-line should be
+      considered valid based on a client's IP address.  Otherwise, the host part should be
+      matched against the client's resolved hostname.  The method used to resolve a client's
+      hostname is outside the scope of this document.
+    </TD>
+  </TR>
+</TABLE>
+
+<A name="m_info"></A>
+<H4>6.5.12 INFO</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>INFO</TD><TD>F</TD><TD>client</TD><TD>1</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_query">query</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_invite"></A>
+<H4>6.5.13 INVITE</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>INVITE</TD><TD>I</TD><TD>client</TD><TD>2</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_client"><I>client</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_channel">channel</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_join"></A>
+<H4>6.5.14 JOIN</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>JOIN</TD><TD>J</TD><TD>client</TD><TD>2</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_channel">channel</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_kick"></A>
+<H4>6.5.15 KICK</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>KICK</TD><TD>K</TD><TD>both</TD><TD>2</TD><TD>1</TD><TD>&nbsp;</TD><TD>Yes</TD><TD><A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_channel">channel</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>n-1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_kill"></A>
+<H4>6.5.16 KILL</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>KILL</TD><TD>D</TD><TD>both</TD><TD>1</TD><TD>1</TD><TD>&nbsp;</TD><TD>Yes</TD><TD>special&nbsp;<A HREF="#target_wall"><I>wall</I></A></TD><TD>Yes</TD><TD><A HREF="#type_client">client</A>&nbsp;&amp;&nbsp;<A HREF="#type_channel">channel</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>n-1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_links"></A>
+<H4>6.5.17 LINKS</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>LINKS</TD><TD>LI</TD><TD>client</TD><TD>1...2</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_query">query</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<P>Optional:</P>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_lusers"></A>
+<H4>6.5.18 LUSERS</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>LUSERS</TD><TD>LU</TD><TD>client</TD><TD>2</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_query">query</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_mode1"></A>
+<H4>6.5.19 MODE</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>MODE</TD><TD>M</TD><TD>client</TD><TD>2</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_client">client</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_mode2"></A>
+<H4>6.5.20 MODE</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>MODE</TD><TD>M</TD><TD>both</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD>1...9</TD><TD>&nbsp;</TD><TD><A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_channel">channel</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180><SPAN class="syntax"><A HREF="#channel_name">&lt;channel_name&gt;</A></SPAN></TD>
+  <TD width=412>Name of target channel.</TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180><SPAN class="syntax"><A HREF="#mode_list">&lt;mode_list&gt;</A></SPAN></TD>
+  <TD width=412>The modes to be changed.</TD>
+</TR>
+</TABLE>
+<P>The order of the following parameters is the same as the order in which
+their corresponding <SPAN class="syntax"><A HREF="#mode">&lt;mode&gt;</A></SPAN> appears in the <SPAN class="syntax"><A HREF="#mode_block">&lt;mode_block&gt;</A></SPAN>.</P>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>r</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180><SPAN class="syntax"><A HREF="#key">&lt;key&gt;</A></SPAN></TD>
+  <TD width=412>Channel key (only present when <SPAN class="syntax"><A HREF="#mode_block">&lt;mode_block&gt;</A></SPAN> contains a <SPAN class="syntax">k</SPAN>).</TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>s</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180><SPAN class="syntax"><A HREF="#limit">&lt;limit&gt;</A></SPAN></TD>
+  <TD width=412>Maximum number of channel members (only present when <SPAN class="syntax"><A HREF="#mode_block">&lt;mode_block&gt;</A></SPAN> contains a <SPAN class="syntax">l</SPAN>).</TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>t</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180><SPAN class="syntax"><A HREF="#nicknum">&lt;nicknum&gt;</A></SPAN></TD>
+  <TD width=412>Numeric client object that is [de]opped or [de]voiced
+       (present,  for each <SPAN class="syntax">o</SPAN> and <SPAN class="syntax">v</SPAN> in <SPAN class="syntax"><A HREF="#mode_block">&lt;mode_block&gt;</A></SPAN>, if any).</TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>u</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180><SPAN class="syntax"><A HREF="#ban_mask">&lt;ban_mask&gt;</A></SPAN></TD>
+  <TD width=412>Ban mask that needs to be added or removed, present for each <SPAN class="syntax">b</SPAN> in <SPAN class="syntax"><A HREF="#mode_block">&lt;mode_block&gt;</A></SPAN>, if any.</TD>
+</TR>
+</TABLE>
+<P>This parameter is always the last parameter, but it is only present when the source of the message is a <EM>server</EM>.</P>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>n-1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180><LI><SPAN class="syntax">0</SPAN></LI><LI><DIV class="syntax"><A HREF="#time_stamp">&lt;time_stamp&gt;</A></DIV></LI></TD>
+  <TD width=412>&quot;Creation time&quot; of the channel (see <A HREF="#m_create"><SPAN class="syntax">CREATE</SPAN></A>) or a <SPAN class="syntax">0</SPAN>.</TD>
+</TR>
+</TABLE>
+<P>This message uses the following tokens:</P>
+<TABLE border=0 cellspacing=10 cellpadding=0>
+
+  <TR>
+    <A name="mode_list"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;mode_list&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <LI><DIV class="syntax"><A HREF="#mode_block">&lt;mode_block&gt;</A></DIV></LI><LI><DIV class="syntax"><A HREF="#mode_block">&lt;mode_block&gt;</A><A HREF="#modelist">&lt;modelist&gt;</A></DIV></LI>
+    </TD>
+  </TR>
+  <TR>
+    <A name="key"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;key&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      A <SPAN class="syntax"><A HREF="#token">&lt;token&gt;</A></SPAN> not containing any <SPAN class="syntax"><A HREF="#colon">&lt;colon&gt;</A></SPAN> and not containing any ASCII value smaller than 33.
+    </TD>
+  </TR>
+  <TR>
+    <A name="limit"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;limit&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      A series of digits (see <SPAN class="syntax"><A HREF="#digit">&lt;digit&gt;</A></SPAN>) representing an unsigned positive number smaller than 4294967296.
+    </TD>
+  </TR>
+  <TR>
+    <A name="ban_mask"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;ban_mask&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      
+    </TD>
+  </TR>
+</TABLE>
+
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_motd"></A>
+<H4>6.5.21 MOTD</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>MOTD</TD><TD>MO</TD><TD>client</TD><TD>1</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_query">query</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_names"></A>
+<H4>6.5.22 NAMES</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>NAMES</TD><TD>E</TD><TD>client</TD><TD>2</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_query">query</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_nick1"></A>
+<H4>6.5.23 NICK</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>NICK</TD><TD>N</TD><TD>client</TD><TD>2</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_client">client</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_nick2"></A>
+<H4>6.5.24 NICK</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>NICK</TD><TD>N</TD><TD>server</TD><TD>5...6</TD><TD>3</TD><TD>&nbsp;</TD><TD>Yes</TD><TD><A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_client">client</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>2</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>3</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>4</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<P>Parameter 5 is optional.</P>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>5</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>n-3</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>n-2</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>n-1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_notice"></A>
+<H4>6.5.25 NOTICE</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>NOTICE</TD><TD>O</TD><TD>both</TD><TD>1</TD><TD>1</TD><TD>&nbsp;</TD><TD>Yes</TD><TD><A HREF="#target_channel"><I>channel</I></A>&nbsp;/&nbsp;<A HREF="#target_client"><I>client</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_notice">notice</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>n-1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_part"></A>
+<H4>6.5.26 PART</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>PART</TD><TD>L</TD><TD>client</TD><TD>1</TD><TD>0...1</TD><TD>&nbsp;</TD><TD>Yes</TD><TD><A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_channel">channel</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<P>Optional:</P>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>n-1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_ping"></A>
+<H4>6.5.27 PING</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>PING</TD><TD>G</TD><TD>both</TD><TD>1...2</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_query">query</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<P>Optional:</P>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_pong"></A>
+<H4>6.5.28 PONG</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>PONG</TD><TD>Z</TD><TD>server</TD><TD>2</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_client"><I>client</I></A>&nbsp;/&nbsp;<A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_notice">notice</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_privmsg"></A>
+<H4>6.5.29 PRIVMSG</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>PRIVMSG</TD><TD>P</TD><TD>client</TD><TD>1</TD><TD>1</TD><TD>&nbsp;</TD><TD>Yes</TD><TD><A HREF="#target_channel"><I>channel</I></A>&nbsp;/&nbsp;<A HREF="#target_client"><I>client</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_chat">chat</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>n-1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_quit"></A>
+<H4>6.5.30 QUIT</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>QUIT</TD><TD>Q</TD><TD>client</TD><TD>1</TD><TD>1</TD><TD>&nbsp;</TD><TD>Yes</TD><TD><A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_client">client</A>&nbsp;&amp;&nbsp;<A HREF="#type_channel">channel</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>n-1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_rping1"></A>
+<H4>6.5.31 RPING</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>RPING</TD><TD>RI</TD><TD>client</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD>3</TD><TD>Yes</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_remote">remote</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>2</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_rping2"></A>
+<H4>6.5.32 RPING</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>RPING</TD><TD>RI</TD><TD>server</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD>5</TD><TD>Yes</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_query">query</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>2</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>3</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>4</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_rpong1"></A>
+<H4>6.5.33 RPONG</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>RPONG</TD><TD>RO</TD><TD>server</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD>4</TD><TD>Yes</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_remote">remote</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>2</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>3</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_rpong2"></A>
+<H4>6.5.34 RPONG</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>RPONG</TD><TD>RO</TD><TD>server</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD>4</TD><TD>Yes</TD><TD><A HREF="#target_client"><I>client</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_notice">notice</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>2</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>3</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_server"></A>
+<H4>6.5.35 SERVER</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>SERVER</TD><TD>S</TD><TD>server</TD><TD>7</TD><TD>1</TD><TD>&nbsp;</TD><TD>Yes</TD><TD><A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_server">server</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>2</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>3</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>4</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>5</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>6</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>n-1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_settime1"></A>
+<H4>6.5.36 SETTIME</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>SETTIME</TD><TD>SE</TD><TD>client</TD><TD>2</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD>special&nbsp;<A HREF="#target_server"><I>server</I></A></TD><TD>Yes</TD><TD><A HREF="#type_remote">remote</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_settime2"></A>
+<H4>6.5.37 SETTIME</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>SETTIME</TD><TD>SE</TD><TD>server</TD><TD>1</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD>special&nbsp;<A HREF="#target_wall"><I>wall</I></A></TD><TD>Yes</TD><TD><A HREF="#type_remote">remote</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_silence"></A>
+<H4>6.5.38 SILENCE</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>SILENCE</TD><TD>U</TD><TD>client</TD><TD>2</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_client"><I>client</I></A>&nbsp;/&nbsp;<A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_client">client</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_squit"></A>
+<H4>6.5.39 SQUIT</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>SQUIT</TD><TD>SQ</TD><TD>both</TD><TD>2</TD><TD>1</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD>special&nbsp;<A HREF="#target_wall"><I>wall</I></A></TD><TD>Yes</TD><TD><A HREF="#type_server">server</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>n-1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_stats"></A>
+<H4>6.5.40 STATS</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>STATS</TD><TD>R</TD><TD>client</TD><TD>2...4</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_query">query</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<P>Optional:</P>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>2</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>3</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_time"></A>
+<H4>6.5.41 TIME</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>TIME</TD><TD>TI</TD><TD>client</TD><TD>1</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_query">query</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_topic"></A>
+<H4>6.5.42 TOPIC</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>TOPIC</TD><TD>T</TD><TD>client</TD><TD>1</TD><TD>0...1</TD><TD>&nbsp;</TD><TD>Yes</TD><TD><A HREF="#target_wall"><I>wall</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_channel">channel</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<P>Optional:</P>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>n-1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_trace"></A>
+<H4>6.5.43 TRACE</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>TRACE</TD><TD>TR</TD><TD>client</TD><TD>2</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_client"><I>client</I></A>&nbsp;/&nbsp;<A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD>special&nbsp;<A HREF="#type_query">query</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_uping"></A>
+<H4>6.5.44 UPING</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>UPING</TD><TD>UP</TD><TD>client</TD><TD>4</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_remote">remote</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>2</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>3</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_version"></A>
+<H4>6.5.45 VERSION</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>VERSION</TD><TD>V</TD><TD>client</TD><TD>1</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_query">query</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_wallchops"></A>
+<H4>6.5.46 WALLCHOPS</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>WALLCHOPS</TD><TD>WC</TD><TD>client</TD><TD>1</TD><TD>1</TD><TD>&nbsp;</TD><TD>Yes</TD><TD>special&nbsp;<A HREF="#target_channel"><I>channel</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_chat">chat</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>n-1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_wallops"></A>
+<H4>6.5.47 WALLOPS</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>WALLOPS</TD><TD>WA</TD><TD>both</TD><TD>1</TD><TD>0</TD><TD>&nbsp;</TD><TD>Yes</TD><TD><A HREF="#target_umode"><I>umode</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_notice">notice</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_whois"></A>
+<H4>6.5.48 WHOIS</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>WHOIS</TD><TD>W</TD><TD>client</TD><TD>2</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_query">query</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<A name="m_whowas"></A>
+<H4>6.5.49 WHOWAS</H4>
+<TABLE border=1 cellpadding=4 cellspacing=0>
+<TR><TH>Command</TH><TH>Token</TH><TH>Source</TH><TH>p</TH><TH>q</TH><TH>n</TH><TH><FONT SIZE=1>Spaces&nbsp;in<BR>last&nbsp;param</FONT></TH><TH>Target</TH><TH><FONT SIZE=1>Modified&nbsp;before<BR>propagation</FONT></TH><TH>Type</TH></TR>
+<TR><TD>WHOWAS</TD><TD>X</TD><TD>client</TD><TD>3</TD><TD>0</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD><A HREF="#target_server"><I>server</I></A></TD><TD>&nbsp;</TD><TD><A HREF="#type_query">query</A></TD></TR>
+</TABLE>
+<H5>Parameters</H5>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>0</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>1</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<TABLE border=0 cellpadding=0 cellspacing=0>
+<TR>
+  <TD width=18>&nbsp;</TD>
+  <TD width=64><I>param<SUB>2</SUB></I></TD>
+  <TD width=32>:</TD>
+  <TD width=180></TD>
+  <TD width=412></TD>
+</TR>
+</TABLE>
+<H5>Description</H5>
+<TABLE width=512 border=0 cellpadding=4 cellspacing=0></TABLE>
+
+<H3>6.6 Numerics</H3>
+
+<A name="numeric_type_1"></A>
+<H4>6.6.1 Type 1</H4>
+
+<P class="syntax"><A HREF="#prefix">&lt;prefix&gt;</A><A HREF="#space">&lt;space&gt;</A><A HREF="#numeric">&lt;numeric&gt;</A><A HREF="#space">&lt;space&gt;</A><A HREF="#nickname">&lt;nickname&gt;</A><A HREF="#space">&lt;space&gt;</A><A HREF="#colon">&lt;colon&gt;</A><A HREF="#text">&lt;text&gt;</A></P>
+
+<P>where</P>
+
+<TABLE border=0 cellspacing=10 cellpadding=0>
+
+  <TR>
+    <A name="numeric"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;numeric&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <SPAN class="syntax"><A HREF="#digit">&lt;digit&gt;</A><A HREF="#digit">&lt;digit&gt;</A><A HREF="#digit">&lt;digit&gt;</A></SPAN>
+    </TD>
+  </TR>
+  <TR>
+    <A name="text"></A>
+    <TD valign=center>
+      <P class="tablesyntax">&lt;text&gt;</P>
+    </TD>
+    <TD width=40 valign=center><IMG src="../images/isperdef.gif"></TD>
+    <TD>
+      <SPAN class="syntax"><A HREF="#last_token">&lt;last_token&gt;</A></SPAN>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+<HR SIZE=1 NOSHADE>
+<A HREF="../index.html"><IMG SRC="../images/home_btn.gif" ALIGN=MIDDLE HSPACE=5 WIDTH=30 HEIGHT=30 BORDER=0></A><A HREF="../index.html">Back to home page</A>
+<ADDRESS>Questions and comments about this page should go to the maintainer: <A HREF="../anti/spam/bots/dont/like/deep/dirs/mail2.html?irc">Carlo Wood</A> <I>(Run @ IRC)</I>.</ADDRESS>
+
+</BODY>
+</HTML>
