@@ -167,11 +167,13 @@ def handleJOIN(cod, line):
     Handles a raw S2S JOIN, this is rarely seen in the wild.
     """
 
-    channel = cod.channels[line.args[0]]
+    channel = cod.channels[line.args[1]]
 
-    channel.clientAdd(cod.clients[source])
+    client = cod.clients[line.source]
 
-    cod.runHooks("join", [cod.clients[line.source], channel])
+    channel.clientAdd(client)
+
+    cod.runHooks("join", [client, channel])
 
 def handlePART(cod, line):
     """
