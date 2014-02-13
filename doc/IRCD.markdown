@@ -45,3 +45,16 @@ configuration for linking InspIRCd to Cod is shown below:
 <module name="m_svsoper.so">
 ```
 
+## Tethys
+
+Tethys configuration subject to change without notice.
+
+```
+link cod.int {
+    host = "127.0.0.1";
+    sendpass = "dev";
+    recvpass = "dev";
+    class = "server";
+};
+```
+
