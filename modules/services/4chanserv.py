@@ -102,7 +102,7 @@ def handleCommands(cod, target, line):
     splitline = line.args[-1].split()
     channel = line.args[0]
 
-    if target == client.uid:
+    if target.uid != client.uid:
         return
 
     command = splitline[0].upper()
