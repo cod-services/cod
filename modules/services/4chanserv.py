@@ -30,8 +30,7 @@ is below:
         "nick": "4ChanServ",
         "user": "moot",
         "host": "4chan.org",
-        "gecos": "4chan Relay",
-        "prefix": "<"
+        "gecos": "4chan Relay"
     },
 
 """
@@ -124,8 +123,7 @@ def handleCommands(cod, target, line):
         if len(board) > 4:
             cod.notice(line.args[0], "/%s/ is not a board on 4chan.", client)
 
-        cod.notice(target, "Now monitoring /%s/%s" % (board, thread), client)
-        cod.servicesLog("%s MONITOR:/%s/%s to %s" % (line.source.nick, board, thread, target))
+        cod.servicesLog("%s MONITOR:/%s/%s to %s" % (line.source.nick, board, thread, target), client)
 
         tm = ThreadMonitor(cod, target, board, thread)
         tm.start()
@@ -134,14 +132,15 @@ def handleCommands(cod, target, line):
 
     elif command == "DEMONITOR":
         board = splitline[1]
-        thread = thread = splitline[2]
+        thread = splitline[2]
+        target = splitline[3]
 
-        if board+thread in threads:
-            target = threads[board+thread].target
-            threads[board+thread].slay()
+        victim = board+thread
 
-            cod.notice(target, "Stopped monitoring /%s/%s at the request of %s" %
-                    (board, thread, line.source.nick), client)
+        if victim in threads:
+            target = threads[victim].target
+            threads[victim].slay()
+
             cod.servicesLog("%s MONITOR:STOP:/%s/%s to %s" %
                     (line.source.nick, board, thread, target), client)
 
@@ -151,9 +150,8 @@ def handleCommands(cod, target, line):
 
     elif command == "HELP":
         cod.notice(line.source.uid, "HELP:", client)
-        #cod.notice(line.source.uid, "JOIN:      <channel>        - Joins a channel. Oper-only.", client)
         cod.notice(line.source.uid, "MONITOR:   - monitors 4chan <board> <thread> to <channel>", client)
-        cod.notice(line.source.uid, "DEMONITOR: - disables monitoring of a <board> <thread>", client)
+        cod.notice(line.source.uid, "DEMONITOR: - disables monitoring of a <board> <thread> to <channel>", client)
 
     else:
         cod.notice(line.source.uid, "Invalid command. Use /msg %s HELP or join %s for more help" %
@@ -173,24 +171,26 @@ class ThreadMonitor(threading.Thread):
 
         self.cod = cod
         self.board = board
-        self.target = target
+        self.target = cod.channels[target]
         self.threadid = threadid
         self.interval = interval
         self.lastpostid = 0
         self.dying = False
 
-        self.client = makeClient("[4CS]\%s\%s" % (board, threadid), "monitor", "boards.4chan.org", "4ChanServ monitor", cod.getUID())
+        nick = "[4CS]\%s\%s" % (board, threadid)
 
+        self.client = makeClient(nick, "monitor", "boards.4chan.org",
+                "4ChanServ monitor for /%s/%s to %s" % (board, threadid, target), cod.getUID())
         cod.burstClient(cod, self.client)
-        cod.protocol.join_client(self.client, cod.channels[target])
+        cod.protocol.join_client(self.client, self.target)
+        cod.protocol.join_client(self.client, cod.channels[cod.config["etc"]["snoopchan"]])
 
         cod.clients[self.client.uid] = self.client
 
         try:
             self.checkThread()
         except ValueError:
-            cod.privmsg(target.name, "Thread %s is invalid" % self.threadid,
-                    client)
+            cod.privmsg(self.client, self.target, "Thread %s is invalid" % self.threadid)
         except Exception as e:
             cod.servicesLog("Monitor on thread /%s/%s failed for %s and %s" %\
                     (self.board, self.threadid, type(e), e.message), client)
@@ -211,34 +211,36 @@ class ThreadMonitor(threading.Thread):
             else:
                 subject = json["posts"][0]["sub"]
 
-            self.cod.privmsg(self.target, "Subject for /%s/%s: %s" % (self.board,
-                self.threadid, subject), self.client)
-
-        self.cod.log("/%s/%s: oldpost=%s, newpostid=%s" %
-                (self.board, self.threadid, self.lastpostid, newpostid), "4CS")
+            self.cod.protocol.privmsg(self.client, self.target, "Subject for /%s/%s: %s" % (self.board,
+                self.threadid, subject))
 
         if newpostid != self.lastpostid and self.lastpostid != 0:
             newposts = filter((lambda x: x["no"] > self.lastpostid), json["posts"])
 
             for post in newposts:
-                string = "[%s] " % post["no"]
-                if "name" in post:
-                    string += "%s " % unescape(remove_html_markup(post["name"]))
-                else:
-                    string += "Anonymous "
+                try:
+                    string = "[%s] " % post["no"]
+                    if "name" in post:
+                        string += "%s " % unescape(remove_html_markup(post["name"]))
+                    else:
+                        string += "Anonymous "
 
-                if "filename" in post:
-                    string += "posted %s%s and " % (post["filename"], post["ext"])
-                if "com" in post:
-                    comment = post["com"].replace("<br>", " \ ")
-                    comment = remove_html_markup(comment)
-                    comment = unescape(comment)
+                    if "filename" in post:
+                        string += "posted %s%s and " % (post["filename"], post["ext"])
+                    if "com" in post:
+                        comment = post["com"].replace("<br>", " \ ")
+                        comment = remove_html_markup(comment)
+                        comment = unescape(comment)
 
-                    string += "commented: %s" % comment
-                else:
-                    string += "did not comment."
+                        string += "commented: %s" % comment
+                    else:
+                        string += "did not comment."
 
-                self.cod.privmsg(self.target, string, self.client)
+                    self.cod.protocol.privmsg(self.client, self.target, string)
+                except UnicodeError:
+                    self.cod.protocol.privmsg(self.client, self.target,
+                            "Post with id %s could not be read: Unicode use?" % post["no"])
+                    self.cod.servicesLog("Unicode error on post %s" % post["no"], self.client)
 
         self.lastpostid = newpostid
 
@@ -252,17 +254,15 @@ class ThreadMonitor(threading.Thread):
         while not self.dying:
             try:
                 self.checkThread()
-            except UnicodeError:
-                pass
             except ValueError as e:
                 self.slay()
-                self.cod.privmsg(self.target, "Montioring stopped for /%s/%s: %s %s. Did the thread die?" %\
+                self.cod.protocol.privmsg(client, self.target, "Montioring stopped for /%s/%s: %s %s. Did the thread die?" %\
                         (self.board, self.threadid, type(e), e.message))
             except Exception as e:
                 self.slay()
-                self.cod.privmsg(self.target, "Thread monitoring for /%s/%s stopped for an unknown reason." %\
-                        (self.board, self.threadid), client)
-                self.cod.servicesLog("Monitoring broken for /%s/%s to %s because %s %s" %\
+                self.cod.protocol.privmsg(client, self.target, "Thread monitoring for /%s/%s stopped for an unknown reason." %\
+                        (self.board, self.threadid))
+                self.cod.servicesLog(client, "Monitoring broken for /%s/%s to %s because %s %s" %\
                         (self.board, self.threadid, self.target, type(e), e.message), client)
 
             for n in range(self.interval):
