@@ -22,6 +22,11 @@ freely, subject to the following restrictions:
     distribution.
 """
 
+from time import time
+
+NAME="CTCP Replies"
+DESC="CTCP reply handlers"
+
 def initModule(cod):
     cod.s2scommands["PRIVMSG"].append(ctcp_reply)
 
@@ -34,5 +39,5 @@ def rehash():
 def ctcp_reply(cod, line):
     if line.args[-1] == "\x01VERSION\x01":
         cod.notice(line.source, "\x01Cod version %s running on %s\x01" %
-                (cod.version, cod.config["uplink"]["protocol"]))
+                (cod.version, cod.config["uplink"]["protocol"]), cod.clients[line.args[0]])
 

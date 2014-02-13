@@ -298,6 +298,9 @@ def handlePRIVMSG(cod, line):
 
     destination = line.args[0]
 
+    if line.args[-1][0] == "\x01": #Ignore CTCP messages
+        return
+
     if destination[0] == "#":
         cod.runHooks("chanmsg", [cod.channels[line.args[0]], line])
     else:
