@@ -131,9 +131,11 @@ def handleCommands(cod, target, line):
         threads[board+thread] = tm
 
     elif command == "DEMONITOR":
-        board = splitline[1]
-        thread = splitline[2]
-        target = splitline[3]
+        try:
+            board = splitline[1]
+            thread = splitline[2]
+        except IndexError:
+            cod.notice(line.args[0], "Insufficient parameters.", client)
 
         victim = board+thread
 
@@ -151,7 +153,7 @@ def handleCommands(cod, target, line):
     elif command == "HELP":
         cod.notice(line.source.uid, "HELP:", client)
         cod.notice(line.source.uid, "MONITOR:   - monitors 4chan <board> <thread> to <channel>", client)
-        cod.notice(line.source.uid, "DEMONITOR: - disables monitoring of a <board> <thread> to <channel>", client)
+        cod.notice(line.source.uid, "DEMONITOR: - disables monitoring of a <board> <thread>", client)
 
     else:
         cod.notice(line.source.uid, "Invalid command. Use /msg %s HELP or join %s for more help" %
