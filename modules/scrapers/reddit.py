@@ -32,24 +32,23 @@ DESC="Reddit post info lookups"
 REDDIT_REGEX = re.compile('reddit.com/r/([\w-]+)/comments/([\w-]+)')
 
 def initModule(cod):
-    cod.s2scommands["PRIVMSG"].append(redditLookup)
+    cod.addHook("chanmsg", redditLookup)
 
 def destroyModule(cod):
-    cod.s2scommands["PRIVMSG"].remove(redditLookup)
+    cod.delHook("chanmsg", redditLookup)
 
 def rehash():
     pass
 
-def redditLookup(cod, line):
+def redditLookup(cod, target, line):
     global REDDIT_REGEX
 
-    if line.args[0] not in cod.channels:
+    if target.name not in cod.channels:
         return
 
-    client = cod.clients[line.source]
     chatline = line.args[-1]
 
-    songid = None
+    posidt = None
 
     try:
         postid = REDDIT_REGEX.split(chatline)[2]
