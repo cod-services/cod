@@ -1,9 +1,10 @@
-##CREDITS
+# CREDITS
 
 Please do not delete names from this list.
 
  - Sam Dodrill (lyska)
  - Jessica Williams (Heartmender/Quora)
+ - AppleDash
  - Purlox
  - nyuszika7h
  - Techman
@@ -21,7 +22,7 @@ Please do not delete names from this list.
 
 > @Cane | TLP turns botspam into an art form.
 
-### Projects that inspired features in this one
+## Projects that inspired features in this one
 
  - [miniature-dangerzone](https://github.com/AlphaChat/miniature-dangerzone)
  - PonyChat's Pegasus Device (proprietary)
