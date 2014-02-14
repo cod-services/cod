@@ -72,8 +72,8 @@ class TS6ServerConn():
     def _msg_like(self, type, client, target, message):
         lines = []
 
-        if len(message) > 450:
-            lines = wrap(message, 450)
+        if len(message) > 400:
+            lines = wrap(message, 400)
         else:
             lines = [message]
 
