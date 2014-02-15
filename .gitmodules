@@ -1,3 +1,6 @@
 [submodule "src/niilib"]
 	path = src/niilib
 	url = https://github.com/Niichan/niilib.git
+[submodule "modules/contrib"]
+	path = modules/contrib
+	url = https://github.com/cod-services/cod-contrib.git

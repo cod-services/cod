@@ -30,6 +30,7 @@
 		"helpchan": "#help",
 		"prefixfile": "etc/prefix.txt",
 		"suffixfile": "etc/suffix.txt",
-		"logfile": "var/cod.log"
+		"logfile": "var/cod.log",
+		"contrib": false
 	}
 }

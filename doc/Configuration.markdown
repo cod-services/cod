@@ -55,6 +55,7 @@ Various other settings
 | `staffchan` | The channel that Cod will send relayed HostServ messages to or other notifications about operator actions. | `"#opers"` | string |
 | `helpchan` | The network help channel name | `"help"` | string |
 | `logfile` | The file that cod will log to | `"var/cod.log"` | string |
+| `contrib` | Wether or not to use contrib modules | `true` | boolean|
 
 ## Module-spefific configuration blocks
 

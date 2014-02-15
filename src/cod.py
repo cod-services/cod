@@ -213,6 +213,9 @@ class Cod():
         sys.path.insert(6, "modules/announcer")
         sys.path.insert(7, "modules/scrapers")
 
+        if self.config["etc"]["contrib"]:
+            sys.path.insert(8, "modules/contrib")
+
         self.modules[modname] = __import__(modname)
         self.modules[modname].initModule(self)
         self.log("Module %s loaded" % modname)
