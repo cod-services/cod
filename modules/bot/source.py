@@ -1,5 +1,5 @@
 """
-Copyright (c) 2013, Sam Dodrill
+Copyright (c) 2014, Sam Dodrill
 All rights reserved.
 
 This software is provided 'as-is', without any express or implied
@@ -36,6 +36,6 @@ def destroyModule(cod):
 
 def testbotCommand(cod, line, splitline, source, destination):
     "Shows source code information"
-    cod.reply(source, destination, "I am an instance of Cod version %s running on %s. You can find more information about me at http://github.com/lyska/cod" %\
+    cod.reply(source, destination, "I am an instance of Cod version %s running on %s. You can find more information about me at http://github.com/cod-services/cod" %\
             (cod.version, cod.config["uplink"]["protocol"]))
 
