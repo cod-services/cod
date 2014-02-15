@@ -71,6 +71,8 @@ def wikipediaLookup(cod, line):
                 (info.title, ''.join([x for x in content if ord(x) < 128]))
 
         cod.privmsg(line.args[0], string)
+    except wikipedia.exceptions.DisambiguationError:
+        pass
     except Exception as e:
         cod.privmsg(line.args[0], "There was some error looking up that article: %s %s" % (type(e), e.message))
 
