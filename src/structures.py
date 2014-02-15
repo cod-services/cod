@@ -61,13 +61,6 @@ class Client():
         """
         return self.uid
 
-    def __eq__(self, other):
-        """
-        Checks if two client instances are the same (same UID)
-        """
-
-        return self.uid == other.uid
-
     def json(self):
         return '{"nick": "%s", "uid": "%s", "ts": %s, "modes": "%s", "user": "%s", "host": "%s", "ip": "%s", "login": "%s", "gecos": "%s"}' % (self.nick, self.uid, self.ts, self.modes, self.user, self.host, self.ip, self.login, self.gecos)
 
@@ -142,9 +135,6 @@ class Channel():
 
     def __str__(self):
         return self.name
-
-    def __eq__(self, other):
-        return self.ts == other.ts and self.name.lower() == other.name.lower()
 
     def listAdd(self, chanlist, mask):
         self.lists[chanlist].append(mask)
