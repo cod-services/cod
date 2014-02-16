@@ -598,7 +598,7 @@ class Cod():
                     except KeyError as e:
                         continue
                     except Exception as e:
-                        cod.servicesLog("%s %s" %(type(e), e.message))
+                        cod.servicesLog("%s %s %s" %(type(e), e.message, lineobj))
                         traceback.print_exc(file=sys.stdout)
                         continue
             except KeyError:
