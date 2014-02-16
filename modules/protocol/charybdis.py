@@ -58,8 +58,6 @@ def initModule(cod):
 
     cod.s2scommands["PRIVMSG"].append(handlePRIVMSG)
 
-    cod.s2scommands["AWAY"] = [nullCommand]
-
 def destroyModule(cod):
     del cod.loginFunc
     cod.loginFunc = None
@@ -85,8 +83,6 @@ def destroyModule(cod):
     del cod.s2scommands["SQUIT"]
 
     cod.s2scommands["PRIVMSG"].remove(handlePRIVMSG)
-
-    del cod.s2scommands["AWAY"]
 
 def rehash():
     pass
