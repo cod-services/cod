@@ -420,6 +420,25 @@ class Cod():
         idx = client.channels.index(channel)
         client.channels.pop(idx)
 
+    def kill_stale_references(self, client):
+        for chname in self.channels:
+            channel = self.channels[chname]
+
+            for cli in channel.clients:
+                if cli.client.uid == client.uid:
+                    del channel.clients[cli]
+
+    def pop_empty_channels(self):
+        """
+        Remove information on any empty channels
+        """
+
+        for chname in self.channels:
+            channel = self.channels[chname]
+
+            if len(channel.clients) == 0:
+                del self.channels[chname]
+
     def snote(self, line, mask="d"):
         """
         Inputs: line to send, target server notice mask

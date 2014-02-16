@@ -140,7 +140,12 @@ class Channel():
         self.lists[chanlist].append(mask)
 
     def clientAdd(self, client, prefix = ""):
-        self.clients[client.uid] = ChanUser(client)
+        matching = filter((lambda x: x == client.uid), self.clients)
+
+        if len(matching) == 0:
+            self.clients[client.uid] = ChanUser(client)
+
+        client.channels.append(self)
 
     def addMessage(self, line):
         if len(self.msgbuffer) == 5:

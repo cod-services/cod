@@ -146,6 +146,9 @@ def handleQUIT(cod, line):
     Handles a client quitting from the network
     """
 
+    cod.kill_stale_references(line.source)
+    cod.pop_empty_channels()
+
     cod.clients.pop(line.source)
 
 def handleSQUIT(cod, line):
@@ -161,6 +164,7 @@ def handleSQUIT(cod, line):
     for client in cod.clients:
         if client.sid == tokill:
             cod.clients.pop(client.uid)
+    cod.pop_empty_channels()
 
 def handleJOIN(cod, line):
     """
@@ -182,6 +186,8 @@ def handlePART(cod, line):
     channel = cod.channels[line.args[0]]
 
     channel.clients.pop(line.source)
+
+    cod.pop_empty_channels()
 
     cod.runHooks("part", [cod.clients[line.source], channel])
 
