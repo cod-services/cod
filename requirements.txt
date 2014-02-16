@@ -9,6 +9,7 @@ cssselect==0.9.1
 dateutils==0.6.6
 dnspython==1.11.1
 lxml==3.2.5
+misaka==1.0.2
 purl==0.8
 pydns==2.3.6
 pygeoip==0.3.0
