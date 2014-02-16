@@ -139,11 +139,11 @@ class Channel():
     def listAdd(self, chanlist, mask):
         self.lists[chanlist].append(mask)
 
-    def clientAdd(self, client, prefix = ""):
+    def clientAdd(self, client, prefix=""):
         matching = filter((lambda x: x == client.uid), self.clients)
 
         if len(matching) == 0:
-            self.clients[client.uid] = ChanUser(client)
+            self.clients[client.uid] = ChanUser(client, prefix)
 
         client.channels.append(self)
 
@@ -167,7 +167,7 @@ class ChanUser():
     """
     Stub channel user structure for prefix tracking
     """
-    def __init__(self, client, prefix = ""):
+    def __init__(self, client, prefix=""):
         self.client = client
         self.prefix = prefix
 

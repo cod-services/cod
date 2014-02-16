@@ -29,6 +29,8 @@ from structures import *
 from utils import *
 from protocol import TS6ServerConn
 
+CHANMODES=["eIbq", "k" ,"flj" ,"CDEFGJKLMOPQTcdgimnpstz", "yaohv"]
+
 NAME="TS6 protocol module"
 DESC="Handles login and protocol commands for TS6 servers"
 
@@ -55,6 +57,7 @@ def initModule(cod):
     cod.s2scommands["PING"] = [handlePING]
     cod.s2scommands["ERROR"] = [handleERROR]
     cod.s2scommands["SQUIT"] = [handleSQUIT]
+    cod.s2scommands["TMODE"] = [handleTMODE]
 
     cod.s2scommands["PRIVMSG"].append(handlePRIVMSG)
 
@@ -81,6 +84,7 @@ def destroyModule(cod):
     del cod.s2scommands["PING"]
     del cod.s2scommands["ERROR"]
     del cod.s2scommands["SQUIT"]
+    del cod.s2scommands["TMODE"]
 
     cod.s2scommands["PRIVMSG"].remove(handlePRIVMSG)
 
@@ -264,6 +268,62 @@ def handleMODE(cod, line):
             cod.clients[line.source].isOper = True
         else:
             cod.clients[line.source].isOper = False
+
+def handleTMODE(cod, line):
+    """
+    Handles channel mode changes
+    """
+
+    # Okay boys and girls, this is where it gets fun.
+    # There are 5 types of channel modes.
+    #
+    # | Type | Param? | Description          |
+    # |:---- |:------ |:-------------------- |
+    # |  0   | Yes    | List-like modes      |
+    # |  1   | Yes    | Key-like modes       |
+    # |  2   | Yes    | argument modes       |
+    # |  3   | No     | channel set modes    |
+    # |  4   | Yes    | channel prefix modes |
+
+    # :00AAAAAAY TMODE 1383760869 #niichan +yo 6LOAAAAKA 6LOAAAAKA
+
+    modestring = line.args[2]
+    params = line.args[3:]
+
+    idx = 0
+    paramcounter = 0
+    set_mode = True
+
+    channel = cod.channels[line.args[1]]
+
+    for mode in modestring:
+        if mode == "+":
+            set_mode = True
+        elif mode == "-":
+            set_mode = False
+        elif mode in CHANMODES[0]:
+            #List-like mode
+            channel.lists[mode].append(params[paramcounter])
+            paramcounter = paramcounter + 1
+        elif mode in CHANMODES[1]:
+            #Key
+            paramcounter = paramcounter + 1
+        elif mode in CHANMODES[2]:
+            #Forwarding, limit and join throttle, not interested in these
+            paramcounter = paramcounter + 1
+        elif mode in CHANMODES[3]:
+            if set_mode:
+                channel.modes = channel.modes + mode
+            else:
+                channel.modes = channel.modes.replace(mode, "")
+        elif mode in CHANMODES[4]:
+            PREFIXES = {"y": "~", "a": "!", "o": "@", "h": "%", "v": "+"}
+            if set_mode:
+                channel.clients[params[paramcounter]].prefix += PREFIXES[mode]
+            else:
+                channel.clients[params[paramcounter]].prefix = \
+                        channel.clients[params[paramcounter]].prefix.replace(PREFIXES[mode], "")
+            paramcounter = paramcounter + 1
 
 def handleCHGHOST(cod, line):
     """
