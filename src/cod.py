@@ -424,7 +424,8 @@ class Cod():
         for chname in self.channels:
             channel = self.channels[chname]
 
-            for cli in channel.clients:
+            for uid in channel.clients:
+                cli = channel.clients[uid]
                 if cli.client.uid == client.uid:
                     del channel.clients[cli]
 
