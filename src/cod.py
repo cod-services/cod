@@ -421,24 +421,36 @@ class Cod():
         client.channels.pop(idx)
 
     def kill_stale_references(self, client):
+        client = cod.clients["%s" % client]
+
         for chname in self.channels:
             channel = self.channels[chname]
+
+            murderlist = []
 
             for uid in channel.clients:
                 cli = channel.clients[uid]
                 if cli.client.uid == client.uid:
-                    del channel.clients[cli]
+                    murderlist.append(uid)
+
+            for uid in murderlist:
+                del channel.clients[uid]
 
     def pop_empty_channels(self):
         """
         Remove information on any empty channels
         """
 
+        murderlist = []
+
         for chname in self.channels:
             channel = self.channels[chname]
 
-            if len(channel.clients) == 0:
-                del self.channels[chname]
+            if len(channel.clients) == 0 and "P" not in channel.modes:
+                murderlist.append(channel)
+
+        for victim in murderlist:
+            del self.channels[victim.name]
 
     def snote(self, line, mask="d"):
         """
