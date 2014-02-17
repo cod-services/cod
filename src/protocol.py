@@ -25,6 +25,7 @@ This code was originally written for eon, but has been ported to cod.
 """
 
 from textwrap import wrap
+import time
 
 class TS6ServerConn():
     """
