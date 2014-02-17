@@ -146,6 +146,14 @@ class Cod():
         self.loginFunc(self)
 
         self.log("done")
+
+        if "web" in self.config:
+            self.log("Loading web frontend")
+
+            self.loadmod("webapp")
+
+            self.log("done")
+
         self.log("Creating and bursting client")
 
         self.client = makeService(self.config["me"]["nick"],

@@ -32,5 +32,10 @@
 		"suffixfile": "etc/suffix.txt",
 		"logfile": "var/cod.log",
 		"contrib": false
+	},
+
+	"web": {
+		"port": 9996,
+		"bindhost": "0.0.0.0"
 	}
 }
