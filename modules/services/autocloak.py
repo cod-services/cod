@@ -35,6 +35,10 @@ global client
 def initModule(cod):
     global client
 
+    if "autocloak" not in cod.config:
+        cod.servicesLog("Need autocloak config")
+        raise ImportError
+
     client = makeService(cod.config["autocloak"]["nick"], cod.config["autocloak"]["user"],
             cod.config["autocloak"]["host"], cod.config["autocloak"]["gecos"],
             cod.getUID())

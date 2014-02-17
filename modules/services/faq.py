@@ -33,6 +33,10 @@ global client
 def initModule(cod):
     global client
 
+    if "faq" not in cod.config:
+        cod.servicesLog("Need faq config")
+        raise ImportError
+
     client = makeService(cod.config["faq"]["nick"], cod.config["faq"]["user"],
             cod.config["faq"]["host"], cod.config["faq"]["gecos"],
             cod.getUID())

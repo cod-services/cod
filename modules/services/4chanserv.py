@@ -51,6 +51,10 @@ DESC="Live-feeds 4chan threads to a channel"
 def initModule(cod):
     global client
 
+    if "4chanserv" not in cod.config:
+        cod.servicesLog("Need 4chanserv config")
+        raise ImportError
+
     client = makeService(cod.config["4chanserv"]["nick"],
             cod.config["4chanserv"]["user"],
             cod.config["4chanserv"]["host"],
