@@ -28,20 +28,8 @@ licensed per file as appropriate.
    - Elemental-IRCd 6.5 +
    - InspIRCd 2.0.x
    - Tethys 0.1 +
+   - Experimental support for ircd-hybrid+plexus
  - Virtual environment support
-
-### Goals:
- - DNS record editing (Tortoise Labs)
- - Feature-completeness with skybot
- - Multiple clients that do the same thing, like BotServ
- - MPD playlist manipulation
- - User statistics collection
-   - Follow anonyminity standards of the Tor Project
- - Web GUI for administration
-
-### Stretch Goals:
- - Automated provisioning and linking of temporary overflow IRC daemons
- - Spam filtering (opt-in only)
 
 The official channel for Cod is `#cod` on `irc.yolo-swag.com`. Come take
 a visit and say hi! Anyone with halfop (`%`) or higher has direct push access 
