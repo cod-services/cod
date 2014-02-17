@@ -557,8 +557,8 @@ class Cod():
 
                 self.sendLine("SQUIT :Killed.")
 
-                os.system("killall %d" % self.pid)
-                sys.exit()
+                os.system("kill -s SIGKILL %d" % self.pid)
+                sys.exit(0)
 
         self.log("Oh, I am slain.")
 
