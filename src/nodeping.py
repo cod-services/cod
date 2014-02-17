@@ -42,7 +42,7 @@ class NodePing:
     def get_checks(self, by=None):
         checks = self.request("checks")
 
-        if filter != None:
+        if by != None:
             mychecks = filter((lambda x: by in checks[x]["label"]), checks)
 
             return [checks[x] for x in checks if x in mychecks]
