@@ -54,7 +54,7 @@ class Relay:
         self.cod.runHooks("chanmsg", [channel, line])
 
     def handlePING(self, line):
-        self.send_line("PONG %s" % " ".join(line.args))
+        self.send_line("PONG :%s" % " ".join(line.args))
 
     def handle352(self, line):
         "WHO reply to a channel"
@@ -81,6 +81,14 @@ class Relay:
 
     def handle376(self, line):
         self.join(self.channel)
+
+    def handleQUIT(self, line):
+        client = self.clients[line.source.nick]
+
+        self.cod.protocol.quit(client, line.args[-1])
+
+        del self.clients[client.nick[:-1]]
+        del self.cod.clients[client.uid]
 
     def go(self):
         self.cod.socks.append(self.link)
@@ -121,7 +129,7 @@ class Relay:
             self.cod.log(line, "RL<")
 
             line = IRCMessage(line)
-            if "!" in line.source:
+            if line.source != None and "!" in line.source:
                 line.source = FakeClient(line.source)
 
             if line.verb == "PING":
@@ -134,6 +142,8 @@ class Relay:
                 self.handle352(line)
             elif line.verb == "376":
                 self.handle376(line)
+            elif line.verb == "PART" or line.verb == "QUIT":
+                self.handleQUIT(line)
 
 global relay
 relay = None
