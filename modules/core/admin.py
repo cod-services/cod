@@ -24,6 +24,7 @@ freely, subject to the following restrictions:
 
 from utils import *
 from structures import *
+import traceback
 import sys
 import subprocess
 
@@ -184,6 +185,7 @@ def commandMODLOAD(cod, line, splitline, source, destination):
         cod.loadmod(target)
     except Exception as e:
         cod.reply(source, destination, "Module %s failed load: %s" % (target, e))
+        traceback.print_exc(file=sys.stdout)
         return
 
     addtoDB(cod, "INSERT INTO Moduleautoload(Name) VALUES ('%s');" % target)
