@@ -79,6 +79,29 @@ class Relay:
     def handleJOIN(self, line):
         self.send_line("WHO %s" % line.source.nick)
 
+    def handleNICK(self, line):
+        pass
+        # Change nickname, update references
+
+        client = self.clients[line.source.nick]
+
+        nick = line.args[-1] + "`"
+
+        client.nick = nick
+        self.cod.clients[client.uid].nick = nick
+
+        self.cod.protocol.change_nick(client, client.nick)
+        self.clients[client.nick] = client
+
+    def handleKICK(self, line):
+        kicker = self.clients[line.source.nick]
+        client = client = self.clients[line.args[1]]
+
+        self.cod.protocol.quit(client, "Kicked by %s: %s" % (kicker.nick, line.args[-1]))
+
+        del self.clients[client.nick[:-1]]
+        del self.cod.clients[client.uid]
+
     def handle376(self, line):
         self.join(self.channel)
 
@@ -144,6 +167,10 @@ class Relay:
                 self.handle376(line)
             elif line.verb == "PART" or line.verb == "QUIT":
                 self.handleQUIT(line)
+            elif line.verb == "NICK":
+                self.handleNICK(line)
+            elif line.verb == "KICK":
+                self.handleKICK(line)
 
 global relay
 relay = None
