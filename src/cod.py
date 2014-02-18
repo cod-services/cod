@@ -425,8 +425,7 @@ class Cod():
 
         self.protocol.part_client(client, channel, message)
 
-        idx = client.channels.index(channel)
-        client.channels.pop(idx)
+        client.channels.remove(channel.name)
 
     def kill_stale_references(self, client):
         client = cod.clients["%s" % client]
