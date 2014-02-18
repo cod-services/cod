@@ -28,7 +28,7 @@ VERSION = "0.2.1"
 
 from niilib import config
 from niilib import log
-from niilib.message import IRCMessage
+from line import IRCLine
 from niilib.b36 import *
 from select import select
 from textwrap import wrap
@@ -593,17 +593,11 @@ class Cod():
             if line[-1] == "\r":
                 line = line[:-1]
 
-            lineobj = IRCMessage(line)
+            lineobj = IRCLine(line)
 
             #debug output
             if self.config["etc"]["debug"]:
                 self.log(line, "<<<")
-                #print "source: %s" % lineobj.source
-                #print "verb: %s" % lineobj.verb
-                #print "args: %s" % lineobj.args
-
-
-            splitline = line.split()
 
             if lineobj.verb == "ERROR":
                 #If ERROR is sent, it's already fatal.
