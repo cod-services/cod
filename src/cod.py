@@ -593,7 +593,9 @@ class Cod():
             if line[-1] == "\r":
                 line = line[:-1]
 
-            lineobj = IRCLine(line)
+            # Automatically make P10 protocols have their lines parsed
+            # differently
+            lineobj = IRCLine(line, self.protocol.p10)
 
             #debug output
             if self.config["etc"]["debug"]:

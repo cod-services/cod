@@ -40,6 +40,8 @@ class TS6ServerConn():
         self.last_uid = 60466176 # 100000 in base 36
         self.numeric = cod.sid
 
+        self.p10 = False
+
     def gen_uid(self):
         uid = base36encode(self.last_uid)
 
@@ -144,6 +146,8 @@ class P10ServerConn():
 
         self.last_uid = 0
         self.numeric = self.cod.sid
+
+        self.p10 = True
 
     def gen_uid(self):
         "Generates the next available UID"
