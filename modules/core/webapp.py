@@ -30,6 +30,7 @@ import json
 import sys
 
 from threading import Thread
+from web import RootPage
 
 def initModule(cod):
     cherrypy.config.update({'server.socket_port': cod.config["web"]["port"],
@@ -58,20 +59,6 @@ class WebAppHandler(object):
 
         cherrypy.engine.signals.subscribe()
         cherrypy.engine.start()
-
-class RootPage:
-    def __init__(self, cod):
-        self.cod = cod
-
-    def add_page(self, name, Page):
-        setattr(self, name, Page(self.cod))
-
-    def del_page(self, name):
-        delattr(self, name)
-
-    @cherrypy.expose
-    def index(self):
-        return "Hello!"
 
 class HelloWorld(RootPage):
     @cherrypy.expose
