@@ -26,22 +26,12 @@ NAME="Web App"
 DESC="A web frontend to Cod"
 
 import cherrypy
-import wsgiref.handlers
 import json
 import sys
-import misaka
 
 from threading import Thread
-from cherrypy.process.plugins import Daemonizer
-
-thread = None
 
 def initModule(cod):
-    global thread
-
-    #cod.webappthread = RunThread(cod)
-    #cod.webappthread.start()
-
     cherrypy.config.update({'server.socket_port': cod.config["web"]["port"],
         'server.socket_host': cod.config["web"]["bindhost"],
         'engine.autoreload_on': False})
@@ -50,52 +40,45 @@ def initModule(cod):
 
 def destroyModule(cod):
     cherrypy.server.stop()
-
-class RunThread(Thread):
-    def __init__(self, cod):
-        Thread.__init__(self)
-        self.cod = cod
-
-    def run(self):
-        self.cod.log("Started webserver", "WEB")
-        self.webapp = WebAppHandler(self.cod)
-        sys.exit(0)
+    del cod.webapp
 
 class WebAppHandler(object):
     def __init__(self, cod):
         self.cod = cod
+        self.root = RootPage(self.cod)
 
-        self.mapper = cherrypy.dispatch.RoutesDispatcher()
-
-        self.add_page("clientinfo", "/clientinfo", ClientInfo)
-        self.add_page("hello", "/hello", HelloWorld)
+        self.root.add_page("clientinfo", ClientInfo)
+        self.root.add_page("hello", HelloWorld)
 
         cherrypy.config.update({'server.socket_port': self.cod.config["web"]["port"],
             'server.socket_host': str(self.cod.config["web"]["bindhost"]),
             'engine.autoreload_on': False})
 
+        cherrypy.tree.mount(self.root)
+
         cherrypy.engine.signals.subscribe()
         cherrypy.engine.start()
 
-    def add_page(self, route, special, Controller):
-        self.mapper.connect(route, special, controller=Controller(self.cod).index)
-
-        print "adding", route, "as", special, "with", Controller
-
-        cherrypy.tree.mount(None, config={"/": {"request.dispatch": self.mapper}})
-
-class HelloWorld:
+class RootPage:
     def __init__(self, cod):
         self.cod = cod
 
+    def add_page(self, name, Page):
+        setattr(self, name, Page(self.cod))
+
+    def del_page(self, name):
+        delattr(self, name)
+
+    @cherrypy.expose
+    def index(self):
+        return "Hello!"
+
+class HelloWorld(RootPage):
     @cherrypy.expose
     def index(self):
         return "Hello world! Version %s" % self.cod.version
 
-class ClientInfo(object):
-    def __init__(self, cod):
-        self.cod = cod
-
+class ClientInfo(RootPage):
     def style(self):
         return """
         <style>
