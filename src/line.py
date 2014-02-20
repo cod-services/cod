@@ -72,5 +72,5 @@ class IRCLine:
 
             args = args + arg + " "
 
-        return " ".join(source, verb, args)
+        return " ".join([source, verb, args])
 
