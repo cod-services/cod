@@ -56,6 +56,9 @@ def eval_line(cod, line, splitline, source, destination):
         if "\n" in output:
             output = output.split("\n")[0]
 
+        if len(output) > 400:
+            output = output[:399]
+
         cod.reply(source, destination, "> %s" % str(output))
 
     except Exception as e:
