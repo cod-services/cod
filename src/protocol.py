@@ -81,7 +81,7 @@ class TS6ServerConn():
         else:
             lines = [message]
 
-        if len(lines) > 5:
+        if len(lines) > 3:
             self.send_line(":%s %s %s :Output too big: %s" %
                     (client.uid, type, target, sprunge(message)))
             return
