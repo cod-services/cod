@@ -8,6 +8,8 @@ Please do not delete names from this list.
  - Purlox
  - nyuszika7h
  - Techman
+ - Rylee
+   - For finding a flooding bug
  - \#tlponies on Quakenet
   - The beta testers and general botspam wizards:
     - Cane
