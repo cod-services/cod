@@ -24,6 +24,7 @@ freely, subject to the following restrictions:
 This code was originally written for eon, but has been ported to cod.
 """
 
+from sprunge import sprunge
 from textwrap import wrap
 import time
 
