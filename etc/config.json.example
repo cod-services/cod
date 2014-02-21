@@ -14,6 +14,10 @@
 		"dbpath": "var/cod.db"
 	},
 
+	"atheme": {
+		"xmlrpc": "http://127.0.0.1:8080/xmlrpc"
+	},
+
 	"uplink": {
 		"host": "127.0.0.1",
 		"port": 6667,
