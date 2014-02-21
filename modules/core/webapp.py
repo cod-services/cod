@@ -35,7 +35,8 @@ from web import RootPage
 def initModule(cod):
     cherrypy.config.update({'server.socket_port': cod.config["web"]["port"],
         'server.socket_host': cod.config["web"]["bindhost"],
-        'engine.autoreload_on': False})
+        'engine.autoreload_on': False, "tools.mako.collection_size": 500,
+        "tools.mako.directories": cod.config["web"]["templates"]})
 
     cod.webapp = WebAppHandler(cod)
 

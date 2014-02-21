@@ -36,6 +36,7 @@
 
 	"web": {
 		"port": 9996,
-		"bindhost": "0.0.0.0"
+		"bindhost": "0.0.0.0",
+		"templates": "web/templates"
 	}
 }
