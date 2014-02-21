@@ -121,11 +121,15 @@ def handleCommands(cod, target, line):
             thread = splitline[2]
             target = splitline[3]
         except IndexError:
-            cod.notice(line.args[0], "Insufficient parameters.", client)
+            cod.notice(source, "Insufficient parameters.", client)
 
         #Sanity check
         if len(board) > 4:
-            cod.notice(line.args[0], "/%s/ is not a board on 4chan.", client)
+            cod.notice(source, "/%s/ is not a board on 4chan.", client)
+            return
+        if "/" in board:
+            cod.notice(source, "Do not include slashes in the board name.", client)
+            return
 
         cod.servicesLog("%s MONITOR:/%s/%s to %s" % (line.source.nick, board, thread, target), client)
 
@@ -139,7 +143,7 @@ def handleCommands(cod, target, line):
             board = splitline[1]
             thread = splitline[2]
         except IndexError:
-            cod.notice(line.args[0], "Insufficient parameters.", client)
+            cod.notice(line.source, "Insufficient parameters.", client)
 
         victim = board+thread
 
@@ -158,6 +162,9 @@ def handleCommands(cod, target, line):
         cod.notice(line.source.uid, "HELP:", client)
         cod.notice(line.source.uid, "MONITOR:   - monitors 4chan <board> <thread> to <channel>", client)
         cod.notice(line.source.uid, "DEMONITOR: - disables monitoring of a <board> <thread>", client)
+        cod.notice(line.source.uid, "Examples:", client)
+        cod.notice(line.source.uid, "/msg %s MONITOR x 9001 #testchannel" % client.nick, client)
+        cod.notice(line.source.uid, "/msg %s DEMONITOR x 9001" % client.nick, client)
 
     else:
         cod.notice(line.source.uid, "Invalid command. Use /msg %s HELP or join %s for more help" %
