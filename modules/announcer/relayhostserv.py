@@ -79,6 +79,8 @@ def relayHook(cod, target, line):
     if target.name == cod.config["etc"]["snoopchan"]:
         if line.source.nick == "HostServ":
             if anyOf(["TAKE", "REQUEST", "REJECT", "ASSIGN", "LISTVHOST"], line.args[-1]):
+                if "<xmlrpc>" in line.args[-1]:
+                    return
                 cod.sendLine(cod.client.privmsg(cod.config["etc"]["staffchan"],
                     "HostServ: " + line.args[-1]))
 
