@@ -240,6 +240,9 @@ class AthemeOperServMethods(object):
     def akill_del(self, num):
         self.parent.atheme.command(self.parent.authcookie, self.parent.username, self.parent.ipaddr, "OperServ", "AKILL", "DEL", num)
 
+    def kill(self, target):
+        return self.parent.atheme.command(self.parent.authcookie, self.parent.username, self.parent.ipaddr, "OperServ", "KILL", target)
+
 class AthemeHostServMethods(object):
     def __init__(self, parent):
         self.parent = parent
