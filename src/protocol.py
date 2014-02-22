@@ -34,7 +34,7 @@ class TS6ServerConn():
     """
 
     def __init__(self, cod):
-        self.umodes = "+Sio"
+        self.umodes = "+Si"
 
         self.cod = cod
 
@@ -58,8 +58,6 @@ class TS6ServerConn():
 
     def add_client(self, client):
         now = int(time.time())
-
-        client.modes = self.umodes
 
         self.send_line_sname("EUID %s 1 %d %s %s %s 0 %s * * :%s" %\
                 (client.nick, now, client.modes, client.user, client.host,
