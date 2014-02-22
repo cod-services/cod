@@ -49,10 +49,10 @@ def anyOf(things, check):
 
     return False
 
-def tld_check(cod, vhost):
+def tld_check(cod, requester, vhost):
     global TLDLIST
 
-    if vhost.split(".")[0].upper() in TLDLIST:
+    if vhost.split(".")[-1].upper() in TLDLIST:
         cod.privmsg(cod.findClientByNick("HostServ").uid,
                 "REJECT %s Your chosen VHost (%s) is a real domain name and cannot be chosen as a VHost. Please contact an operator in %s." %\
                         (requester, vhost, cod.config["etc"]["helpchan"]))
@@ -87,10 +87,11 @@ def relayHook(cod, target, line):
                 splitline = line.args[-1].split()
 
                 vhost = splitline[2][1:-1] if splitline[1] == "REQUEST:" else splitline[3][1:-1]
+                requester = splitline[0]
 
                 if "REQUEST" not in line.args[-1]:
                     return
 
-                if not tld_check(cod, vhost):
+                if not tld_check(cod, requester, vhost):
                     lookupVhost(cod, vhost)
 
