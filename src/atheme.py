@@ -13,7 +13,8 @@ class AthemeNickServMethods(object):
     """
     def __init__(self, parent):
         self.parent = parent
-        self.flags = ["Hold", "HideMail", "NeverOp", "NoOp", "NoMemo", "EMailMemos", "Private"]
+        self.flags = ["Hold", "HideMail", "NeverOp", "NoOp", "NoMemo",
+                "EMailMemos", "Private"]
 
     def _parse_access(self, data):
         raw_lines = data.split("\n")
@@ -33,13 +34,17 @@ class AthemeNickServMethods(object):
         return list
 
     def list_own_access(self):
-        return self._parse_access(self.parent.atheme.command(self.parent.authcookie, self.parent.username, self.parent.ipaddr, "NickServ", "LISTCHANS"))
+        return self._parse_access(self.parent.atheme.command(self.parent.authcookie,
+            self.parent.username, self.parent.ipaddr, "NickServ", "LISTCHANS"))
 
     def list_access(self, target):
-        return self._parse_access(self.parent.atheme.command(self.parent.authcookie, self.parent.username, self.parent.ipaddr, "NickServ", "LISTCHANS", target))
+        return self._parse_access(self.parent.atheme.command(self.parent.authcookie,
+            self.parent.username, self.parent.ipaddr, "NickServ", "LISTCHANS",
+            target))
 
     def get_info(self, target):
-        data = self.parent.atheme.command(self.parent.authcookie, self.parent.username, self.parent.ipaddr, "NickServ", "INFO", target)
+        data = self.parent.atheme.command(self.parent.authcookie, self.parent.username,
+                self.parent.ipaddr, "NickServ", "INFO", target)
         raw_lines = data.split("\n")
 
         tuple = {}
@@ -71,10 +76,12 @@ class AthemeNickServMethods(object):
         return tuple
 
     def set_password(self, password):
-        self.parent.atheme.command(self.parent.authcookie, self.parent.username, self.parent.ipaddr, "NickServ", "SET", "PASSWORD", password)
+        self.parent.atheme.command(self.parent.authcookie, self.parent.username,
+                self.parent.ipaddr, "NickServ", "SET", "PASSWORD", password)
 
     def set_email(self, email):
-        self.parent.atheme.command(self.parent.authcookie, self.parent.username, self.parent.ipaddr, "NickServ", "SET", "EMAIL", email)
+        self.parent.atheme.command(self.parent.authcookie, self.parent.username,
+                self.parent.ipaddr, "NickServ", "SET", "EMAIL", email)
 
 class AthemeChanServMethods(object):
     """
@@ -83,13 +90,18 @@ class AthemeChanServMethods(object):
     """
     def __init__(self, parent):
         self.parent = parent
-        self.flags = ["HOLD", "SECURE", "VERBOSE", "VERBOSE_OPS", "RESTRICTED", "KEEPTOPIC", "TOPICLOCK", "GUARD", "FANTASY", "PRIVATE", "LIMITFLAGS"]
+        self.flags = ["HOLD", "SECURE", "VERBOSE", "VERBOSE_OPS", "RESTRICTED",
+                "KEEPTOPIC", "TOPICLOCK", "GUARD", "FANTASY", "PRIVATE",
+                "LIMITFLAGS"]
 
     def kick(self, channel, victim, reason):
-        self.parent.atheme.command(self.parent.authcookie, self.parent.username, self.parent.ipaddr, "ChanServ", "KICK", channel, victim, reason)
+        self.parent.atheme.command(self.parent.authcookie, self.parent.username,
+                self.parent.ipaddr, "ChanServ", "KICK", channel, victim, reason)
 
     def get_access_list(self, channel):
-        data = self.parent.atheme.command(self.parent.authcookie, self.parent.username, self.parent.ipaddr, "ChanServ", "FLAGS", channel)
+        data = self.parent.atheme.command(self.parent.authcookie,
+                self.parent.username, self.parent.ipaddr, "ChanServ", "FLAGS",
+                channel)
         raw_lines = data.split("\n")
 
         list = []
@@ -108,13 +120,19 @@ class AthemeChanServMethods(object):
         return list
 
     def get_access_flags(self, channel, nick):
-        return self.parent.atheme.command(self.parent.authcookie, self.parent.username, self.parent.ipaddr, "ChanServ", "FLAGS", channel, nick)
+        return self.parent.atheme.command(self.parent.authcookie,
+                self.parent.username, self.parent.ipaddr, "ChanServ", "FLAGS",
+                channel, nick)
 
     def set_access_flags(self, channel, nick, flags):
-        self.parent.atheme.command(self.parent.authcookie, self.parent.username, self.parent.ipaddr, "ChanServ", "FLAGS", channel, nick, "=" + flags)
+        self.parent.atheme.command(self.parent.authcookie, self.parent.username,
+                self.parent.ipaddr, "ChanServ", "FLAGS", channel,
+                nick, "=" + flags)
 
     def get_channel_info(self, channel):
-        data = self.parent.atheme.command(self.parent.authcookie, self.parent.username, self.parent.ipaddr, "ChanServ", "INFO", channel)
+        data = self.parent.atheme.command(self.parent.authcookie,
+                self.parent.username, self.parent.ipaddr, "ChanServ", "INFO",
+                channel)
         raw_lines = data.split("\n")
 
         tuple = {}
@@ -143,7 +161,8 @@ class AthemeChanServMethods(object):
         return tuple
 
     def set_channel_flag(self, channel, flag, value):
-        self.parent.atheme.command(self.parent.authcookie, self.parent.username, self.parent.ipaddr, "ChanServ", "SET", channel, flag, value)
+        self.parent.atheme.command(self.parent.authcookie, self.parent.username,
+                self.parent.ipaddr, "ChanServ", "SET", channel, flag, value)
 
 class AthemeMemoServMethods(object):
     """
@@ -156,7 +175,8 @@ class AthemeMemoServMethods(object):
     def list(self):
         list = []
 
-        data = self.parent.atheme.command(self.parent.authcookie, self.parent.username, self.parent.ipaddr, "MemoServ", "LIST")
+        data = self.parent.atheme.command(self.parent.authcookie,
+                self.parent.username, self.parent.ipaddr, "MemoServ", "LIST")
         raw_lines = data.split("\n")
 
         for line in raw_lines:
@@ -171,7 +191,9 @@ class AthemeMemoServMethods(object):
         return list
 
     def read(self, number):
-        data = self.parent.atheme.command(self.parent.authcookie, self.parent.username, self.parent.ipaddr, "MemoServ", "READ", number)
+        data = self.parent.atheme.command(self.parent.authcookie,
+                self.parent.username, self.parent.ipaddr, "MemoServ", "READ",
+                number)
         raw_lines = data.split("\n")
 
         fields = raw_lines[0].split(" ", 6)
@@ -180,25 +202,33 @@ class AthemeMemoServMethods(object):
         return tuple
 
     def send(self, target, message):
-        self.parent.atheme.command(self.parent.authcookie, self.parent.username, self.parent.ipaddr, "MemoServ", "SEND", target, message)
+        self.parent.atheme.command(self.parent.authcookie, self.parent.username,
+                self.parent.ipaddr, "MemoServ", "SEND", target, message)
 
     def send_ops(self, target, message):
-        self.parent.atheme.command(self.parent.authcookie, self.parent.username, self.parent.ipaddr, "MemoServ", "SENDOPS", target, message)
+        self.parent.atheme.command(self.parent.authcookie, self.parent.username,
+                self.parent.ipaddr, "MemoServ", "SENDOPS", target, message)
 
     def forward(self, target, message_id):
-        self.parent.atheme.command(self.parent.authcookie, self.parent.username, self.parent.ipaddr, "MemoServ", "FORWARD", target, message_id)
+        self.parent.atheme.command(self.parent.authcookie, self.parent.username,
+                self.parent.ipaddr, "MemoServ", "FORWARD", target, message_id)
 
     def delete(self, message_id):
-        self.parent.atheme.command(self.parent.authcookie, self.parent.username, self.parent.ipaddr, "MemoServ", "DELETE", message_id)
+        self.parent.atheme.command(self.parent.authcookie, self.parent.username,
+                self.parent.ipaddr, "MemoServ", "DELETE", message_id)
 
     def ignore_add(self, target):
-        self.parent.atheme.command(self.parent.authcookie, self.parent.username, self.parent.ipaddr, "MemoServ", "IGNORE", "ADD", target)
+        self.parent.atheme.command(self.parent.authcookie, self.parent.username,
+                self.parent.ipaddr, "MemoServ", "IGNORE", "ADD", target)
 
     def ignore_delete(self, target):
-        self.parent.atheme.command(self.parent.authcookie, self.parent.username, self.parent.ipaddr, "MemoServ", "IGNORE", "DEL", target)
+        self.parent.atheme.command(self.parent.authcookie, self.parent.username,
+                self.parent.ipaddr, "MemoServ", "IGNORE", "DEL", target)
 
     def ignore_list(self):
-        data = self.parent.atheme.command(self.parent.authcookie, self.parent.username, self.parent.ipaddr, "MemoServ", "IGNORE", "LIST")
+        data = self.parent.atheme.command(self.parent.authcookie,
+                self.parent.username, self.parent.ipaddr, "MemoServ", "IGNORE",
+                "LIST")
         raw_lines = data.split("\n")
 
         list = []
@@ -216,14 +246,22 @@ class AthemeMemoServMethods(object):
         return list
 
     def ignore_clear(self):
-        self.parent.atheme.command(self.parent.authcookie, self.parent.username, self.parent.ipaddr, "MemoServ", "IGNORE", "CLEAR")
+        self.parent.atheme.command(self.parent.authcookie, self.parent.username,
+                self.parent.ipaddr, "MemoServ", "IGNORE", "CLEAR")
 
 class AthemeOperServMethods(object):
     def __init__(self, parent):
         self.parent = parent
 
+    def akill_add(self, mask, reason="Requested"):
+        return self.parent.atheme.command(self.parent.authcookie,
+                self.parent.username, self.parent.ipaddr, "OperServ", "AKILL",
+                "ADD", mask, reason)
+
     def akill_list(self):
-        akills = self.parent.atheme.command(self.parent.authcookie, self.parent.username, self.parent.ipaddr, "OperServ", "AKILL", "LIST", "FULL").split("\n")[1:-1]
+        akills = self.parent.atheme.command(self.parent.authcookie,
+                self.parent.username, self.parent.ipaddr, "OperServ", "AKILL",
+                "LIST", "FULL").split("\n")[1:-1]
         akillset = {}
 
         for i in akills:
@@ -238,10 +276,17 @@ class AthemeOperServMethods(object):
         return akillset
 
     def akill_del(self, num):
-        self.parent.atheme.command(self.parent.authcookie, self.parent.username, self.parent.ipaddr, "OperServ", "AKILL", "DEL", num)
+        self.parent.atheme.command(self.parent.authcookie, self.parent.username,
+                self.parent.ipaddr, "OperServ", "AKILL", "DEL", num)
 
     def kill(self, target):
-        return self.parent.atheme.command(self.parent.authcookie, self.parent.username, self.parent.ipaddr, "OperServ", "KILL", target)
+        return self.parent.atheme.command(self.parent.authcookie,
+                self.parent.username, self.parent.ipaddr, "OperServ", "KILL", target)
+
+    def mode(self, modestring):
+        return self.parent.atheme.command(self.parent.authcookie,
+                self.parent.username, self.parent.ipaddr, "OperServ", "MODE",
+                modestring)
 
 class AthemeHostServMethods(object):
     def __init__(self, parent):
@@ -271,7 +316,8 @@ class AthemeHostServMethods(object):
         return reply
 
     def request(self, vhost):
-        self.parent.atheme.command(self.parent.authcookie, self.parent.username, self.parent.ipaddr, "HostServ", "REQUEST", vhost)
+        self.parent.atheme.command(self.parent.authcookie, self.parent.username,
+                self.parent.ipaddr, "HostServ", "REQUEST", vhost)
 
     def reject(self, account, reason=None):
         if reason is not None:
@@ -337,7 +383,8 @@ class AthemeXMLConnection(object):
 
     def register(self, username, password, email):
         try:
-            return self.atheme.command("*", "*", "*", "NickServ", "REGISTER", username, password, email)
+            return self.atheme.command("*", "*", "*", "NickServ", "REGISTER",
+                    username, password, email)
         except Fault, e:
             if e.faultString == "A user matching this account is already on IRC.":
                 return "Error: " + e.faultString + "  If you are already connected to IRC using this nickname, please complete the registration procedure through IRC."
