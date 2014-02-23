@@ -306,7 +306,10 @@ def handleTMODE(cod, line):
             if set_mode:
                 channel.lists[mode].append(params[paramcounter])
             else:
-                channel.lists[mode].remove(params[paramcounter])
+                try:
+                    channel.lists[mode].remove(params[paramcounter])
+                except:
+                    pass
             paramcounter = paramcounter + 1
         elif mode in CHANMODES[1]:
             #Key
