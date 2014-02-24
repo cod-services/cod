@@ -24,6 +24,8 @@ freely, subject to the following restrictions:
 
 class IRCLine:
     def __init__(self, line, p10=False):
+        self.line = line
+
         splitline = line.split()
 
         self.p10 = p10
@@ -57,20 +59,4 @@ class IRCLine:
         self.args = args
 
     def __str__(self):
-        if self.source:
-            source = "%s%s" % ("" if self.p10 else ":", self.source)
-        else:
-            source = ""
-
-        verb = self.verb
-
-        args = ""
-
-        for arg in self.args:
-            if " " in arg:
-                arg = ":" + arg
-
-            args = args + arg + " "
-
-        return " ".join([source, verb, args])
-
+       return self.line
