@@ -463,8 +463,17 @@ def handleSTATS(cod, line):
     elif line.args[0] == "M":
         cod.notice(line.source, "%d protocol commands loaded" % len(cod.s2scommands))
         cod.notice(line.source, "%d bot commands loaded" % len(cod.botcommands))
+    elif line.args[0] == "h":
+        cod.notice(line.source, "%d types of hooks loaded" % len(cod.hooks))
+
+        amount = 0
+
+        for name, hooks in cod.hooks.iteritems():
+            amount += len(hooks)
+
+        cod.notice(line.source, "%d hooks loaded" % amount)
     else:
-        cod.notice(line.source, "Stats commands: [v]ersion, [c]lients, [C]hannels, [m]modules, co[M]mands")
+        cod.notice(line.source, "Stats commands: [v]ersion, [c]lients, [C]hannels, [m]odules, co[M]mands, [h]ooks")
 
     cod.notice(line.source, "End of /STATS report")
 
