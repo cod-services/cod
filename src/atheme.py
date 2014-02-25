@@ -340,7 +340,7 @@ class AthemeHostServMethods(object):
             vhost = line.split(", vhost:")[1].split(" (")[0]
             date = line.split(" (")[1].split(" - ")[1][:-1]
 
-            vhosts.append("nick": nick, "vhost": vhost, "date", date)
+            vhosts.append({"nick": nick, "vhost": vhost, "date": date})
 
         return vhosts
 
