@@ -335,7 +335,7 @@ class AthemeHostServMethods(object):
                 "WAITING").split("\n")
         vhosts = []
 
-        for line in waiting:
+        for line in waitinglist:
             nick = line.split("Nick:")[1].split(",")[0]
             vhost = line.split(", vhost:")[1].split(" (")[0]
             date = line.split(" (")[1].split(" - ")[1][:-1]
