@@ -13,9 +13,8 @@ files in this project are **not** under the terms of this license and are
 licensed per file as appropriate.
 
 ### Features:
- - Asynchronous socket handling
+ - Asynchronous I/O
    (and an easy way for modules to add socket handlers)
- - Dynamic channel joins
  - Forking to background
  - Logging to snoop channel
  - Modular loading and unloading
