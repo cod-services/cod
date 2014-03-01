@@ -40,11 +40,10 @@ def priceCheck(cod, line, splitline, source, destination):
     "Shows BTC exchange rates on MTGox"
 
     try:
-        info = requests.get("http://data.mtgox.com/api/2/BTCUSD/money/ticker").json()
+        info = requests.get("https://www.bitstamp.net/api/ticker/").json()
 
-        cod.reply(source, destination, "MtGox prices: Average: %s, High: %s, Low: %s" %\
-                (info["data"]["avg"]["display"], info["data"]["high"]["display"],
-                    info["data"]["low"]["display"]))
+        cod.reply(source, destination, "Bitstamp prices: Average: %s, High: %s, Low: %s" %\
+                (info["ask"], info["high"], info["low"]))
     except Exception as e:
         cod.reply(source, destination, "There was some error looking bitcoin prices: %s" % e.message)
 
