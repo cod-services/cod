@@ -116,6 +116,7 @@ class TS6ServerConn():
 
 class InspircdServerConn(TS6ServerConn):
     def __init__(self, cod):
+        TS6ServerConn.__init(self, cod)
         self.umodes = "+iok"
 
     def join_client(self, client, channel):
