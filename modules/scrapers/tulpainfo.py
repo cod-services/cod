@@ -65,7 +65,7 @@ def tulpaInfoLookup(cod, target, line):
         soup = Soup(info.text)
 
         title = soup("span", "active")[0].text.encode("ascii", "ignore")
-        poster = soup("strong")[4].text.encode("ascii", "ignore")
+        poster = soup("span", "largetext")[0].text.encode("ascii", "ignore")
         summary = soup("meta")[3]["content"].encode("ascii", "ignore")
 
         string = "^ Tulpa.info forums: %s posted %s: %s" %\
