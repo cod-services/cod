@@ -25,8 +25,6 @@ freely, subject to the following restrictions:
 from bs4 import BeautifulSoup as Soup
 import requests
 import re
-import traceback
-import sys
 
 NAME="Tulpa.info"
 DESC="Tulpa.info thread title lookups"
@@ -60,19 +58,15 @@ def tulpaInfoLookup(cod, target, line):
     except:
         return
 
-    try:
-        info = requests.get("http://community.tulpa.info/%s" % threadid)
-        soup = Soup(info.text)
+    info = requests.get("http://community.tulpa.info/%s" % threadid)
+    soup = Soup(info.text)
 
-        title = soup("span", "active")[0].text.encode("ascii", "ignore")
-        poster = soup("span", "largetext")[0].text.encode("ascii", "ignore")
-        summary = soup("meta")[3]["content"].encode("ascii", "ignore")
+    title = soup("span", "active")[0].text.encode("ascii", "ignore")
+    poster = soup("span", "largetext")[0].text.encode("ascii", "ignore")
+    summary = soup("meta")[3]["content"].encode("ascii", "ignore")
 
-        string = "^ Tulpa.info forums: %s posted %s: %s" %\
-            (poster, title, summary)
+    string = "^ Tulpa.info forums: %s posted %s: %s" %\
+        (poster, title, summary)
 
-        cod.privmsg(line.args[0], string)
-    except Exception as e:
-        cod.privmsg(line.args[0], "There was some error looking up that thread: %s" % e.message)
-        traceback.print_exc(file=sys.stdout)
+    cod.privmsg(line.args[0], string)
 
