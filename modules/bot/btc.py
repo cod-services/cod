@@ -24,8 +24,8 @@ freely, subject to the following restrictions:
 
 import requests
 
-NAME="MTGox price lookups"
-DESC="Shows the BTC price on MTGox"
+NAME="Bitstamp price lookups"
+DESC="Shows the BTC price on Bitstamp"
 
 def initModule(cod):
     cod.addBotCommand("BTC", priceCheck)
@@ -37,7 +37,7 @@ def rehash():
     pass
 
 def priceCheck(cod, line, splitline, source, destination):
-    "Shows BTC exchange rates on MTGox"
+    "Shows BTC exchange rates on Bitstamp"
 
     try:
         info = requests.get("https://www.bitstamp.net/api/ticker/").json()
