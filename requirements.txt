@@ -1,5 +1,7 @@
 CherryPy==3.2.4
+Mako==0.9.1
 Markdown==2.3.1
+MarkupSafe==0.18
 PyYAML==3.10
 ThePirateBay==1.3.0
 argparse==1.2.1
@@ -7,6 +9,7 @@ beautifulsoup4==4.3.2
 cssselect==0.9.1
 dateutils==0.6.6
 dnspython==1.11.1
+ircmess==0.1
 lxml==3.2.5
 misaka==1.0.2
 nltk==2.0.4
@@ -17,12 +20,16 @@ pygeoip==0.3.0
 pyruby==1.0.0
 python-dateutil==2.2
 python-mpd2==0.5.1
+python-wordpress-xmlrpc==2.2
 pytz==2013.9
 repoze.lru==0.6
 requests==1.2.3
+shodan==1.0.2
+simplejson==3.3.3
 six==1.4.1
 textblob==0.8.4
 transmissionrpc==0.11
 update-checker==0.8
 wikipedia==1.1
 wsgiref==0.1.2
+xmltodict==0.8.6

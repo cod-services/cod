@@ -28,7 +28,7 @@ VERSION = "0.3"
 
 from niilib import config
 from niilib import log
-from line import IRCLine
+from ircmess import IRCLine
 from niilib.b36 import *
 from select import select
 from textwrap import wrap
