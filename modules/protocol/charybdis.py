@@ -383,6 +383,9 @@ def handlePRIVMSG(cod, line):
     command = ""
     pm = True
 
+    if line == []:
+        return
+
     if destination[0] == "#":
         if destination not in cod.client.channels:
             return
