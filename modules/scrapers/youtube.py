@@ -62,7 +62,7 @@ def youtubeLookup(cod, line):
     try:
         info = requests.get("http://gdata.youtube.com/feeds/api/videos/%s?v=2&alt=json" % videoid).json()
 
-        string = "^ Youtube: %s" % info["entry"]["title"]["$t"]
+        string = "^ Youtube: %s" % info["entry"]["title"]["$t"].encode("ascii", "replace")
 
         cod.privmsg(line.args[0], string)
     except Exception as e:
