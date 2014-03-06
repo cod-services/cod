@@ -30,18 +30,20 @@ from structures import *
 from random import choice
 from random import randint
 
-global prefix, suffix, slaves
+global prefix, suffix, slaves, nicks
 
 prefix = []
 suffix = []
 slaves = []
+nicks = set()
 
 def initModule(cod):
-    global prefix, suffix, slaves
+    global prefix, suffix, slaves, nicks
 
     prefix = []
     suffix = []
     slaves = []
+    nicks = set()
 
     #Initialize Database table
     initDBTable(cod, "OFCStats", "Id INTEGER PRIMARY KEY, Clients INTEGER")
@@ -63,7 +65,7 @@ def initModule(cod):
     cod.addBotCommand("OFC", ofc, True)
 
 def destroyModule(cod):
-    global prefix, suffix, slaves
+    global prefix, suffix, slaves, nicks
 
     for slave in slaves:
         cod.sendLine(slave.quit())
@@ -75,6 +77,7 @@ def destroyModule(cod):
     del slaves
     del prefix
     del suffix
+    del nicks
 
     cod.delBotCommand("OFC")
 
@@ -116,17 +119,34 @@ def ofc(cod, line, splitline, source, destination):
     else:
         help(cod, source)
 
+def gen_nick():
+    nick = prefix[randint(0, len(prefix) - 1)].upper() + prefix[randint(0, len(prefix) - 1)].upper()
+    for char in [" ", "-", "&", "(", ")", ".", ",", "/", "'"]:
+        nick = "".join(nick.split(char))
+
+    nick = nick[:20]
+    if len(nick) < 6:
+        nick = nick + nick
+    return nick
+
 def joinclients(cod, channel, source):
     global slaves, nicks
 
     number = 1500
 
     for n in range(number):
+        nick = gen_nick()
+        while nick in nicks:
+            nick = gen_nick()
+        nicks.add(nick)
         user = "~lel~"
-
+        host = "%s.%s.%s" %(prefix[randint(0, len(prefix) - 1)].upper(), prefix[randint(0, len(prefix) - 1)].upper(), suffix[randint(0, len(suffix) - 1)].upper())
+        host = ".".join(host.split())
         uid = cod.getUID()
+        if cod.protocol.gen_uid() is None:  # We are using a protocol that does not support uids
+            uid = nick
 
-        slave = makeClient(uid, user, uid, "CareFriend", uid)
+        slave = makeClient(nick, user, host, "CareFriend", uid)
         slaves.append(slave)
         cod.burstClient(cod, slave)
         cod.join(channel, slave)
@@ -157,7 +177,7 @@ def decimate(cod, source, channel):
             (len(slaves), channel, cod.clients[source].nick))
 
 def depart(cod, source):
-    global slaves
+    global slaves, nicks
 
     num = len(slaves)
 
@@ -172,11 +192,12 @@ def depart(cod, source):
     cod.notice(source, "%d slaves deleted" % num)
 
     cod.servicesLog("OFC:DEPART: requested by %s" % source.nick)
+    nicks.clear()
 
 def stats(cod, source):
     rows = lookupDB(cod, "OFCStats")
 
-    if rows == []:
+    if not rows:
         cod.notice(source, "The cannon has not been run yet. Please run the cannon and try again.")
         return
 
@@ -196,4 +217,3 @@ def stats(cod, source):
     cod.notice(source, " - %d runs, average of %4.2f clients per run" % (len(rows), avgclients))
     cod.notice(source, " - Maximum of %d clients in a single run" % maxclients)
     cod.notice(source, "END OF STATS")
-
