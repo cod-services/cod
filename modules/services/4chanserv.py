@@ -234,14 +234,14 @@ class ThreadMonitor(threading.Thread):
                 try:
                     string = "[%s] " % post["no"]
                     if "name" in post:
-                        string += "%s " % unescape(remove_html_markup(post["name"]))
+                        string += "%s " % unescape(remove_html_markup(post["name"])).encode("ascii", "replace")
                     else:
                         string += "Anonymous "
 
                     if "filename" in post:
-                        string += "posted %s%s and " % (post["filename"], post["ext"])
+                        string += "posted %s%s and " % (post["filename"].encode("ascii", "replace"), post["ext"])
                     if "com" in post:
-                        comment = post["com"].replace("<br>", " \ ")
+                        comment = post["com"].replace("<br>", " \ ").encode("ascii", "replace")
                         comment = remove_html_markup(comment)
                         comment = unescape(comment)
 
