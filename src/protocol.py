@@ -26,6 +26,7 @@ This code was originally written for eon, but has been ported to cod.
 
 from sprunge import sprunge
 from textwrap import wrap
+from niilib.b36 import *
 import time
 
 class TS6ServerConn():
