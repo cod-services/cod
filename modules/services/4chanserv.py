@@ -234,7 +234,7 @@ class ThreadMonitor(threading.Thread):
                 try:
                     string = "[%s] " % post["no"]
                     if "name" in post:
-                        string += "%s " % unescape(remove_html_markup(post["name"])).encode("ascii", "replace")
+                        string += "%s " % unescape(remove_html_markup(post["name"])).encode("ascii", "ignore")
                     else:
                         string += "Anonymous "
 
