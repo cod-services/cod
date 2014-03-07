@@ -4,6 +4,8 @@ Simple relay from #help tp #opers
 Code is in public domain
 """
 
+DESC="Relay messages from the help channel to the staff channel"
+
 def initModule(cod):
     cod.addHook("chanmsg", chanmsgHook)
 

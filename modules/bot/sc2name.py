@@ -25,6 +25,9 @@ freely, subject to the following restrictions:
 import requests
 from bs4 import BeautifulSoup
 
+NAME="SC2 name"
+DESC="Grabs nicknames from the starcraft koreanizer"
+
 def initModule(cod):
     cod.addBotCommand("SC2NAME", commandSC2NAME)
 
