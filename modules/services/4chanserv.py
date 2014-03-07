@@ -190,10 +190,10 @@ class ThreadMonitor(threading.Thread):
         self.lastpostid = 0
         self.dying = False
 
-        nick = "[4CS]\%s\%s" % (board, threadid)
+        nick = "\%s\%s" % (board, threadid)
 
         self.client = makeClient(nick, "monitor", "boards.4chan.org",
-                "4ChanServ monitor for /%s/%s to %s" % (board, threadid, target), cod.getUID())
+                "/%s/%s to %s" % (board, threadid, target), cod.getUID())
         cod.burstClient(cod, self.client)
         cod.protocol.join_client(self.client, self.target)
         cod.protocol.join_client(self.client, cod.channels[cod.config["etc"]["snoopchan"]])
