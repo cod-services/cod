@@ -42,5 +42,13 @@
 		"port": 9996,
 		"bindhost": "0.0.0.0",
 		"templates": "web/templates"
+	},
+
+	"email": {
+		"host": "some.email.server",
+		"port": 22,
+		"username": "lolemail",
+		"password": "yeshello",
+		"myemail": "lolemail@some.email.server"
 	}
 }
