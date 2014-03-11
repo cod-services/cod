@@ -40,6 +40,10 @@ def announceDNSBLHits(cod, line):
     if line.args[1] == "SNOTE":
         if line.args[2] == "r":
             message = line.args[-1]
+
+            if "DNS" not in message:
+                return
+
             cod.servicesLog("DNSBL:HIT: %s" % message)
 
             try:
