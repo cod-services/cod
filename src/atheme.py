@@ -405,7 +405,7 @@ class CodAthemeConnector():
     def __getattr__(self, name):
         if time.time() > self.time + 900:
             self.__login()
-        return self.atheme.__getattr__(name)
+        return getattr(self.atheme, name)
 
     def __login(self):
         self.atheme.login(self.cod.config["me"]["nick"],
