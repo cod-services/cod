@@ -4,6 +4,8 @@
 # This file is licensed under the Atheme license.
 #
 
+import time
+
 from xmlrpclib import ServerProxy, Fault
 
 class AthemeNickServMethods(object):
@@ -390,3 +392,25 @@ class AthemeXMLConnection(object):
                 return "Error: " + e.faultString + "  If you are already connected to IRC using this nickname, please complete the registration procedure through IRC."
 
             return "Error: " + e.faultString
+
+class CodAthemeConnector():
+    def __init__(self, cod):
+        self.cod = cod
+        self.xmlrpc = cod.config["atheme"]["xmlrpc"]
+
+        self.atheme = AthemeXMLConnection(self.xmlrpc)
+
+        self.__login()
+
+    def __getattr__(self, name):
+        if time.time() > self.time + 900:
+            self.__login()
+        return self.atheme.__getattr__(name)
+
+    def __login(self):
+        self.atheme.login(self.cod.config["me"]["nick"],
+                self.cod.config["me"]["servicespass"])
+        self.time = time.time()
+
+        self.cod.log("Logged into XMLRPC")
+

@@ -33,6 +33,7 @@ from niilib.b36 import *
 from select import select
 from textwrap import wrap
 
+import atheme
 import socket
 import os
 import sys
@@ -104,6 +105,10 @@ class Cod():
         if self.config["uplink"]["ssl"]:
             self.link = ssl.wrap_socket(self.link)
             self.log("SSL enabled")
+
+        self.log("Initializing Atheme XMLRPC connector")
+
+        self.services = atheme.CodAthemeConnector(self)
 
         #pid value
         self.pid = os.getpid()
