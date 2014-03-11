@@ -108,5 +108,4 @@ def emailMongs(cod, line):
                         network=network, host=host)
 
                 email.format_email(address, subject, text)
-                email.format_email(replymail, "FWD: %s" % subject, text + "\nThis is the staff copy.")
 
