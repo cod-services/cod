@@ -402,10 +402,11 @@ class CodAthemeConnector():
 
         self.__login()
 
-    def __getattr__(self, name):
-        if time.time() > self.time + 900:
-            self.__login()
-        return getattr(self.atheme, name)
+        self.nickserv = self.atheme.nickserv
+        self.chanserv = self.atheme.chanserv
+        self.operserv = self.atheme.operserv
+        self.hostserv = self.atheme.hostserv
+        self.memoserv = self.atheme.memoserv
 
     def __login(self):
         self.atheme.login(self.cod.config["me"]["nick"],
