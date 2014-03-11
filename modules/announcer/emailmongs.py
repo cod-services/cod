@@ -84,9 +84,12 @@ def emailMongs(cod, line):
 
             replymail = "staff@%s" % email.config.myemail.split("@")[1]
 
-            subject = "HTTP Proxy connection attempt from %s (%s)" % (host, ip)
+            if host == ip:
+                subject = "HTTP Proxy connection attempt from %s" % (ip)
+            else:
+                subject = "HTTP Proxy connection attempt from %s (%s)" % (host, ip)
 
-            cod.servicesLog(subject)
+            cod.servicesLog(subject + " on server %s" % server)
 
             my_template = Template(template)
 
