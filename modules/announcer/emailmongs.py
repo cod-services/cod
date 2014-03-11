@@ -34,10 +34,11 @@ DESC="Sends abuse complaints to the providers of idiots that POST an ircd"
 
 template = """Hello,
 
-This is an automated message. An IP address you control (${ip}) has made a POST request
-to port 5000 of the ircd at ${server}. This could mean the machine at that IP
-address is compromised or is doing scanning for a certain kind of vulnerable
-system. Please discontinue ${ip}'s attempts to POST this network's daemons.
+This is an automated message. An IP address you control (${ip})
+has made a POST request to port 5000 of the ircd at ${server}. This could mean
+the machine at that IP address is compromised or is doing scanning for a certain
+kind of vulnerable system. If at all possible, please discontinue
+${ip}'s attempts to POST this network's daemons.
 
 As this is an automated message, replies will be ignored. If you wish to email
 the network staff directly, please do so to ${replymail}. Another option is to
@@ -47,10 +48,16 @@ This email was sent at ${time} and the protocol line that triggered it was:
 
     ${line}
 
-Thank you for your understanding. This message is in your inbox because ${email}
-is listed as your email in a WHOIS lookup. If this is in error, please send a
-full copy of this message to ${replymail} with a timestamp in GMT so a false
-positive can be recorded.
+A full record of all information that our IRC daemon reported:
+
+    hostname of client: ${host} (${ip})
+    server affected: ${server}
+
+Thank you for your understanding. This message is in your inbox because
+${email} is listed as your email in a WHOIS lookup.
+If this is in error, please send a full copy of this message to ${replymail}
+with a timestamp in GMT so a false positive can be recorded as well as steps
+taken to prevent future emails like this one from being sent.
 
 ${network} Staff
 """
@@ -98,8 +105,8 @@ def emailMongs(cod, line):
             for address in emails:
                 text = my_template.render(ip=ip, server=server, replymail=replymail,
                         time=now, line=str(line), helpchan=helpchan, email=address,
-                        network=network)
+                        network=network, host=host)
 
                 email.format_email(address, subject, text)
-                email.format_email(replymail, "FWD: %s" % subject, text + "\n\nThis is the staff copy.")
+                email.format_email(replymail, "FWD: %s" % subject, text + "\nThis is the staff copy.")
 
