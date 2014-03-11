@@ -9,6 +9,7 @@ beautifulsoup4==4.3.2
 cssselect==0.9.1
 dateutils==0.6.6
 dnspython==1.11.1
+ipaddr==2.1.11
 ircmess==0.1
 lxml==3.2.5
 misaka==1.0.2
@@ -22,6 +23,7 @@ python-dateutil==2.2
 python-mpd2==0.5.1
 python-wordpress-xmlrpc==2.2
 pytz==2013.9
+querycontacts==0.2.1
 repoze.lru==0.6
 requests==1.2.3
 shodan==1.0.2
