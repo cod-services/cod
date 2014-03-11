@@ -161,6 +161,8 @@ class RBLSearch(object):
                 #print "*** Error contacting %s ***" % key
                 pass
 
+        self.cod.servicesLog("End of results")
+
 if __name__ == "__main__":
     # Tests!
     try:
