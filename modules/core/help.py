@@ -42,14 +42,12 @@ def commandHELP(cod, line, splitline, source, destination):
 
         commandlist = " ".join(commands)
 
+        cod.reply(source, destination, "Commands: %s" % commandlist)
+
         if source.isOper:
             opercmds = [n.lower() for n in cod.opercommands]
             opercmds.sort()
-
-            commandlist = commandlist + \
-                " (%s)" % " ".join(opercmds)
-
-        cod.reply(source, destination, "Commands: %s" % commandlist)
+            cod.notice(source, "Oper-only commands: %s" % " ".join(opercmds))
     else:
         splitline[1] = splitline[1].upper()
         try:
