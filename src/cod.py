@@ -106,10 +106,9 @@ class Cod():
             self.link = ssl.wrap_socket(self.link)
             self.log("SSL enabled")
 
-        if "go" in self.config["atheme"]:
-            self.log("Initializing Atheme XMLRPC connector")
+        self.log("Initializing Atheme XMLRPC connector")
 
-            self.services = atheme.CodAthemeConnector(self)
+        self.services = atheme.CodAthemeConnector(self)
 
         #pid value
         self.pid = os.getpid()
