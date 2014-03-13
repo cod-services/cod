@@ -42,7 +42,9 @@ def commandSEEN(cod, line, splitline, source, destination):
 
     account = splitline[1]
 
-    info = cod.services.nickserv.get_info(account)
-
-    cod.reply(source, destination, "%s was last seen %s" % (account, info["Last seen"]))
+    try:
+        info = cod.services.nickserv.get_info(account)
+        cod.reply(source, destination, "%s was last seen %s" % (account, info["Last seen"]))
+    except:
+        cod.reply(source, destination, "%s is unknown to me" % account)
 
