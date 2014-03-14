@@ -402,16 +402,19 @@ class CodAthemeConnector():
 
         self.__login()
 
-        self.nickserv = self.atheme.nickserv
-        self.chanserv = self.atheme.chanserv
-        self.operserv = self.atheme.operserv
-        self.hostserv = self.atheme.hostserv
-        self.memoserv = self.atheme.memoserv
-
     def __login(self):
         self.atheme.login(self.cod.config["me"]["nick"],
                 self.cod.config["me"]["servicespass"])
         self.time = time.time()
 
         self.cod.log("Logged into XMLRPC")
+
+    def __getattr__(self, name):
+        if self.time + 600 < time.time():
+            self.__login()
+
+        if hasattr(self.atheme, name):
+            return getattr(self.atheme, name)
+        else:
+            return object().__getattr__(self, name)
 
