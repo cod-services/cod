@@ -49,7 +49,7 @@ def youtubeLookup(cod, line):
 
     chatline = line.args[-1]
 
-    if "youtube" not in chatline:
+    if "youtu" not in chatline:
         return
 
     videoid = None
