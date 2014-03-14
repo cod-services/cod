@@ -102,6 +102,10 @@ def emailMongs(cod, line):
 
             emails = qf.find(ip)
 
+            if emails is None:
+                cod.servicesLog("Wow. %s has no abuse contact. You should report this." % ip)
+                return
+
             for address in emails:
                 text = my_template.render(ip=ip, server=server, replymail=replymail,
                         time=now, line=str(line), helpchan=helpchan, email=address,
