@@ -8,6 +8,7 @@ Please do not delete names from this list.
  - Purlox
  - nyuszika7h
  - Techman
+   - For using this on inspircd
  - Rylee
    - For finding a flooding bug
  - \#tlponies on Quakenet
