@@ -168,11 +168,16 @@ def handleSQUIT(cod, line):
 
 def handleJOIN(cod, line):
     """
-    Handles a raw S2S JOIN, this is rarely seen in the wild.
+    Handles a raw S2S JOIN, this also handles JOIN 0.
     """
 
-    channel = cod.channels[line.args[1]]
+    if line.args[0] == "0":
+        cod.clients[line.source].channnels = []
+        cod.kill_stale_references(cod.clients[line.source])
+        cod.pop_empty_channels()
+        return
 
+    channel = cod.channels[line.args[1]]
     client = cod.clients[line.source]
 
     channel.clientAdd(client)
