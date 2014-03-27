@@ -264,6 +264,14 @@ def handlePRIVMSG(cod, line):
                 command = splitline[0].upper()
                 command = command[1:]
                 pm = False
+            else:
+                mynick = "%s: " % cod.config["me"]["nick"]
+                mylen = len(mynick)
+                if line[:mylen] == mynick:
+                    line = line[:mylen]
+                    splitline = splitline[1:]
+                    command = splitline[0].upper()
+                    pm = False
         except IndexError as e:
             return
 
