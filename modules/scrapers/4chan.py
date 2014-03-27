@@ -22,6 +22,7 @@ freely, subject to the following restrictions:
     distribution.
 """
 
+import htmllib
 import requests
 import re
 
@@ -38,6 +39,30 @@ def destroyModule(cod):
 
 def rehash():
     pass
+
+def unescape(comment):
+    p = htmllib.HTMLParser(None)
+    p.save_bgn()
+    p.feed(comment)
+    return p.save_end()
+
+# http://stackoverflow.com/a/14464381
+def remove_html_markup(s):
+    tag = False
+    quote = False
+    out = ""
+
+    for c in s:
+            if c == '<' and not quote:
+                tag = True
+            elif c == '>' and not quote:
+                tag = False
+            elif (c == '"' or c == "'") and tag:
+                quote = not quote
+            elif not tag:
+                out = out + c
+
+    return out
 
 def fourchanLookup(cod, line):
     """
@@ -64,8 +89,7 @@ def fourchanLookup(cod, line):
 
         text = info["posts"][0]["com"].split("<br>")[0]
 
-        text = text.replace('<span class="quote">&gt;', ">")
-        text = text.replace("</span>", "")
+        text = unescape(remove_html_markup(post))
 
         string = "^ 4chan: %s on /%s/ - %s%s - %s" %\
                 (info["posts"][0]["name"], board, info["posts"][0]["filename"],

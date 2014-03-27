@@ -99,6 +99,12 @@ def remove_html_markup(s):
 
     return out
 
+def unescape(comment):
+    p = htmllib.HTMLParser(None)
+    p.save_bgn()
+    p.feed(comment)
+    return p.save_end()
+
 def handleCommands(cod, target, line):
     global client
     global threads
@@ -169,12 +175,6 @@ def handleCommands(cod, target, line):
     else:
         cod.notice(line.source.uid, "Invalid command. Use /msg %s HELP or join %s for more help" %
                 (client.nick, cod.config["etc"]["helpchan"]), client)
-
-def unescape(comment):
-    p = htmllib.HTMLParser(None)
-    p.save_bgn()
-    p.feed(comment)
-    return p.save_end()
 
 class ThreadMonitor(threading.Thread):
     def __init__(self, cod, target, board, threadid, interval=15):
