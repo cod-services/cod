@@ -48,3 +48,9 @@ modules/experimental/*
 
 # Venv
 env/*
+
+# PyCharm project files
+.idea
+.idea/
+.idea/*
+.idea/**
