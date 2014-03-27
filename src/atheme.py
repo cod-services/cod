@@ -397,10 +397,9 @@ class CodAthemeConnector():
     def __init__(self, cod):
         self.cod = cod
         self.xmlrpc = cod.config["atheme"]["xmlrpc"]
-
-        self.atheme = AthemeXMLConnection(self.xmlrpc)
-
-        self.__login()
+        if self.xmlrpc and len(self.xmlrpc):
+            self.atheme = AthemeXMLConnection(self.xmlrpc)
+            self.__login()
 
     def __login(self):
         self.atheme.login(self.cod.config["me"]["nick"],
