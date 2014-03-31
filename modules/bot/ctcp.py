@@ -38,6 +38,13 @@ def rehash():
 
 def ctcp_reply(cod, line):
     if line.args[-1] == "\x01VERSION\x01":
-        cod.notice(line.source, "\x01Cod version %s running on %s\x01" %
+        cod.notice(line.source, "\x01VERSION Cod version %s running on %s\x01" %
                 (cod.version, cod.config["uplink"]["protocol"]), cod.clients[line.args[0]])
+    elif line.args[-1] == "\x01BOTINFO\x01":
+        cod.notice(line.source, "\x01BOTINFO category:services\x01")
+        cod.notice(line.source, "\x01BOTINFO version:%s\x01" % cod.version)
+        cod.notice(line.source, "\x01BOTINFO type:Cod Extended Services\x01")
+        cod.notice(line.source, "\x01BOTINFO\x01")
+    elif line.args[-1] == "\x01CLIENTINFO\x01":
+        cod.notice(line.source, "\x01CLIENTINFO ACTION BOTINFO CLIENTINFO VERSION")
 
