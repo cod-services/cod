@@ -576,7 +576,7 @@ network. A ping query is encoded in a privmsg, and has the form:
 
     \001PING timestamp\001
 
-where `timestamp' is the current time encoded in any form the querying
+where `timestamp` is the current time encoded in any form the querying
 client finds convienent. The replying client sends back an identical
 message inside a notice:
 
@@ -842,7 +842,7 @@ without any prefixes or commands. A CHAT connection ends when
 one party issues the DCC CLOSE command to their clients, which
 causes the socket to be closed and the information on the connection
 to be discarded. The terminating character of each line is a 
-newline character, '\n'.
+newline character, `\n`.
 
 #### FILE
 
