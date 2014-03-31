@@ -23,7 +23,9 @@ freely, subject to the following restrictions:
 """
 
 import requests
+
 from bs4 import BeautifulSoup
+from time import time
 
 NAME="SC2 name"
 DESC="Grabs nicknames from the starcraft koreanizer"
@@ -43,5 +45,10 @@ def getSC2Name():
     return name
 
 def commandSC2NAME(cod, line, splitline, source, destination):
-    cod.reply(source, destination, "Your name should be: %s" % getSC2Name())
+    nick = getSC2Name()
+    cod.reply(source, destination, "Your name should be: %s" % nick)
+    if cod.config["etc"]["production"] == False:
+        cod.sendLine(":%s ENCAP * RSFNC %s %s %d %s" % (cod.sid, source, nick,
+            int(time()), source.ts))
+        source.ts = int(time())
 
