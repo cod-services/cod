@@ -36,5 +36,5 @@ def destroyModule(cod):
 
 def testbotCommand(cod, line, splitline, source, destination):
     "Shows command prefix"
-    cod.reply(source, destination, "My command prefix is: %s" % cod.config["me"]["prefix"])
+    cod.reply(source, destination, "My command prefix is %s" % cod.config["me"]["prefix"])
 
