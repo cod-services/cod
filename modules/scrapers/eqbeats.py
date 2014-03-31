@@ -25,10 +25,10 @@ freely, subject to the following restrictions:
 import requests
 import re
 
-NAME="EQBeats lookups"
-DESC="EQBeats song info lookups"
+NAME="EqBeats lookups"
+DESC="EqBeats song info lookups"
 
-EQBEATS_REGEX = re.compile('(eqbeats.org/track/)([\w-]+)')
+EqBEATS_REGEX = re.compile('(eqbeats.org/track/)([\w-]+)')
 
 def initModule(cod):
     cod.s2scommands["PRIVMSG"].append(eqbeatsLookup)
@@ -40,7 +40,7 @@ def rehash():
     pass
 
 def eqbeatsLookup(cod, line):
-    global EQBEATS_REGEX
+    global EqBEATS_REGEX
 
     if line.args[0] not in cod.channels:
         return
@@ -50,14 +50,14 @@ def eqbeatsLookup(cod, line):
     songid = None
 
     try:
-        songid = EQBEATS_REGEX.split(chatline)[2]
+        songid = EqBEATS_REGEX.split(chatline)[2]
     except:
         return
 
     try:
         info = requests.get("http://eqbeats.org/track/%s/json" % songid).json()
 
-        string = "^ EQBeats: %s -- %s" %\
+        string = "^ EqBeats: %s -- %s" %\
                 (info["artist"]["name"], info["title"])
 
         cod.privmsg(line.args[0], string)
