@@ -233,6 +233,7 @@ def handleNICK(cod, line):
     """
 
     cod.clients[line.source].nick = line.args[0]
+    cod.clients[line.source].ts = line.args[-1]
 
 def handleSID(cod, line):
     """
