@@ -47,8 +47,4 @@ def getSC2Name():
 def commandSC2NAME(cod, line, splitline, source, destination):
     nick = getSC2Name()
     cod.reply(source, destination, "Your name should be %s" % nick)
-    if cod.config["etc"]["production"] == False:
-        cod.sendLine(":%s ENCAP * RSFNC %s %s %d %s" % (cod.sid, source, nick,
-            int(time()), source.ts))
-        source.ts = int(time())
 
