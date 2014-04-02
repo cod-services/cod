@@ -1,5 +1,5 @@
 """
-Copyright (c) 2013, Sam Dodrill
+Copyright (c) 2014, Sam Dodrill
 All rights reserved.
 
 This software is provided 'as-is', without any express or implied
@@ -38,11 +38,11 @@ def logRESV(cod, line):
     if line.args[1] == "RESV":
         if line.args[0] == "0":
             cod.servicesLog("RESV: %s -- INFINITE by: %s" %
-                    (line.args[1], cod.clients[source].nick))
+                    (line.args[1], line.source.nick))
         else:
             time = int(line.args[2])
             time = time / 60
 
             cod.servicesLog("RESV: %s %d minutes by: %s" %
-                    (line.args[3], time, cod.clients[source].nick))
+                    (line.args[3], time, line.source.nick))
 
