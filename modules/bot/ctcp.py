@@ -46,5 +46,5 @@ def ctcp_reply(cod, line):
         cod.notice(line.source, "\x01BOTINFO type:Cod Extended Services\x01")
         cod.notice(line.source, "\x01BOTINFO\x01")
     elif line.args[-1] == "\x01CLIENTINFO\x01":
-        cod.notice(line.source, "\x01CLIENTINFO ACTION BOTINFO CLIENTINFO VERSION")
+        cod.notice(line.source, "\x01CLIENTINFO ACTION BOTINFO CLIENTINFO VERSION\x01")
 
