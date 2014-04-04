@@ -39,11 +39,10 @@ def commandWHOAMI(cod, line, splitline, source, destination):
 
     try:
         oper = "Oper" if source.isOper else "User"
-        uidstring = " (%s)" % source.uid
 
         string = "%s %s!%s@%s: %s%s: %s" %\
                 (oper, source.nick, source.user, source.host, source.gecos,
-                        uidstring, source.login)
+                        source.login)
 
         cod.reply(source, destination, string)
     except Exception as e:
