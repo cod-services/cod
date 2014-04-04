@@ -284,36 +284,22 @@ def handlePRIVMSG(cod, line):
         destination = cod.clients[destination]
         command = splitline[0].upper()
 
-    #Guido, I am sorry.
-    try:
+    if command in cod.opercommands:
         if source.isOper:
             for impl in cod.opercommands[command]:
-                try:
-                    if pm:
-                        impl(cod, line, splitline, source, source)
-                    else:
-                        impl(cod, line, splitline, source, destination)
-                except Exception as e:
-                    cod.servicesLog("%s: %s" % (type(e), e.message))
-                    continue
-        else:
-            raise KeyError
-
-    except KeyError as e:
-        for impl in cod.botcommands[command]:
-            try:
-                print command
                 if pm:
                     impl(cod, line, splitline, source, source)
                 else:
                     impl(cod, line, splitline, source, destination)
-            except Exception as e:
-                cod.servicesLog("%s: %s" % (type(e), e.message))
-    except KeyError as e:
-        return
-    except Exception as e:
-        cod.servicesLog("%s: %s" % (type(e), e.message))
+        else:
+            cod.protocol.notice(cod.client, source, "Permission denied.")
 
+    elif command in cod.botcommands:
+        for impl in cod.botcommands[command]:
+            if pm:
+                impl(cod, line, splitline, source, source)
+            else:
+                impl(cod, line, splitline, source, destination)
 
 def handleKILL(cod, line):
     """
