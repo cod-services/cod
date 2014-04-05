@@ -18,6 +18,8 @@ class JsonAPI(RootPage):
     def command(self, cmd, *args):
         cherrypy.response.headers['Content-Type'] = 'application/json'
 
+        self.cod.servicesLog("WEB: %s used command %s" % (cherrypy.request.remote.ip, str(cmd)))
+
         cmd = str(cmd)
         source = make_smurf()
         destination = "<json-rpc>"
@@ -41,6 +43,8 @@ class JsonAPI(RootPage):
     def clientinfo(self):
         cherrypy.response.headers['Content-Type'] = 'application/json'
 
+        self.cod.servicesLog("WEB: %s accessed client list" % cherrypy.request.remote.ip)
+
         clients = []
 
         for client in self.cod.clients.itervalues():
@@ -51,6 +55,8 @@ class JsonAPI(RootPage):
     @cherrypy.expose
     def chaninfo(self, channel=None):
         cherrypy.response.headers['Content-Type'] = 'application/json'
+
+        self.cod.servicesLog("WEB: %s accessed raw channel list" % cherrypy.request.remote.ip)
 
         if channel == None:
             channels = []
