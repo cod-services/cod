@@ -37,5 +37,5 @@ def destroyModule(cod):
 def testbotCommand(cod, line, splitline, source, destination):
     "Shows source code information"
     return "I am an instance of Cod version %s running on %s. You can find more information about me at http://github.com/cod-services/cod" %\
-            (cod.version, cod.config["uplink"]["protocol"]))
+            (cod.version, cod.config["uplink"]["protocol"])
 
