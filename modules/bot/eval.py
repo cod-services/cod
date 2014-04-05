@@ -56,8 +56,8 @@ def eval_line(cod, line, splitline, source, destination):
         if "\n" in output:
             output = output.split("\n")[0]
 
-        cod.reply(source, destination, "> %s" % str(output))
+        return "> %s" % str(output)
 
     except Exception as e:
-        cod.reply(source, destination, "There was some error: %s" % e.message)
+        return "There was some error: %s" % e.message
 

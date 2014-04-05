@@ -94,7 +94,7 @@ def diceWrapper(cod, line, splitline, source, destination):
     "DICE <diceroll> -- simulates dicerolls, e.g. .dice 2d20-d5+4 roll 2 D20s, subtract 1D5, add 4"
 
     try:
-        cod.reply(source, destination, dice(" ".join(splitline[1:])))
+        return dice(" ".join(splitline[1:]))
     except AttributeError:
-        cod.reply(source, destination, "dice <diceroll> -- simulates dicerolls, e.g. .dice 2d20-d5+4 roll 2 D20s, subtract 1D5, add 4")
+        return "dice <diceroll> -- simulates dicerolls, e.g. .dice 2d20-d5+4 roll 2 D20s, subtract 1D5, add 4"
 

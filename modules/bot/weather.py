@@ -69,10 +69,10 @@ def commandWEATHER(cod, line, splitline, source, destination):
         if locale == "":
             locale = location
 
-        cod.reply(source, destination, "Weather report for %s: %s degrees C (%s F), %s" %\
-                (locale, temps[1], temps[0], wind))
+        return "Weather report for %s: %s degrees C (%s F), %s" %\
+                (locale, temps[1], temps[0], wind)
 
     except:
-        cod.reply(source, destination, "%s: %s doesn't seem to be a valid location" %\
-                (source.nick, location))
+        return "%s: %s doesn't seem to be a valid location" %\
+                (source.nick, location)
 

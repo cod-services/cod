@@ -43,8 +43,7 @@ def priceCheck(cod, line, splitline, source, destination):
         info = requests.get("http://pubapi.cryptsy.com/api.php?method=singlemarketdata&marketid=132").json()
         info = info["return"]["markets"]["DOGE"]
 
-        cod.reply(source, destination, "One Dogecoin is worth %s BTC" %
-                (info["lasttradeprice"]))
+        return "One Dogecoin is worth %s BTC" % info["lasttradeprice"]
 
     except Exception as e:
         cod.reply(source, destination, "There was some error looking dogecoin prices: %s" % e.message)

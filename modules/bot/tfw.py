@@ -40,8 +40,7 @@ def commandTFW(cod, line, splitline, source, destination):
     location = " ".join(splitline[1:])
 
     if location.lower() == "no gf":
-        cod.reply(source, destination, "Feels man, feels")
-        return
+        return "Feels man, feels"
 
     html = requests.get("http://thefuckingweather.com/?where=%s&unit=c" % location)
     soup = BeautifulSoup(html.text)
@@ -49,5 +48,5 @@ def commandTFW(cod, line, splitline, source, destination):
     temp = soup('span', {"class": "temperature"})[0].getText()
     locale = soup('span', {"id": "locationDisplaySpan"})[0].getText()
 
-    cod.reply(source, destination, str("THE FUCKING Weather report for %s: %s (%s degrees C)" % (locale, remark, temp)).upper())
+    return str("THE FUCKING Weather report for %s: %s (%s degrees C)" % (locale, remark, temp)).upper()
 

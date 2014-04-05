@@ -42,8 +42,8 @@ def priceCheck(cod, line, splitline, source, destination):
     try:
         info = requests.get("https://www.bitstamp.net/api/ticker/").json()
 
-        cod.reply(source, destination, "Bitstamp prices: Average: %s, High: %s, Low: %s" %\
-                (info["ask"], info["high"], info["low"]))
+        return "Bitstamp prices: Average: %s, High: %s, Low: %s" %\
+                (info["ask"], info["high"], info["low"])
     except Exception as e:
-        cod.reply(source, destination, "There was some error looking bitcoin prices: %s" % e.message)
+        return "There was some error looking bitcoin prices: %s" % e.message
 

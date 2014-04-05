@@ -84,8 +84,8 @@ def youtubeSearch(cod, line, splitline, source, destination):
 
         string = "Youtube: %s - http://youtu.be/%s" % (video["title"], video["id"])
 
-        cod.reply(source, destination, string)
+        return string
 
     except Exception as e:
-        cod.reply(source, destination, "There was some error looking up that video: %s" % e.message)
+        return "There was some error looking up that video: %s" % e.message
 

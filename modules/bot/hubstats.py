@@ -54,7 +54,7 @@ def personCheck(cod, line, splitline, source, destination):
                 (info["name"], toplang["language"], toplang["quantile"],
                         toprepo["repo"], toprepo["count"])
 
-        cod.reply(source, destination, string)
+        return string
     except Exception as e:
-        cod.reply(source, destination, "There was some error looking that person up: %s" % e.message)
+        return "There was some error looking that person up: %s" % e.message
 

@@ -71,3 +71,5 @@ def commandRBL(cod, line, splitline, source, destination):
 
     search.print_results()
 
+    return "See services snoop channel for more information"
+

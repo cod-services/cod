@@ -25,7 +25,7 @@ def bf_wrapper(cod, line, splitline, source, destination):
         cod.reply(source, destination, "BF <prog> -- executes brainfuck program <prog>")
         return
 
-    cod.reply(source, destination, "> " + bf(splitline[1]))
+    return "> " + bf("".join(splitline[1:]))
 
 def bf(inp):
     ".bf <prog> -- executes brainfuck program <prog>"""

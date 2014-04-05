@@ -25,7 +25,7 @@ def fibCMD(cod, line, splitline, source, destination):
 
     num = int(splitline[1])
 
-    cod.reply(source, destination, "%d: %d" % (num, smart_recur_fib(num)))
+    return "%d: %d" % (num, smart_recur_fib(num))
 
 fibs = {}
 

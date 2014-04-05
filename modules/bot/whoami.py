@@ -44,7 +44,7 @@ def commandWHOAMI(cod, line, splitline, source, destination):
                 (oper, source.nick, source.user, source.host, source.gecos,
                         source.login)
 
-        cod.reply(source, destination, string)
+        return string
     except Exception as e:
         cod.log("%s %s" % (type(e), e.message))
 

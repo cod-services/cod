@@ -420,22 +420,27 @@ def handlePRIVMSG(cod, line):
         destination = cod.clients[destination]
         command = splitline[0].upper()
 
+    output = None
+
     if command in cod.opercommands:
         if source.isOper:
             for impl in cod.opercommands[command]:
                 if pm:
-                    impl(cod, line, splitline, source, source)
+                    output = impl(cod, line, splitline, source, source)
                 else:
-                    impl(cod, line, splitline, source, destination)
+                    output = impl(cod, line, splitline, source, destination)
         else:
             cod.protocol.notice(cod.client, source, "Permission denied.")
 
     elif command in cod.botcommands:
         for impl in cod.botcommands[command]:
             if pm:
-                impl(cod, line, splitline, source, source)
+                output = impl(cod, line, splitline, source, source)
             else:
-                impl(cod, line, splitline, source, destination)
+                output = impl(cod, line, splitline, source, destination)
+
+    if output != None:
+        cod.reply(source, destination, output)
 
 def handleERROR(cod, line):
     """

@@ -116,12 +116,13 @@ def commandJOIN(cod, line, splitline, source, destination):
 
         client = source
         cod.servicesLog("JOIN %s: %s" % (channel, client.nick))
-        cod.notice(source, "I have joined %s" % channel)
 
         addtoDB(cod, "INSERT INTO Joins(Name) VALUES ('%s');" % channel)
 
+        return "I have joined %s" % channel
+
     else:
-        cod.notice(source, "USAGE: JOIN #channel")
+        return "USAGE: JOIN #channel"
 
 def commandPART(cod, line, splitline, source, destination):
     "Makes Cod leave a cahnnel."
@@ -137,8 +138,10 @@ def commandPART(cod, line, splitline, source, destination):
 
         deletefromDB(cod, "DELETE FROM Joins WHERE Name = \"%s\"" % channel)
 
+        return "I have left %s" % channel
+
     else:
-        cod.notice(source, "USAGE: PART #channel")
+        return "USAGE: PART #channel"
 
 def commandREHASH(cod, line, splitline, source, destination):
     "Rehashes Cod's configuration file from the disk."
@@ -147,6 +150,8 @@ def commandREHASH(cod, line, splitline, source, destination):
 
     client = source
     cod.servicesLog("REHASH: %s" % client.nick)
+
+    return "Rehashed."
 
 def commandDIE(cod, line, splitline, source, destination):
     "Kills off Cod"
@@ -170,56 +175,50 @@ def commandMODLOAD(cod, line, splitline, source, destination):
     "Makes Cod try to load a module."
 
     if len(splitline) < 2:
-        cod.notice(source, "Need name of module")
-        return
+        return "Need name of module"
 
     target = splitline[1].lower()
 
     if target in cod.modules:
-        cod.notice(source, "Module %s is loaded" % target)
-        return
+        return "Module %s is loaded" % target
 
     cod.rehash()
 
     try:
         cod.loadmod(target)
     except Exception as e:
-        cod.reply(source, destination, "Module %s failed load: %s" % (target, e))
         traceback.print_exc(file=sys.stdout)
-        return
+        return "Module %s failed load: %s" % (target, e)
 
     addtoDB(cod, "INSERT INTO Moduleautoload(Name) VALUES ('%s');" % target)
 
     cod.servicesLog("MODLOAD:%s: %s" % (target, source.nick))
 
-    cod.reply(source, destination, "%s loaded." % target)
+    return "%s loaded." % target
 
 def commandMODUNLOAD(cod, line, splitline, source, destination):
     "Makes Cod unload a module."
 
     if len(splitline) < 2:
-        cod.notice(source, "Need name of module")
-        return
+        return "Need name of module"
 
     target = splitline[1].lower()
 
     if target not in cod.modules:
-        cod.notice(source, "Module %s is not loaded" % target)
-        return
+        return "Module %s is not loaded" % target
 
     cod.rehash()
 
     try:
         cod.unloadmod(target)
     except Exception as e:
-        cod.reply(source, destination, "Module %s failed unload: %s" % (target, e))
-        return
+        return "Module %s failed unload: %s" % (target, e)
 
     deletefromDB(cod, "DELETE FROM Moduleautoload WHERE Name = \"%s\";" % target)
 
     cod.servicesLog("MODUNLOAD:%s: %s" % (target, source.nick))
 
-    cod.reply(source, destination, "%s unloaded." % target)
+    return "%s unloaded." % target
 
 def commandLISTCHANS(cod, line, splitline, source, destination):
     "Lists all the channels Cod is set to autojoin."
@@ -252,7 +251,7 @@ def handleMOTD(cod, line):
 def commandVERSION(cod, line, splitline, source, destination):
     "Shows Cod's version information."
 
-    cod.notice(source, "Cod version %s" % cod.version)
+    return "Cod version %s" % cod.version
 
 def commandUPGRADE(cod, line, splitline, source, destination):
     "Updrace Cod's code on the disk without reloading anything."
@@ -265,7 +264,9 @@ def commandUPGRADE(cod, line, splitline, source, destination):
     output = output.split("\n")
 
     for line in output:
-        cod.reply(source, destination, (line.strip()))
+        cod.servicesLog(line.strip())
 
     cod.servicesLog("%s: UPGRADE" % source.nick)
+
+    return "Done"
 

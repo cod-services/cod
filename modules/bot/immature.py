@@ -42,7 +42,7 @@ def rehash():
     pass
 
 def commandIMMATURE(cod, line, splitline, source, destination):
-    cod.reply(source, destination, immature(" ".join(splitline[1:])))
+    return immature(" ".join(splitline[1:]))
 
 def immature(tweet, no_url=True):
     """A very childish function. Takes any string input (assumes a sentence) and appends "in your pants" to it, preserving case if nessecary."""

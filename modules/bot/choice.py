@@ -48,5 +48,5 @@ def commandCHOICE(cod, line, splitline, source, destination):
 
     choice = random.choice(choices)
 
-    cod.reply(source, destination, "Result: " + choice)
+    return "Result: " + choice
 

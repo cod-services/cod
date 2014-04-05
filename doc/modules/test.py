@@ -1,5 +1,5 @@
 """
-Copyright (c) 2013, Sam Dodrill
+Copyright (c) 2014, Sam Dodrill
 All rights reserved.
 
 This software is provided 'as-is', without any express or implied
@@ -55,6 +55,8 @@ def rehash():
     to be done on a rehash, do it here.
     """
 
+    pass
+
 def testbotCommand(cod, line, splitline, source, destination):
     "A simple test command"
 
@@ -66,15 +68,20 @@ def testbotCommand(cod, line, splitline, source, destination):
     3. The line split by spaces for convenience
     4. The source UID of the message
     5. The destination of the message, can be UID or channel
+
+    A bot command may either return a reply or send one directly. It is preferable
+    to return a reply directly to make it work with JSON-RPC.
     """
-    cod.reply(source, destination, "Hello!")
+
+    return "Hello!"
 
 def tests2sCommand(cod, line):
     """
     A s2s command takes in 2 arguments:
 
     1. A reference to the cod instance
-    2. An IRCMessage instance with the line from the server pre-populated
+    2. An IRCLine instance with the line from the server pre-populated
     """
+
     pass
 

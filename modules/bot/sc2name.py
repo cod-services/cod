@@ -46,5 +46,5 @@ def getSC2Name():
 
 def commandSC2NAME(cod, line, splitline, source, destination):
     nick = getSC2Name()
-    cod.reply(source, destination, "Your name should be %s" % nick)
+    return "Your name should be %s" % nick
 
