@@ -22,6 +22,7 @@ freely, subject to the following restrictions:
     distribution.
 """
 
+import json
 import time
 
 class Client():
@@ -135,6 +136,25 @@ class Channel():
 
     def __str__(self):
         return self.name
+
+    def json(self):
+        chaninfo = {}
+
+        chaninfo["name"] = self.name
+        chaninfo["ts"] = self.ts
+        chaninfo["modes"] = self.modes
+        chaninfo["clients"] = []
+        chaninfo["lists"] = {}
+
+        for client in self.clients.itervalues():
+            value = {}
+
+            value["prefix"] = client.prefix
+            value["client"] = json.loads(client.client.json())
+
+            chaninfo["clients"].append(value)
+
+        return json.dumps(chaninfo)
 
     def listAdd(self, chanlist, mask):
         self.lists[chanlist].append(mask)
