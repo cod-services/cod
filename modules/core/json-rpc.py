@@ -38,7 +38,7 @@ class JsonAPI(RootPage):
         print output
 
     @cherrypy.expose
-    def clientlist(self):
+    def clientinfo(self):
         cherrypy.response.headers['Content-Type'] = 'application/json'
 
         clients = []
@@ -49,15 +49,21 @@ class JsonAPI(RootPage):
         return format_reply(clients)
 
     @cherrypy.expose
-    def channellist(self):
+    def chaninfo(self, channel=None):
         cherrypy.response.headers['Content-Type'] = 'application/json'
 
-        channels = []
+        if channel == None:
+            channels = []
 
-        for channel in self.cod.channels.itervalues():
-            channels.append(json.loads(channel.json()))
+            for channel in self.cod.channels.itervalues():
+                channels.append(json.loads(channel.json()))
 
-        return format_reply(channels)
+            return format_reply(channels)
+
+        else:
+            channel = "#" + channel
+
+            return format_reply(json.loads(self.cod.channels[channel].json()))
 
 def make_smurf():
     return makeClient("<json-rpc>", "*false*", "Fake!uSer@LOLOL", "Json-RPC", "000000000")
