@@ -63,7 +63,9 @@ class Client():
         return self.uid
 
     def json(self):
-        return '{"nick": "%s", "uid": "%s", "ts": %s, "modes": "%s", "user": "%s", "host": "%s", "ip": "%s", "login": "%s", "gecos": "%s"}' % (self.nick, self.uid, self.ts, self.modes, self.user, self.host, self.ip, self.login, self.gecos)
+        return '{"nick": %s, "uid": "%s", "ts": %s, "modes": "%s", "user": %s, "host": "%s", "ip": "%s", "login": "%s", "gecos": %s}' %\
+                (json.dumps(self.nick), self.uid, self.ts, self.modes, json.dumps(self.user),
+                        self.host, self.ip, self.login, json.dumps(self.gecos))
 
     def privmsg(self, target, message):
         """
