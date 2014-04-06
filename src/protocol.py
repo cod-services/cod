@@ -86,6 +86,7 @@ class TS6ServerConn():
             return
 
         for thatline in lines:
+            thatline = " " if thatline == "" else thatline
             self.send_line(":%s %s %s :%s" %
                     (client.uid, type, target, thatline))
 
