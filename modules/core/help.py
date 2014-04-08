@@ -41,15 +41,13 @@ def commandHELP(cod, line, splitline, source, destination):
         commands.sort()
 
         commandlist = " ".join(commands)
-
         toret = "Commands: %s" % commandlist
+        cod.notice(source, toret)
 
         if source.isOper:
             opercmds = [n.lower() for n in cod.opercommands]
             opercmds.sort()
             cod.notice(source, "Oper-only commands: %s" % " ".join(opercmds))
-
-        return toret
 
     else:
         splitline[1] = splitline[1].upper()
@@ -58,15 +56,14 @@ def commandHELP(cod, line, splitline, source, destination):
                 raise KeyError
 
             assert str(cod.botcommands[splitline[1]].__doc__) != None
-            cod.reply(source, destination, "%s: %s" %\
-                    (splitline[1], cod.botcommands[splitline[1]][0].__doc__))
+            cod.notice(source, "%s: %s" % (splitline[1], cod.botcommands[splitline[1]][0].__doc__))
         except KeyError:
             try:
                 if source.isOper:
                     assert str(cod.botcommands[splitline[1]].__doc__) != "None"
-                    return "%s: %s" % (splitline[1], cod.opercommands[splitline[1]][0].__doc__)
+                    cod.notice(source, "%s: %s" % (splitline[1], cod.opercommands[splitline[1]][0].__doc__))
                 else:
-                    return "No help available for %s." % splitline[1]
+                    cod.notice(source, "No help available for %s." % splitline[1])
             except KeyError:
-                return "No help available for %s." % splitline[1]
+                cod.notice(source, "No help available for %s." % splitline[1])
 
