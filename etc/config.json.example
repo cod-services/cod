@@ -35,7 +35,11 @@
 		"prefixfile": "etc/prefix.txt",
 		"suffixfile": "etc/suffix.txt",
 		"logfile": "var/cod.log",
-		"contrib": false
+		"contrib": false,
+		"autoload": [
+			"help", "ctcp", "memusage", "source", "youtube", "say", "dnsbl",
+			"hubstats", "tfw", "prefix", "btc"
+		]
 	},
 
 	"web": {

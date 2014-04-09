@@ -56,15 +56,21 @@ def initModule(cod):
     initDBTable(cod, "Moduleautoload", "Id INTEGER PRIMARY KEY, Name TEXT")
     initDBTable(cod, "Joins", "Id INTEGER PRIMARY KEY, Name TEXT")
 
-
     rows = lookupDB(cod, "Moduleautoload")
 
     if rows != []:
         for row in rows:
             try:
                 cod.loadmod(row[1])
-            except AttributeError:
-                pass
+            except Exception as e:
+                cod.servicesLog("%s failed load, %s" % (row[1], e))
+
+    if "autoload" in cod.config["etc"]:
+        for module in cod.config["etc"]["autoload"]:
+            try:
+                cod.loadmod("module")
+            except Exception as e:
+                cod.servicesLog("%s failed load, %s" % (module, e))
 
     rows = lookupDB(cod, "Joins")
 
