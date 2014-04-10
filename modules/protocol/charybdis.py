@@ -374,7 +374,7 @@ def handlePRIVMSG(cod, line):
 
     destination = line.args[0]
 
-    if line.args[-1][0] == "\x01": #Ignore CTCP messages
+    if line.args[-1][0] == "\x01": # Ignore CTCP messages
         return
 
     if destination[0] == "#":
@@ -440,7 +440,10 @@ def handlePRIVMSG(cod, line):
                 output = impl(cod, line, splitline, source, destination)
 
     if output != None:
-        cod.reply(source, destination, output)
+        if pm:
+            cod.notice(source, output, destination)
+        else:
+            cod.reply(source, destination, output)
 
 def handleERROR(cod, line):
     """
