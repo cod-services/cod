@@ -39,8 +39,7 @@ class NickServ(Parent):
             target))
 
     def get_info(self, target):
-        data = self.parent.atheme.command(self.parent.authcookie, self.parent.username,
-                self.parent.ipaddr, "NickServ", "INFO", target)
+        data = self.parent.command("NickServ", "INFO", target)
         raw_lines = data.split("\n")
 
         tuple = {}
