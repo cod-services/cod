@@ -1,22 +1,18 @@
-#
-# Copyright (c) 2009 William Pitcock <nenolod@atheme.org>.
-#
-# This file is licensed under the Atheme license.
-#
-
 import time
 
 from xmlrpclib import ServerProxy, Fault
 
-class AthemeNickServMethods(object):
-    """
-    Parse Atheme NickServ responses.  Since the XML interface provides the same output as the IRC interface, we
-    have to do this.  It"s kind of a pain in the ass.
-    """
+
+class Parent(object):
+    def __init__(self, parent):
+        self.parent = parent
+
+
+class NickServ(Parent):
     def __init__(self, parent):
         self.parent = parent
         self.flags = ["Hold", "HideMail", "NeverOp", "NoOp", "NoMemo",
-                "EMailMemos", "Private"]
+                      "EMailMemos", "Private"]
 
     def _parse_access(self, data):
         raw_lines = data.split("\n")
@@ -36,12 +32,10 @@ class AthemeNickServMethods(object):
         return list
 
     def list_own_access(self):
-        return self._parse_access(self.parent.atheme.command(self.parent.authcookie,
-            self.parent.username, self.parent.ipaddr, "NickServ", "LISTCHANS"))
+        return self._parse_access(self.parent.command("NickServ", "LISTCHANS"))
 
     def list_access(self, target):
-        return self._parse_access(self.parent.atheme.command(self.parent.authcookie,
-            self.parent.username, self.parent.ipaddr, "NickServ", "LISTCHANS",
+        return self._parse_access(self.parent.command("NickServ", "LISTCHANS",
             target))
 
     def get_info(self, target):
@@ -78,14 +72,13 @@ class AthemeNickServMethods(object):
         return tuple
 
     def set_password(self, password):
-        self.parent.atheme.command(self.parent.authcookie, self.parent.username,
-                self.parent.ipaddr, "NickServ", "SET", "PASSWORD", password)
+        self.parent.command("NickServ", "SET", "PASSWORD", password)
 
     def set_email(self, email):
-        self.parent.atheme.command(self.parent.authcookie, self.parent.username,
-                self.parent.ipaddr, "NickServ", "SET", "EMAIL", email)
+        self.parent.command("NickServ", "SET", "EMAIL", email)
 
-class AthemeChanServMethods(object):
+
+class ChanServ(Parent):
     """
     Parse Atheme ChanServ responses.  Since the XML interface provides the same output as the IRC interface, we
     have to do this.  It"s kind of a pain in the ass.
@@ -97,13 +90,10 @@ class AthemeChanServMethods(object):
                 "LIMITFLAGS"]
 
     def kick(self, channel, victim, reason):
-        self.parent.atheme.command(self.parent.authcookie, self.parent.username,
-                self.parent.ipaddr, "ChanServ", "KICK", channel, victim, reason)
+        self.parent.command("ChanServ", "KICK", channel, victim, reason)
 
     def get_access_list(self, channel):
-        data = self.parent.atheme.command(self.parent.authcookie,
-                self.parent.username, self.parent.ipaddr, "ChanServ", "FLAGS",
-                channel)
+        data = self.parent.command("ChanServ", "FLAGS", channel)
         raw_lines = data.split("\n")
 
         list = []
@@ -122,19 +112,13 @@ class AthemeChanServMethods(object):
         return list
 
     def get_access_flags(self, channel, nick):
-        return self.parent.atheme.command(self.parent.authcookie,
-                self.parent.username, self.parent.ipaddr, "ChanServ", "FLAGS",
-                channel, nick)
+        return self.parent.command("ChanServ", "FLAGS", channel, nick)
 
     def set_access_flags(self, channel, nick, flags):
-        self.parent.atheme.command(self.parent.authcookie, self.parent.username,
-                self.parent.ipaddr, "ChanServ", "FLAGS", channel,
-                nick, "=" + flags)
+        self.parent.command("ChanServ", "FLAGS", channel, nick, "=" + flags)
 
     def get_channel_info(self, channel):
-        data = self.parent.atheme.command(self.parent.authcookie,
-                self.parent.username, self.parent.ipaddr, "ChanServ", "INFO",
-                channel)
+        data = self.parent.command("ChanServ", "INFO", channel)
         raw_lines = data.split("\n")
 
         tuple = {}
@@ -163,22 +147,18 @@ class AthemeChanServMethods(object):
         return tuple
 
     def set_channel_flag(self, channel, flag, value):
-        self.parent.atheme.command(self.parent.authcookie, self.parent.username,
-                self.parent.ipaddr, "ChanServ", "SET", channel, flag, value)
+        self.parent.command("ChanServ", "SET", channel, flag, value)
 
-class AthemeMemoServMethods(object):
+
+class MemoServ(Parent):
     """
     Parse Atheme MemoServ responses.  Since the XML interface provides the same output as the IRC interface, we
     have to do this.  It"s kind of a pain in the ass.
     """
-    def __init__(self, parent):
-        self.parent = parent
-
     def list(self):
         list = []
 
-        data = self.parent.atheme.command(self.parent.authcookie,
-                self.parent.username, self.parent.ipaddr, "MemoServ", "LIST")
+        data = self.parent.command("MemoServ", "LIST")
         raw_lines = data.split("\n")
 
         for line in raw_lines:
@@ -193,9 +173,7 @@ class AthemeMemoServMethods(object):
         return list
 
     def read(self, number):
-        data = self.parent.atheme.command(self.parent.authcookie,
-                self.parent.username, self.parent.ipaddr, "MemoServ", "READ",
-                number)
+        data = self.parent.command("MemoServ", "READ", number)
         raw_lines = data.split("\n")
 
         fields = raw_lines[0].split(" ", 6)
@@ -204,33 +182,28 @@ class AthemeMemoServMethods(object):
         return tuple
 
     def send(self, target, message):
-        self.parent.atheme.command(self.parent.authcookie, self.parent.username,
-                self.parent.ipaddr, "MemoServ", "SEND", target, message)
+        self.parent.command("MemoServ", "SEND", target, message)
 
     def send_ops(self, target, message):
-        self.parent.atheme.command(self.parent.authcookie, self.parent.username,
-                self.parent.ipaddr, "MemoServ", "SENDOPS", target, message)
+        self.parent.command("MemoServ", "SENDOPS", target, message)
+
+    def send_group(self, target, message):
+        self.parent.command("MemoServ", "SENDGROUP", target, message)
 
     def forward(self, target, message_id):
-        self.parent.atheme.command(self.parent.authcookie, self.parent.username,
-                self.parent.ipaddr, "MemoServ", "FORWARD", target, message_id)
+        self.parent.command("MemoServ", "FORWARD", target, message_id)
 
     def delete(self, message_id):
-        self.parent.atheme.command(self.parent.authcookie, self.parent.username,
-                self.parent.ipaddr, "MemoServ", "DELETE", message_id)
+        self.parent.command("MemoServ", "DELETE", message_id)
 
     def ignore_add(self, target):
-        self.parent.atheme.command(self.parent.authcookie, self.parent.username,
-                self.parent.ipaddr, "MemoServ", "IGNORE", "ADD", target)
+        self.parent.command("MemoServ", "IGNORE", "ADD", target)
 
     def ignore_delete(self, target):
-        self.parent.atheme.command(self.parent.authcookie, self.parent.username,
-                self.parent.ipaddr, "MemoServ", "IGNORE", "DEL", target)
+        self.parent.command("MemoServ", "IGNORE", "DEL", target)
 
     def ignore_list(self):
-        data = self.parent.atheme.command(self.parent.authcookie,
-                self.parent.username, self.parent.ipaddr, "MemoServ", "IGNORE",
-                "LIST")
+        data = self.parent.command("MemoServ", "IGNORE", "LIST")
         raw_lines = data.split("\n")
 
         list = []
@@ -248,22 +221,15 @@ class AthemeMemoServMethods(object):
         return list
 
     def ignore_clear(self):
-        self.parent.atheme.command(self.parent.authcookie, self.parent.username,
-                self.parent.ipaddr, "MemoServ", "IGNORE", "CLEAR")
+        self.parent.command("MemoServ", "IGNORE", "CLEAR")
 
-class AthemeOperServMethods(object):
-    def __init__(self, parent):
-        self.parent = parent
 
+class OperServ(Parent):
     def akill_add(self, mask, reason="Requested"):
-        return self.parent.atheme.command(self.parent.authcookie,
-                self.parent.username, self.parent.ipaddr, "OperServ", "AKILL",
-                "ADD", mask, reason)
+        return self.parent.command("OperServ", "AKILL", "ADD", mask, reason)
 
     def akill_list(self):
-        akills = self.parent.atheme.command(self.parent.authcookie,
-                self.parent.username, self.parent.ipaddr, "OperServ", "AKILL",
-                "LIST", "FULL").split("\n")[1:-1]
+        akills = self.parent.command("OperServ", "AKILL", "LIST", "FULL").split("\n")[1:-1]
         akillset = {}
 
         for i in akills:
@@ -278,31 +244,28 @@ class AthemeOperServMethods(object):
         return akillset
 
     def akill_del(self, num):
-        self.parent.atheme.command(self.parent.authcookie, self.parent.username,
-                self.parent.ipaddr, "OperServ", "AKILL", "DEL", num)
+        self.parent.command("OperServ", "AKILL", "DEL", num)
 
     def kill(self, target):
-        return self.parent.atheme.command(self.parent.authcookie,
-                self.parent.username, self.parent.ipaddr, "OperServ", "KILL", target)
+        return self.parent.command("OperServ", "KILL", target)
 
     def mode(self, modestring):
-        return self.parent.atheme.command(self.parent.authcookie,
-                self.parent.username, self.parent.ipaddr, "OperServ", "MODE",
-                modestring)
+        return self.parent.command("OperServ", "MODE", modestring)
 
-class AthemeHostServMethods(object):
-    def __init__(self, parent):
-        self.parent = parent
+
+class HostServ(Parent):
+    """
+    Methods for HostServ functionality.
+    """
 
     def activate(self, account):
-        self.parent.atheme.command(self.parent.authcookie,
-                self.parent.username, self.parent.ipaddr, "HostServ",
-                "ACTIVATE", account)
+        self.parent.command("HostServ", "ACTIVATE", account)
 
     def listvhost(self, mask="*"):
-        vhosts = self.parent.atheme.command(self.parent.authcookie,
-                self.parent.username, self.parent.ipaddr, "HostServ", "LISTVHOST",
-                mask)
+        """
+        Return a list of all vhosts (with metadata) by mask
+        """
+        vhosts = self.parent.command("HostServ", "LISTVHOST", mask)
 
         reply = []
 
@@ -318,23 +281,28 @@ class AthemeHostServMethods(object):
         return reply
 
     def request(self, vhost):
-        self.parent.atheme.command(self.parent.authcookie, self.parent.username,
-                self.parent.ipaddr, "HostServ", "REQUEST", vhost)
+        """
+        Request a vhost
+        """
+
+        self.parent.command("HostServ", "REQUEST", vhost)
 
     def reject(self, account, reason=None):
+        """
+        Reject a vhost request
+        """
+
         if reason is not None:
-            self.parent.atheme.command(self.parent.authcookie,
-                    self.parent.username, self.parent.ipaddr, "HostServ",
-                    "REJECT", account, reason)
+            self.parent.command("HostServ", "REJECT", account, reason)
         else:
-            self.parent.atheme.command(self.parent.authcookie,
-                    self.parent.username, self.parent.ipaddr, "HostServ",
-                    "REJECT", account)
+            self.parent.command("HostServ", "REJECT", account)
 
     def waiting(self):
-        waitinglist = self.parent.atheme.command(self.parent.authcookie,
-                self.parent.username, self.parent.ipaddr, "HostServ",
-                "WAITING").split("\n")
+        """
+        Get a list of all the vhosts that are waiting to be accepted
+        """
+
+        waitinglist = self.parent.command("HostServ", "WAITING").split("\n")
         vhosts = []
 
         for line in waitinglist:
@@ -346,23 +314,105 @@ class AthemeHostServMethods(object):
 
         return vhosts
 
+
+class ALIS(Parent):
+    """
+    Methods for the advanced channel lister
+    """
+
+    def list(self, mask="*", popcount=10):
+        """
+        List channels by mask and/or population count
+        """
+
+        data = self.parent.command("ALIS", "LIST", mask, "-min", popcount).split("\n")
+
+        data = data[1:-1] # shuck the data
+
+        chans = []
+        for segment in data:
+            channel = {}
+
+            if segment == "Maximum channel output reached":
+                continue
+
+            segment = segment.split()
+
+            channel["name"] = segment[0]
+            channel["safename"] = segment[0][1:]
+            channel["population"] = segment[1]
+            channel["topic"] = " ".join(segment[2:])[1:]
+
+            chans.append(channel)
+
+        return chans
+
+
+class InfoServ(Parent):
+    """
+    InfoServ methods.
+    """
+
+    def list(self):
+        """
+        List all InfoServ news
+        """
+
+        data = self.parent.command("InfoServ", "LIST")
+        data = data.split("\n")
+        data = data[:-1]
+
+        posts = []
+
+        for line in data:
+            post = {}
+
+            topic = line.split("[")[1].split("]")[0]
+            line  = line.split("[")[1].split("]")[1]
+
+            poster = line.split()[1]
+            time = line.split()[3]
+            date = line.split()[5][:-1]
+            contents = " ".join(line.split()[6:])
+
+            post["poster"] = poster
+            post["time"] = time
+            post["date"] = date
+            post["contents"] = contents
+            post["topic"] = topic
+
+            posts.append(post)
+
+        return posts
+
+
 class AthemeXMLConnection(object):
     def __init__(self, url, ipaddr="0.0.0.0"):
-        self.proxy    = ServerProxy(url)
-        self.chanserv = AthemeChanServMethods(self)
-        self.memoserv = AthemeMemoServMethods(self)
-        self.nickserv = AthemeNickServMethods(self)
-        self.operserv = AthemeOperServMethods(self)
-        self.hostserv = AthemeHostServMethods(self)
+        self.proxy = ServerProxy(url)
+        self.chanserv = ChanServ(self)
+        self.memoserv = MemoServ(self)
+        self.nickserv = NickServ(self)
+        self.operserv = OperServ(self)
+        self.hostserv = HostServ(self)
+        self.infoserv = InfoServ(self)
+        self.alis = ALIS(self)
         self._privset = None
-        self.ipaddr   = ipaddr
+        self.ipaddr = ipaddr
+        self.username = "*"
+        self.authcookie = "*"
 
     def __getattr__(self, name):
         return self.proxy.__getattr__(name)
 
+    def command(self, service, *parv):
+        return self.atheme.command(self.authcookie, self.username, self.ipaddr,
+                                   service, *parv)
+
     def login(self, username, password):
         self.username = username
         self.authcookie = self.atheme.login(username, password)
+
+        self.get_privset()
 
     def logout(self):
         self.atheme.logout(self.authcookie, self.username)
@@ -380,18 +430,18 @@ class AthemeXMLConnection(object):
                 return True
             else:
                 return False
-        except ValueError, e:
+        except ValueError:
             return False
 
     def register(self, username, password, email):
         try:
-            return self.atheme.command("*", "*", "*", "NickServ", "REGISTER",
-                    username, password, email)
+            return self.atheme.command("*", "*", self.ipaddr, "NickServ", "REGISTER", username, password, email)
         except Fault, e:
             if e.faultString == "A user matching this account is already on IRC.":
                 return "Error: " + e.faultString + "  If you are already connected to IRC using this nickname, please complete the registration procedure through IRC."
 
             return "Error: " + e.faultString
+
 
 class CodAthemeConnector():
     def __init__(self, cod):
@@ -403,7 +453,7 @@ class CodAthemeConnector():
 
     def __login(self):
         self.atheme.login(self.cod.config["me"]["nick"],
-                self.cod.config["me"]["servicespass"])
+                          self.cod.config["me"]["servicespass"])
         self.time = time.time()
 
         self.cod.log("Logged into XMLRPC")
@@ -416,4 +466,3 @@ class CodAthemeConnector():
             return getattr(self.atheme, name)
         else:
             return object().__getattr__(self, name)
-
