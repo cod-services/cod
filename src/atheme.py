@@ -79,8 +79,7 @@ class NickServ(Parent):
 
 class ChanServ(Parent):
     """
-    Parse Atheme ChanServ responses.  Since the XML interface provides the same output as the IRC interface, we
-    have to do this.  It"s kind of a pain in the ass.
+    ChanServ functions
     """
     def __init__(self, parent):
         self.parent = parent
@@ -151,9 +150,9 @@ class ChanServ(Parent):
 
 class MemoServ(Parent):
     """
-    Parse Atheme MemoServ responses.  Since the XML interface provides the same output as the IRC interface, we
-    have to do this.  It"s kind of a pain in the ass.
+    MemoServ functions
     """
+
     def list(self):
         list = []
 
