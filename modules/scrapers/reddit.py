@@ -48,30 +48,28 @@ def redditLookup(cod, target, line):
 
     chatline = line.args[-1]
 
-    posidt = None
+    postid = None
 
     try:
         postid = REDDIT_REGEX.split(chatline)[2]
     except:
         return
 
-    try:
-        info = requests.get("http://reddit.com/%s/.json" % postid).json()
+    headers = {"User-Agent": "Cod Services"}
+    info = requests.get("http://reddit.com/%s/.json" % postid, headers=headers).json()
 
-        title = info[0]["data"]["children"][0]["data"]["title"]
-        board = info[0]["data"]["children"][0]["data"]["subreddit"]
-        author = info[0]["data"]["children"][0]["data"]["author"]
-        url = info[0]["data"]["children"][0]["data"]["url"]
+    title = info[0]["data"]["children"][0]["data"]["title"]
+    board = info[0]["data"]["children"][0]["data"]["subreddit"]
+    author = info[0]["data"]["children"][0]["data"]["author"]
+    url = info[0]["data"]["children"][0]["data"]["url"]
 
-        link = " - URL: %s" % url
+    link = " - URL: %s" % url
 
-        if url in chatline:
-            link = ""
+    if url in chatline:
+        link = ""
 
-        string = "^ Reddit: %s posted to /r/%s: %s%s" %\
-                (author, board, title, link)
+    string = "^ Reddit: %s posted to /r/%s: %s%s" %\
+            (author, board, title, link)
 
-        cod.privmsg(line.args[0], string)
-    except Exception as e:
-        cod.privmsg(line.args[0], "There was some error looking up that post: %s" % e.message)
+    cod.privmsg(line.args[0], string)
 
