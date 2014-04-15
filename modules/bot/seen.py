@@ -50,7 +50,7 @@ def commandSEEN(cod, line, splitline, source, destination):
         if info["Last seen"] == "now":
             return "%s is online." % account
         else:
-            return "%s was last seen %s with quit reason %s" %\
+            return "%s was last seen %s with quit reason: %s" %\
                    (account, info["Last seen"], info["Last quit"])
 
     except Fault:
