@@ -22,17 +22,19 @@ freely, subject to the following restrictions:
     distribution.
 """
 
-NAME="seen"
-DESC="Shows last seen date of an account on NickServ"
+NAME = "seen"
+DESC = "Shows last seen date of an account on NickServ"
+
+from xmlrpclib import Fault
+
 
 def initModule(cod):
     cod.addBotCommand("SEEN", commandSEEN)
 
+
 def destroyModule(cod):
     cod.delBotCommand("SEEN")
 
-def rehash():
-    pass
 
 def commandSEEN(cod, line, splitline, source, destination):
     "Shows you when NickServ last saw a user - Params: account to look up"
@@ -44,7 +46,14 @@ def commandSEEN(cod, line, splitline, source, destination):
 
     try:
         info = cod.services.nickserv.get_info(account)
-        return "%s was last seen %s" % (account, info["Last seen"])
-    except:
-        cod.reply(source, destination, "%s is unknown to me" % account)
 
+        if info["Last seen"] == "now":
+            return "%s is online." % account
+        else:
+            return "%s was last seen %s with quit reason %s" %\
+                   (account, info["Last seen"], info["Last quit"])
+
+    except Fault:
+        cod.reply(source, destination, "%s is unknown to me" % account)
+    except Exception:
+        raise
