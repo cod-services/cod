@@ -4,6 +4,8 @@ import json
 from structures import makeClient
 from web import RootPage
 
+DESC="Json API"
+
 def initModule(cod):
     cod.webapp.root.add_page("json", JsonAPI)
 
