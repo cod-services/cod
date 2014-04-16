@@ -391,7 +391,7 @@ class Cod():
         if source is None:
             source = self.client
 
-        self.protocol.kill(client, target, message)
+        self.protocol.kill(source, target, message)
 
         self.clients.pop(target.uid)
 
