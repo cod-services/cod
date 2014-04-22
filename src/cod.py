@@ -558,6 +558,7 @@ class Cod():
                 self.sendLine(self.client.quit())
 
                 for module in self.modules:
+                    #XXX
                     if module == "elemental-ircd" or module == "inspircd":
                         continue
                     elif module == "admin":
@@ -575,6 +576,10 @@ class Cod():
         self.log("Oh, I am slain.")
 
     def process(self, args):
+        """
+        Called when Cod is selected.
+        """
+
         tbuf = self.link.recv(2048)
         tbuf = self.buf + tbuf
 
