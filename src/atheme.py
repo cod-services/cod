@@ -39,7 +39,8 @@ class NickServ(Parent):
             target))
 
     def get_info(self, target):
-        data = self.parent.command("NickServ", "INFO", target)
+        data = self.parent.atheme.command(self.parent.authcookie, self.parent.username,
+                self.parent.ipaddr, "NickServ", "INFO", target)
         raw_lines = data.split("\n")
 
         tuple = {}
@@ -79,7 +80,8 @@ class NickServ(Parent):
 
 class ChanServ(Parent):
     """
-    ChanServ functions
+    Parse Atheme ChanServ responses.  Since the XML interface provides the same output as the IRC interface, we
+    have to do this.  It"s kind of a pain in the ass.
     """
     def __init__(self, parent):
         self.parent = parent
@@ -150,9 +152,9 @@ class ChanServ(Parent):
 
 class MemoServ(Parent):
     """
-    MemoServ functions
+    Parse Atheme MemoServ responses.  Since the XML interface provides the same output as the IRC interface, we
+    have to do this.  It"s kind of a pain in the ass.
     """
-
     def list(self):
         list = []
 
