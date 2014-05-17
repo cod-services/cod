@@ -49,7 +49,7 @@ class Relay:
         self.buf = ""
 
     def relay_chanmsg(self, cod, target, line):
-        if line.source.nick.endswith("`"):
+        if line.source.nick.endswith("|%s" % cod.config["relay"]["shortname"]):
             return
 
         if self.channel.name == target.name:
@@ -68,14 +68,18 @@ class Relay:
 
     def handlePRIVMSG(self, line):
         message = line.args[-1]
-        client = self.clients[line.source.nick]
+        try:
+            client = self.clients[line.source.nick]
 
-        channel = self.cod.channels[self.channel.name]
+            channel = self.cod.channels[self.channel.name]
 
-        line.source = client
+            line.source = client
 
-        self.cod.protocol.privmsg(client, self.channel, message)
-        self.cod.runHooks("chanmsg", [channel, line])
+            self.cod.protocol.privmsg(client, self.channel, message)
+            self.cod.runHooks("chanmsg", [channel, line])
+        except KeyError:
+            self.cod.privmsg(channel, "<-%s> %s" % line.source.nick, message)
+            self.send_line("WHO %s" % channel)
 
     def handlePING(self, line):
         self.send_line("PONG :%s" % " ".join(line.args))
@@ -88,15 +92,23 @@ class Relay:
         host = line.args[3]
 
         if nick not in self.clients:
+            if nick == self.cod.config["relay"]["nick"]:
+                return
+
             channel = self.cod.channels[line.args[1]]
 
-            client = makeClient(nick + "`", user, host, line.args[-1], self.cod.getUID())
+            client = makeClient(nick + "|" + self.cod.config["relay"]["shortname"], user,
+                    host, line.args[-1], self.cod.getUID())
 
             self.cod.protocol.add_client(client)
             self.cod.clients[client.uid] = client
 
             channel.clientAdd(client)
             self.cod.protocol.join_client(client, channel)
+
+            self.cod.protocol.add_metadata(client, "SWHOIS",
+                    "User is actually connected to %s" %
+                    self.cod.config["relay"]["netname"])
 
             self.clients[nick] = client
 
@@ -109,21 +121,20 @@ class Relay:
 
         client = self.clients[line.source.nick]
 
-        nick = line.args[-1] + "`"
+        self.send_line("WHO %s" % line.args[-1])
 
-        client.nick = nick
-        self.cod.clients[client.uid].nick = nick
+        self.cod.protocol.quit(client, "Changing details")
 
-        self.cod.protocol.change_nick(client, client.nick)
-        self.clients[client.nick] = client
+        del self.clients[line.source.nick]
+        del self.cod.clients[client.uid]
 
     def handleKICK(self, line):
         kicker = self.clients[line.source.nick]
-        client = client = self.clients[line.args[1]]
+        client = self.clients[line.args[1]]
 
         self.cod.protocol.quit(client, "Kicked by %s: %s" % (kicker.nick, line.args[-1]))
 
-        del self.clients[client.nick[:-1]]
+        del self.clients[client.nick.split("|")[0]]
         del self.cod.clients[client.uid]
 
     def handle376(self, line):
@@ -134,7 +145,7 @@ class Relay:
 
         self.cod.protocol.quit(client, line.args[-1])
 
-        del self.clients[client.nick[:-1]]
+        del self.clients[line.source.nick]
         del self.cod.clients[client.uid]
 
     def go(self):
@@ -173,6 +184,7 @@ class Relay:
 
     def processLines(self, lines):
         for line in lines:
+            line = "".join([x if ord(x) < 128 else '?' for x in line])
             self.cod.log(line, "RL<")
 
             line = IRCMessage(line)
