@@ -69,7 +69,10 @@ def handleCloak(cod, newclient):
         #If they are authed, they probably have a vhost or are getting re-bursted
         #so it would be a Bad Idea to cloak them
         if newclient.login != "*":
-            return
+            if cod.config["autocloak"]["list"][newclient.ip].startswith("bnc."):
+                pass
+            else:
+                return
 
         cloaksuffix = cod.config["autocloak"]["list"][newclient.ip]
         ident = newclient.user + cod.config["me"]["netname"]
