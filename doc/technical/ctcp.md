@@ -433,7 +433,7 @@ The known request/reply pairs are for the following commands.
 
 This is used to get a user's real name, and perhaps also the idle time
 of the user (this usage has been obsoleted by enhancements to the IRC
-protocol. The request is in a "privmsg" and looks like
+protocol). The request is in a "privmsg" and looks like
 
     \001FINGER\001
 
