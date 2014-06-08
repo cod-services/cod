@@ -34,3 +34,6 @@ The official channel for Cod is `#cod` on `irc.yolo-swag.com`. Come take
 a visit and say hi! Anyone with halfop (`%`) or higher has direct push access 
 and the live instance is called `ShadowNET`.
 
+Due to some problems with how InspIRCd works, support for it will be minimal
+at best. If you are having issues please leave a full stack trace of the problem,
+as well as a sql dump of your cod database.
