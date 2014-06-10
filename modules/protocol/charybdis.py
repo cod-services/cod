@@ -214,7 +214,11 @@ def handleSJOIN(cod, line):
     finally:
         channel = cod.channels[line.args[1]]
         #Set channel modes
-        channel.modes = line.args[2]
+        for mode in line.args[2]:
+            try:
+                channel.add_prop_by_letter(True, mode)
+            except KeyError:
+                pass
 
         #Join users to channel
         uids = line.args[-1].split(" ")
@@ -226,7 +230,7 @@ def handleSJOIN(cod, line):
 
             client = cod.clients[uid]
 
-            channel.clientAdd(client, prefix)
+            channel.add_member(client, prefix)
 
             if cod.bursted:
                 cod.runHooks("join", [client, channel])
