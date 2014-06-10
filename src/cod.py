@@ -570,7 +570,7 @@ class Cod():
 
                 self.sendLine("SQUIT :Killed.")
 
-                os.system("kill -s SIGKILL %d" % self.pid)
+                os.system("kill -9 %d" % self.pid)
                 sys.exit(0)
 
         self.log("Oh, I am slain.")
@@ -613,7 +613,7 @@ class Cod():
 
             if lineobj.verb == "ERROR":
                 #If ERROR is sent, it's already fatal.
-                raise KeyboardInterrupt
+                raise IOError
 
             #Handle server commands
             try:
