@@ -43,18 +43,22 @@ def sendfileCMD(cod, line, splitline, source, destination):
         cod.reply(source, destination, "SENDFILE <target> <path>")
         return
 
-    with open("etc/sendfile/" + splitline[2], "r") as f:
-        for line in f:
-            if line.endswith("\n"):
-                line = line[:-1]
-            elif line.endswith("\r"):
-                line = line[:-1]
+    try:
+        with open("etc/sendfile/" + splitline[2], "r") as f:
+            for line in f:
+                if line.endswith("\n"):
+                    line = line[:-1]
+                elif line.endswith("\r"):
+                    line = line[:-1]
 
-            if line == "":
-                line = " "
+                if line == "":
+                    line = " "
 
-            cod.privmsg(splitline[1], line)
+                cod.privmsg(splitline[1], line)
 
-    cod.servicesLog("%s: SENDFILE %s: %s" %
+        cod.servicesLog("%s: SENDFILE %s: %s" %
             (source.nick, splitline[1], splitline[2]))
+
+    except IOError:
+        cod.notice(source, "No such file")
 
