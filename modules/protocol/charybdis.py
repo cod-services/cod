@@ -29,10 +29,12 @@ from structures import *
 from utils import *
 from protocol import TS6ServerConn
 
-CHANMODES=["eIbq", "k" ,"flj" ,"CDEFGJKLMOPQTcdgimnpstz", "yaohv"]
+CHANMODES=["eIbq", "k", "flj", "CDEFGJKLMNOPQTcdgimnpstuz", "yahov"]
 
 NAME="TS6 protocol module"
 DESC="Handles login and protocol commands for TS6 servers"
+
+sidhack = ""
 
 def initModule(cod):
     cod.loginFunc = login
@@ -58,6 +60,8 @@ def initModule(cod):
     cod.s2scommands["ERROR"] = [handleERROR]
     cod.s2scommands["SQUIT"] = [handleSQUIT]
     cod.s2scommands["TMODE"] = [handleTMODE]
+    cod.s2scommands["PASS"] = [handlePASS]
+    cod.s2scommands["SERVER"] = [handleSERVER]
 
     cod.s2scommands["PRIVMSG"].append(handlePRIVMSG)
 
@@ -524,4 +528,16 @@ def handlePING(cod, line):
     cod.sendLine(":%s PONG %s :%s" %
             (cod.sid, cod.config["me"]["name"],
                 line.source))
+
+def handlePASS(cod, line):
+    global sidhack
+
+    sidhack = line.args[-1]
+
+def handleSERVER(cod, line):
+    global sidhack
+
+    servername, hops, real = line.args
+
+    cod.servers[sidhack] = Server(sidhack, servername, hops, real)
 
