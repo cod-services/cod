@@ -22,7 +22,6 @@ freely, subject to the following restrictions:
     distribution.
 """
 
-import json
 import time
 
 class Client():
@@ -61,11 +60,6 @@ class Client():
         Output : Client UID
         """
         return self.uid
-
-    def json(self):
-        return '{"nick": %s, "uid": "%s", "ts": %s, "modes": "%s", "user": %s, "host": "%s", "ip": "%s", "login": "%s", "gecos": %s}' %\
-                (json.dumps(self.nick), self.uid, self.ts, self.modes, json.dumps(self.user),
-                        self.host, self.ip, self.login, json.dumps(self.gecos))
 
     def privmsg(self, target, message):
         """
@@ -123,6 +117,7 @@ class Channel():
     """
     Channel data structure
     """
+
     def __init__(self, name, ts):
         """
         Inputs: Name of channel, channel timestamp
@@ -138,25 +133,6 @@ class Channel():
 
     def __str__(self):
         return self.name
-
-    def json(self):
-        chaninfo = {}
-
-        chaninfo["name"] = self.name
-        chaninfo["ts"] = self.ts
-        chaninfo["modes"] = self.modes
-        chaninfo["clients"] = []
-        chaninfo["lists"] = {}
-
-        for client in self.clients.itervalues():
-            value = {}
-
-            value["prefix"] = client.prefix
-            value["client"] = json.loads(client.client.json())
-
-            chaninfo["clients"].append(value)
-
-        return json.dumps(chaninfo)
 
     def listAdd(self, chanlist, mask):
         self.lists[chanlist].append(mask)
@@ -180,11 +156,6 @@ class Channel():
         except Exception as e:
             print type(e), e.message
 
-class FakeLine():
-    def __init__(self, line):
-        self.nick = line.source.nick
-        self.message = line.args[-1]
-
 class ChanUser():
     """
     Stub channel user structure for prefix tracking
@@ -197,6 +168,7 @@ class Server():
     """
     Information on servers goes here
     """
+
     def __init__(self, sid, name, hops, realname):
         self.sid = sid
         self.name = name
