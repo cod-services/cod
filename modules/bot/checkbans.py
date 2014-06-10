@@ -49,5 +49,5 @@ def cmdCHECKBANS(cod, line, splitline, source, destination):
 
     cod.notice(source, "\n".join(ret))
 
-    cod.servicesLog("%s: CHECKBANS %s" % (source.nick, channel.name))
+    cod.servicesLog("%s: CHECKBANS %s" % (source.nick, ban))
 
