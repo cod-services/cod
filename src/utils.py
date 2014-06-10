@@ -75,14 +75,3 @@ def addtoDB(cod, query):
     cod.db.commit()
     cod.log("DB: %s" % query, "===")
 
-def banUser(cod, client, channel, me=None):
-    ts = cod.clients[channel].ts
-    mask = "*!*@%s" % client.host
-
-    cod.sendLine(":%s TMODE %d %s +b %s" %
-            (me.uid, ts, channel, mask))
-
-def kickUser(cod, client, channel, reason, me=None):
-    cod.sendLine(":%s KICK %s %s :%s" %
-            (me.uid, channel, client))
-
