@@ -153,7 +153,7 @@ def handleQUIT(cod, line):
     client = cod.clients[line.source]
 
     for chanuser in client.channels:
-        chanuser.channel.del_member(client)
+        chanuser.channel.del_member(chanuser)
 
     cod.pop_empty_channels()
 
