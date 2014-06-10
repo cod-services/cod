@@ -144,17 +144,6 @@ class Channel():
 
         client.channels.append(self)
 
-    def addMessage(self, line):
-        if len(self.msgbuffer) == 5:
-            self.msgbuffer.pop(0)
-
-        try:
-            fakeline = FakeLine(line)
-
-            self.msgbuffer.append(fakeline)
-        except Exception as e:
-            print type(e), e.message
-
 class ChanUser():
     """
     Stub channel user structure for prefix tracking
