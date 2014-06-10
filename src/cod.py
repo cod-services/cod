@@ -460,7 +460,7 @@ class Cod():
         for chname in self.channels:
             channel = self.channels[chname]
 
-            if len(channel.clients) == 0 and "P" not in channel.modes:
+            if len(channel.clients) == 0:
                 murderlist.append(channel)
 
         for victim in murderlist:
