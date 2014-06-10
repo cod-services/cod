@@ -180,7 +180,7 @@ def handleJOIN(cod, line):
     """
 
     if line.args[0] == "0":
-        cod.clients[line.source].channnels =
+        cod.clients[line.source].channnels = []
         cod.pop_empty_channels()
         return
 
