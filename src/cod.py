@@ -559,7 +559,7 @@ class Cod():
 
                 for module in self.modules:
                     #XXX
-                    if module == "elemental-ircd" or module == "inspircd":
+                    if module == "elemental-ircd" or module == "charybdis":
                         continue
                     elif module == "admin":
                         continue

@@ -20,31 +20,6 @@ service {
 };
 ```
 
-## InspIRCd
-
-Cod requires the same InspIRCd modules that Atheme does. An example 
-configuration for linking InspIRCd to Cod is shown below:
-
-```
-<uline server="cod.int">
-
-<link name="cod.int"
-      ipaddr="localhost"
-      port="7001"
-      allowmask="127.0.0.0/8"
-      sendpass="password"
-      recvpass="password">
-
-#Absolutely required.
-<module name="m_spanningtree.so">
-<module name="m_services_account.so">
-<module name="m_servprotect.so">
-<module name="m_chghost.so">
-
-# Needed for SVSOPER
-<module name="m_svsoper.so">
-```
-
 ## Tethys
 
 Tethys configuration subject to change without notice.

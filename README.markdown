@@ -25,15 +25,10 @@ licensed per file as appropriate.
  - SpanningTree/TS6 link protocol support
    - Charybdis 3.4.2 +
    - Elemental-IRCd 6.5 +
-   - InspIRCd 2.0.x
    - Tethys 0.1 +
-   - Experimental support for ircd-hybrid+plexus
  - Virtual environment support
 
 The official channel for Cod is `#cod` on `irc.yolo-swag.com`. Come take
 a visit and say hi! Anyone with halfop (`%`) or higher has direct push access 
 and the live instance is called `ShadowNET`.
 
-Due to some problems with how InspIRCd works, support for it will be minimal
-at best. If you are having issues please leave a full stack trace of the problem,
-as well as a sql dump of your cod database.

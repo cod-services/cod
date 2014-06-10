@@ -18,8 +18,8 @@ $ sudo apk add py-pip py-virtualenv python-dev libxml2-dev libxslt-dev
 ### Installation:
 
 1. Set up an IRC network using Charybdis, Tethys, ShadowIRCD, Elemental-IRCd, 
-   InspIRCd, or any other TS6 daemon. If in doubt choose `charybdis` as your 
-   link protocol.
+   or any other TS6 daemon. If in doubt choose `charybdis` as your link 
+   protocol.
 2. Create a link block like [this](https://gist.github.com/lyska/9c8a8e1a1102cbee61c7).
 3. Copy `etc/config.json.example` to a file of your choice. Read `Configuration.markdown`
    for more detailed explanation about each of the configuration elements.
