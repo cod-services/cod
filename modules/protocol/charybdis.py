@@ -153,7 +153,7 @@ def handleQUIT(cod, line):
     client = cod.clients[line.source]
 
     for chanuser in client.channels:
-        chanuser.channel.del_member(client.uid)
+        chanuser.channel.del_member(client)
 
     cod.pop_empty_channels()
 
@@ -197,7 +197,7 @@ def handlePART(cod, line):
     """
     channel = cod.channels[line.args[0]]
 
-    channel.del_member(line.source)
+    channel.del_member(cod.clients[line.source])
 
     cod.pop_empty_channels()
 
