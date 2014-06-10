@@ -434,22 +434,6 @@ class Cod():
 
         client.channels.remove(channel.name)
 
-    def kill_stale_references(self, client):
-        client = cod.clients["%s" % client]
-
-        for chname in self.channels:
-            channel = self.channels[chname]
-
-            murderlist = []
-
-            for uid in channel.clients:
-                cli = channel.clients[uid]
-                if cli.client.uid == client.uid:
-                    murderlist.append(uid)
-
-            for uid in murderlist:
-                del channel.clients[uid]
-
     def pop_empty_channels(self):
         """
         Remove information on any empty channels

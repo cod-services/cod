@@ -150,7 +150,11 @@ def handleQUIT(cod, line):
     Handles a client quitting from the network
     """
 
-    cod.kill_stale_references(line.source)
+    client = cod.clients[line.source]
+
+    for chanuser in client.channels:
+        chanuser.channel.del_member(client.uid)
+
     cod.pop_empty_channels()
 
     cod.clients.pop(line.source)
@@ -176,8 +180,7 @@ def handleJOIN(cod, line):
     """
 
     if line.args[0] == "0":
-        cod.clients[line.source].channnels = []
-        cod.kill_stale_references(cod.clients[line.source])
+        cod.clients[line.source].channnels =
         cod.pop_empty_channels()
         return
 
