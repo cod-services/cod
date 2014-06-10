@@ -20,10 +20,6 @@
 #    distribution.
 #
 
-FLAG_NONE           = 0x0000 # No connection flags
-FLAG_REGISTERED     = 0x0001 # Registered as a client with the server
-FLAG_WS_NOHANDSHAKE = 0x0002 # Websocket client that has yet to handshake
-
 CHFL_PEON   = 0x0000 # No channel status
 CHFL_VOICE  = 0x0001 # Old +v, voiced user
 CHFL_HALFOP = 0x0002 # Old +h, half-operator
