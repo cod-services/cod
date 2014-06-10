@@ -526,7 +526,7 @@ def handlePING(cod, line):
 
     cod.sendLine(":%s PONG %s :%s" %
             (cod.sid, cod.config["me"]["name"],
-                line.source))
+                line.args[-1]))
 
 def handlePASS(cod, line):
     global sidhack
