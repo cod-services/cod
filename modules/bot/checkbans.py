@@ -48,7 +48,8 @@ def cmdCHECKBANS(cod, line, splitline, source, destination):
             for mask, banobj in banlist.iteritems():
                 mask = mask.replace("*", "").lower()
                 if fnmatch(mask, ban):
-                    ret.append("%s in %s by %s on %s" % (kind, name, banobj.setter, banobj.ts))
+                    ret.append("%s in %s by %s on %s (%s)" %\
+                            (kind, name, banobj.setter, banobj.ts, banobj.mask))
 
     cod.notice(source, "\n".join(ret))
 
