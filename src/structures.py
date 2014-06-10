@@ -112,7 +112,6 @@ def makeClient(nick, user, host, name, uid):
     """
     return Client(nick, uid, "0", "+Si", user, host, "*", nick, name)
 
-
 class Channel():
     """
     Channel data structure
@@ -169,9 +168,10 @@ class Server():
     Information on servers goes here
     """
 
-    def __init__(self, sid, name, hops, realname):
+    def __init__(self, sid, name=None, hops=None, realname=None):
         self.sid = sid
         self.name = name
         self.hops = hops
         self.realname = realname
+        self.clients = []
 
