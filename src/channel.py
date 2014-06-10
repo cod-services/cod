@@ -21,6 +21,9 @@
 #
 
 from modes import *
+from utils import CaseInsensitiveDict
+
+import time
 
 class ChanUser:
     """
