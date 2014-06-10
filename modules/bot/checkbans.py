@@ -20,6 +20,8 @@
 #    distribution.
 #
 
+from fnmatch import fnmatch
+
 NAME="channel info"
 DESC="Shows detailed channel information"
 
@@ -44,7 +46,8 @@ def cmdCHECKBANS(cod, line, splitline, source, destination):
     for name, channel in cod.channels.iteritems():
         for kind, banlist in channel.lists.iteritems():
             for mask, banobj in banlist.iteritems():
-                if ban == mask.lower():
+                mask = mask.replace("*", "").lower()
+                if fnmatch(mask, ban):
                     ret.append("%s in %s by %s on %s" % (kind, name, banobj.setter, banobj.ts))
 
     cod.notice(source, "\n".join(ret))
