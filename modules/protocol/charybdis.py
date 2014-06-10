@@ -319,7 +319,7 @@ def handleTMODE(cod, line):
                 ban = Ban(params[paramcounter], None, None)
                 channel.add_ban(CHANMODES[0][mode], ban)
             else:
-                channel.del_ban(CHANMODES[0][mode], params[parc])
+                channel.del_ban(CHANMODES[0][mode], params[paramcounter])
 
             paramcounter = paramcounter + 1
 
