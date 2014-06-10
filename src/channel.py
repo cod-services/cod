@@ -115,7 +115,7 @@ class Ban:
         if setter is None:
             self.setter = "A.TS6.server"
         else:
-            self.setter = setter.account if setter.account != "*" else setter.nick
+            self.setter = setter.login if setter.login != "*" else setter.nick
 
         self.reason = reason if reason else "No reason given"
 
