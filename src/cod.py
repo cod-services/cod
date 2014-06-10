@@ -38,13 +38,14 @@ import socket
 import os
 import sys
 import ssl
+import time
 import gc
 import sqlite3 as lite
 import traceback
 
-from structures import *
+from channel import Channel, ChanUser
+from structures import Client, makeService
 from utils import *
-
 
 class Cod():
 
@@ -381,7 +382,8 @@ class Cod():
         if source is None:
             source = self.client
 
-        self.protocol.notice(source, target, line)
+        for subline in line.split("\n"):
+            self.protocol.notice(source, target, subline)
 
     def kill(self, target, source=None, message="Connection has been terminated."):
         """
