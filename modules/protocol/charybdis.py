@@ -184,7 +184,7 @@ def handleJOIN(cod, line):
     channel = cod.channels[line.args[1]]
     client = cod.clients[line.source]
 
-    channel.clientAdd(client)
+    channel.add_member(client)
 
     cod.runHooks("join", [client, channel])
 
@@ -194,7 +194,7 @@ def handlePART(cod, line):
     """
     channel = cod.channels[line.args[0]]
 
-    channel.clients.pop(line.source)
+    channel.del_member(line.source)
 
     cod.pop_empty_channels()
 
