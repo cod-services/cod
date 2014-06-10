@@ -25,11 +25,11 @@ freely, subject to the following restrictions:
 import sys
 import traceback
 
-from structures import *
-from utils import *
-from protocol import TS6ServerConn
-
-CHANMODES=["eIbq", "k", "flj", "CDEFGJKLMNOPQTcdgimnpstuz", "yahov"]
+from channel    import Ban, ChanUser, Channel
+from modes      import *
+from structures import Client, Server
+from utils      import *
+from protocol   import TS6ServerConn
 
 NAME="TS6 protocol module"
 DESC="Handles login and protocol commands for TS6 servers"
@@ -254,15 +254,12 @@ def handleBMASK(cod, line):
     even though this protocol command was only made for ban modes.
     """
 
-    listmode = line.args[1]
+    channel = cod.channels[line.args[1]]
+    ban_type = CHANMODES[0][line.args[2]]
 
-    #The channel will be a valid channel
-    channel = cod.channels[line.args[0]]
-
-    masks = line[args[-1]]
-
-    for mask in masks:
-        channel.lists[listmode].append(mask)
+    for mask in line.args[-1].split():
+        ban = Ban(mask)
+        channel.add_ban(ban_type, ban)
 
 def handleMODE(cod, line):
     """
@@ -311,35 +308,37 @@ def handleTMODE(cod, line):
             set_mode = True
         elif mode == "-":
             set_mode = False
+
         elif mode in CHANMODES[0]:
             #List-like mode
             if set_mode:
-                channel.lists[mode].append(params[paramcounter])
+                ban = Ban(params[paramcounter], None, None)
+                channel.add_ban(CHANMODES[0][mode], ban)
             else:
-                try:
-                    channel.lists[mode].remove(params[paramcounter])
-                except:
-                    pass
+                channel.del_ban(CHANMODES[0][mode], params[parc])
+
             paramcounter = paramcounter + 1
+
         elif mode in CHANMODES[1]:
             #Key
             paramcounter = paramcounter + 1
+
         elif mode in CHANMODES[2]:
             #Forwarding, limit and join throttle, not interested in these
-            paramcounter = paramcounter + 1
+            paramcounter += 1
+
         elif mode in CHANMODES[3]:
-            if set_mode:
-                channel.modes = channel.modes + mode
-            else:
-                channel.modes = channel.modes.replace(mode, "")
+            channel.add_prop_by_letter(set_mode, mode)
+
+            paramcounter += 1
+
         elif mode in CHANMODES[4]:
-            PREFIXES = {"y": "~", "a": "!", "o": "@", "h": "%", "v": "+"}
-            if set_mode:
-                channel.clients[params[paramcounter]].prefix += PREFIXES[mode]
-            else:
-                channel.clients[params[paramcounter]].prefix = \
-                        channel.clients[params[paramcounter]].prefix.replace(PREFIXES[mode], "")
-            paramcounter = paramcounter + 1
+            # STATUS
+            string = str("+" if set_mode else "-") + mode
+
+            client = channel.clients[params[paramcounter]]
+            client.add_prefix(string)
+            paramcounter += 1
 
 def handleCHGHOST(cod, line):
     """
@@ -415,7 +414,7 @@ def handlePRIVMSG(cod, line):
                         pm = False
                         break
         except IndexError as e:
-            return
+            raise
 
     elif destination != cod.client.uid and pm:
         return
