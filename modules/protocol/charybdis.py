@@ -200,9 +200,12 @@ def handlePART(cod, line):
     """
     channel = cod.channels[line.args[0]]
 
-    channel.del_member(cod.clients[line.source])
+    try:
+        channel.del_member(cod.clients[line.source])
 
-    cod.pop_empty_channels()
+        cod.pop_empty_channels()
+    except:
+        pass
 
     cod.runHooks("part", [cod.clients[line.source], channel])
 
