@@ -48,6 +48,9 @@ class Client():
         self.sid = self.uid[:3]
         self.channels = []
 
+        #Okay python you win
+        self.client = self
+
         self.name = self.nick
 
         self.isOper = self.modes.find("o") != -1
