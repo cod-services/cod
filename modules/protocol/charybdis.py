@@ -141,6 +141,7 @@ def handleEUID(cod, line):
             line.args[-1])
 
     cod.clients[client.uid] = client
+    cod.servers[client.uid[:3]].clients.append(client)
 
     cod.runHooks("newclient", [client])
 
@@ -150,6 +151,7 @@ def handleQUIT(cod, line):
     """
 
     client = cod.clients[line.source]
+    cod.servers[client.uid[:3]].clients.remove(client)
 
     for chanuser in client.channels:
         try:
