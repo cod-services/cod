@@ -60,8 +60,7 @@ def initModule(cod):
     cod.s2scommands["ERROR"] = [handleERROR]
     cod.s2scommands["SQUIT"] = [handleSQUIT]
     cod.s2scommands["TMODE"] = [handleTMODE]
-    cod.s2scommands["PASS"] = [handlePASS]
-    cod.s2scommands["SERVER"] = [handleSERVER]
+    cod.s2scommands["SID"] = [handleSID]
 
     cod.s2scommands["PRIVMSG"].append(handlePRIVMSG)
 
@@ -538,15 +537,5 @@ def handlePING(cod, line):
             (cod.sid, cod.config["me"]["name"],
                 line.args[-1]))
 
-def handlePASS(cod, line):
-    global sidhack
-
-    sidhack = line.args[-1]
-
-def handleSERVER(cod, line):
-    global sidhack
-
-    servername, hops, real = line.args
-
-    cod.servers[sidhack] = Server(sidhack, servername, hops, real)
-
+def handleSID(cod, line):
+    cod.servers[line.args[2]] = Server(line.args[2], line.args[0], line.args[1])
