@@ -20,8 +20,13 @@ def rehash():
 def cmdMEM(cod, line, splitline, source, destination):
     "Shows memory usage statistics for curious opers"
 
-    return mem() + ", %d clients, %d channels, %s modules" %\
-            (len(cod.clients), len(cod.channels), len(cod.modules))
+    chanclientcount = 0
+
+    for channel in cod.channels.itervalues():
+        chanclientcount += len(channel.clients)
+
+    return mem() + ", %d clients, %d channels, %s modules, %s channel clients" %\
+            (len(cod.clients), len(cod.channels), len(cod.modules), chanclientcount)
 
 def mem():
     status_file = open("/proc/%d/status" % os.getpid()).read()
