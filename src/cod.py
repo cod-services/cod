@@ -24,7 +24,7 @@ freely, subject to the following restrictions:
     distribution.
 """
 
-VERSION = "0.3"
+VERSION = "0.4"
 
 from niilib import config
 from niilib import log
