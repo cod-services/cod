@@ -75,6 +75,16 @@ def lookupVhost(cod, vhost):
         cod.privmsg(cod.findClientByNick("HostServ").uid,
                      "LISTVHOST %s" % frag)
 
+def lookupPreviousVhost(cod, requester):
+    userInfo = cod.services.nickserv.get_info(requester)
+
+    if userInfo.has_key("vHost"):
+        cod.sendLine(cod.client.privmsg(cod.config["etc"]["staffchan"],
+                           "NickServ: " + userInfo["vHost"]))
+    else:
+        cod.sendLine(cod.client.privmsg(cod.config["etc"]["staffchan"],
+                           "%s doesn't appear to have a vhost yet." % requester))
+
 def relayHook(cod, target, line):
     if target.name == cod.config["etc"]["snoopchan"]:
         if line.source.nick == "HostServ":
@@ -87,11 +97,12 @@ def relayHook(cod, target, line):
                 splitline = line.args[-1].split()
 
                 vhost = splitline[2][1:-1] if splitline[1] == "REQUEST:" else splitline[3][1:-1]
-                requester = splitline[0]
+                requester = splitline[0] if splitline[1] == "REQUEST:" else splitline[1][1:-1]
 
                 if "REQUEST" not in line.args[-1]:
                     return
 
                 if not tld_check(cod, requester, vhost):
+                    lookupPreviousVhost(cod, requester)
                     lookupVhost(cod, vhost)
 
