@@ -3,12 +3,14 @@ package cod
 import (
 	"code.google.com/p/go-uuid/uuid"
 	"github.com/cod-services/cod/1459"
+	"errors"
 )
 
 type Handler struct {
 	Impl func(*r1459.RawLine)
 	Verb string
 	Uuid string
+	//Script *Script
 }
 
 func (cod *Cod) AddHandler(verb string, impl func(*r1459.RawLine)) (handler *Handler, err error) {
@@ -25,5 +27,15 @@ func (cod *Cod) AddHandler(verb string, impl func(*r1459.RawLine)) (handler *Han
 	cod.Handlers[verb][handler.Uuid] = handler
 
 	return
+}
+
+func (cod *Cod) DelHandler(verb string, uuid string) (err error) {
+	if _, present := cod.Handers[verb]; !present {
+		return errors.New("No such verb to delete handler for " + verb)
+	}
+
+	delete(bot.Handlers[verb], uuid)
+
+	return nil
 }
 
