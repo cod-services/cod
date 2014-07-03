@@ -10,8 +10,8 @@ import (
 )
 
 type Clients struct {
-	ByNick map[string]*Client
-	ByUID  map[string]*Client
+	ByNick map[string]Client
+	ByUID  map[string]Client
 }
 
 type Cod struct {
@@ -36,8 +36,8 @@ func NewCod() (cod *Cod) {
 			Gecos: "Cod in Go!",
 		},
 		Clients: &Clients{
-			ByNick: make(map[string]*Client),
-			ByUID:  make(map[string]*Client),
+			ByNick: make(map[string]Client),
+			ByUID:  make(map[string]Client),
 		},
 		Handlers: make(map[string]map[string]*Handler),
 		Services: make(map[string]*ServiceClient),
@@ -63,8 +63,8 @@ func NewCod() (cod *Cod) {
 			account: line.Args[11],
 		}
 
-		cod.Clients.ByNick[nick] = *Client(client)
-		cod.Clients.ByUID[uid] = *Client(client)
+		cod.Clients.ByNick[nick] = Client(client)
+		cod.Clients.ByUID[uid] = Client(client)
 	})
 
 	return
