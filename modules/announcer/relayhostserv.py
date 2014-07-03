@@ -54,8 +54,8 @@ def tld_check(cod, requester, vhost):
 
     if vhost.split(".")[-1].upper() in TLDLIST:
         cod.privmsg(cod.findClientByNick("HostServ").uid,
-                "REJECT %s Your chosen VHost (%s) is a real domain name and cannot be chosen as a VHost. Please contact an operator in %s." %\
-                        (requester, vhost, cod.config["etc"]["helpchan"]))
+                "REJECT %s Your chosen VHost (%s) is a real domain name and cannot be chosen as a VHost. You can also try replacing \".\"s with a \"-\"" %\
+                        (requester, vhost))
         return True
     return False
 
