@@ -1,8 +1,8 @@
 package cod
 
 import (
-	"github.com/cod-services/cod/1459"
 	"bufio"
+	"github.com/cod-services/cod/1459"
 	"log"
 	"net"
 	"net/textproto"
@@ -45,22 +45,23 @@ func NewCod() (cod *Cod) {
 		Bursted:  false,
 	}
 
-	cod.AddHandler("EUID", func (line *r1459.RawLine) {
+	cod.AddHandler("EUID", func(line *r1459.RawLine) {
 		// :47G EUID xena 1 1404369238 +ailoswxz xena staff.yolo-swag.com 0::1 47GAAAABK 0::1 * :Xena
 		nick := line.Args[0]
 		user := line.Args[4]
 		host := line.Args[5]
-		ip := line.Args[10]
-		uid := line.Args[9]
+		ip := line.Args[8]
+		uid := line.Args[7]
 
-		client := &RemoteClient {
-			nick: nick,
-			user: user,
-			VHost: host,
-			host: line.Args[6],
-			uid: uid,
-			Ip: ip,
-			account: line.Args[11],
+		client := &RemoteClient{
+			nick:    nick,
+			user:    user,
+			VHost:   host,
+			host:    line.Args[6],
+			uid:     uid,
+			Ip:      ip,
+			account: line.Args[9],
+			gecos:   line.Args[10],
 		}
 
 		cod.Clients.ByNick[nick] = Client(client)

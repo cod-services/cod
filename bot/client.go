@@ -54,7 +54,7 @@ func (r *ServiceClient) Umodes() (int) {
 }
 
 func (r *ServiceClient) Gecos() (string) {
-	return u.gecos
+	return r.gecos
 }
 
 type RemoteClient struct {

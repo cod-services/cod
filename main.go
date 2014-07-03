@@ -29,5 +29,15 @@ func main() {
 		if rawline.Verb == "PING" {
 			cod.Conn.SendLine("PONG :%s", rawline.Args[0])
 		}
+
+		if _, present := cod.Handlers[rawline.Verb]; present {
+			for _, handler := range cod.Handlers[rawline.Verb] {
+				if cod.Bursted {
+					go handler.Impl(rawline)
+				} else {
+					handler.Impl(rawline)
+				}
+			}
+		}
 	}
 }
