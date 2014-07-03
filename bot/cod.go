@@ -2,7 +2,6 @@ package cod
 
 import (
 	"bufio"
-	"github.com/cod-services/cod/1459"
 	"log"
 	"net"
 	"net/textproto"
@@ -19,7 +18,7 @@ type Cod struct {
 	Info     *Server
 	Clients  *Clients
 	Bursted  bool
-	Handlers map[string]func(*r1459.RawLine)
+	Handlers map[string]map[string]*Handler
 	Services map[string]*ServiceClient
 	//Config *Config
 }
@@ -38,7 +37,7 @@ func NewCod() (cod *Cod) {
 			ByNick: make(map[string]*Client),
 			ByUID:  make(map[string]*Client),
 		},
-		Handlers: make(map[string]func(*r1459.RawLine)),
+		Handlers: make(map[string]map[string]*Handler),
 		Services: make(map[string]*ServiceClient),
 		Bursted:  false,
 	}
