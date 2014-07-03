@@ -18,7 +18,7 @@ type Cod struct {
 
 func NewCod() (cod *Cod) {
 	cod = &Cod{
-		Conn: new(Connection),
+		Conn: NewConnection(),
 		Info: &Server {
 			Name: "cod.int",
 			Sid:  "420",

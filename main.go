@@ -2,7 +2,7 @@ package main
 
 import (
 	"bufio"
-	"fmt"
+	_ "fmt"
 	"github.com/cod-services/cod/bot"
 	"net/textproto"
 )
@@ -13,9 +13,9 @@ func main() {
 	cod.Connect("127.0.0.1", "6667")
 	defer cod.Conn.Conn.Close()
 
-	fmt.Fprintln(cod.Conn.Conn, "PASS shameless TS 6 :420")
-	fmt.Fprintln(cod.Conn.Conn, "CAPAB :QS EX IE KLN UNKLN ENCAP SERVICES EUID EOPMO")
-	fmt.Fprintln(cod.Conn.Conn, "SERVER cod.int 1 :Cod in Go!")
+	cod.Conn.SendLine("PASS shameless TS 6 :420")
+	cod.Conn.SendLine("CAPAB :QS EX IE KLN UNKLN ENCAP SERVICES EUID EOPMO")
+	cod.Conn.SendLine("SERVER cod.int 1 :Cod in Go!")
 
 	reader := bufio.NewReader(cod.Conn.Conn)
 	tp := textproto.NewReader(reader)
@@ -26,6 +26,6 @@ func main() {
 			panic(err)
 		}
 
-		fmt.Printf("%s\n", line)
+		cod.Conn.Log.Printf("<<< %s", line)
 	}
 }
