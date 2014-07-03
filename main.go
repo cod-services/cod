@@ -16,6 +16,10 @@ func main() {
 	cod.Conn.SendLine("CAPAB :QS EX IE KLN UNKLN ENCAP SERVICES EUID EOPMO")
 	cod.Conn.SendLine("SERVER cod.int 1 :Cod in Go!")
 
+	for _, client := range cod.Clients.ByUID {
+		cod.Conn.SendLine(client.Euid())
+	}
+
 	for {
 		line, err := cod.Conn.GetLine()
 		if err != nil {
@@ -27,6 +31,9 @@ func main() {
 		cod.Conn.Log.Printf("<<< %s", line)
 
 		if rawline.Verb == "PING" {
+			if !cod.Bursted {
+				cod.Bursted = true
+			}
 			cod.Conn.SendLine("PONG :%s", rawline.Args[0])
 		}
 

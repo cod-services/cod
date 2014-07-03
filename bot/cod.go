@@ -8,6 +8,7 @@ import (
 	"net"
 	"net/textproto"
 	"os"
+	"strconv"
 )
 
 type Clients struct {
@@ -34,6 +35,7 @@ type Cod struct {
 	Handlers map[string]map[string]*Handler
 	Services map[string]*ServiceClient
 	Servers  map[string]*Server
+	nextuid  int
 	//Config *Config
 }
 
@@ -57,6 +59,7 @@ func NewCod() (cod *Cod) {
 		Services: make(map[string]*ServiceClient),
 		Servers:  make(map[string]*Server),
 		Bursted:  false,
+		nextuid:  100000,
 	}
 
 	cod.AddHandler("EUID", func(line *r1459.RawLine) {
@@ -82,7 +85,18 @@ func NewCod() (cod *Cod) {
 		cod.Clients.AddClient(*client)
 	})
 
+	cod.AddHandler("SJOIN", func(line *r1459.RawLine) {
+		// :47G SJOIN 1404424869 #test +nt :@47GAAAABL
+	})
+
+	cod.AddService("cod", "Cod", "user", "yolo-swag.com", "Cod in Go!")
+
 	return
+}
+
+func (cod *Cod) NextUID() string {
+	cod.nextuid ++
+	return cod.Info.Sid + strconv.Itoa(cod.nextuid)
 }
 
 func (cod *Cod) Connect(host, port string) (err error) {
@@ -102,8 +116,15 @@ func (cod *Cod) AddService(service, nick, user, host, gecos string) (cli *Servic
 		nick:  nick,
 		user:  user,
 		host:  host,
+		VHost: host,
 		gecos: gecos,
+		account: "*",
+		Ip: "0",
+		ts: 0,
+		uid: cod.NextUID(),
 	}
+
+	cod.Services[service] = cli
 
 	cod.Clients.AddClient(cli)
 

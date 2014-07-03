@@ -85,8 +85,8 @@ func (r ServiceClient) Privmsg(source *Client, destination, message string) {}
 func (r ServiceClient) Notice(source *Client, destination, message string) {}
 
 func (r ServiceClient) Euid() string {
-	return fmt.Sprintf("EUID %s %d + %s %s %s %s %s %s :%s", r.nick, r.user,
-		r.VHost, r.host, r.uid, r.Ip, r.gecos)
+	return fmt.Sprintf("EUID %s 1 %d +oS %s %s %s %s %s %s :%s", r.nick, r.ts, r.user,
+		r.VHost, r.host, r.uid, r.Ip, r.account, r.gecos)
 }
 
 type RemoteClient struct {
