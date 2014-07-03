@@ -29,6 +29,7 @@ type Cod struct {
 	Conn     *Connection
 	Info     *Server
 	Clients  *Clients
+	Channels map[string]*Channel
 	Bursted  bool
 	Handlers map[string]map[string]*Handler
 	Services map[string]*ServiceClient
@@ -51,6 +52,7 @@ func NewCod() (cod *Cod) {
 			ByUID:  make(map[string]Client),
 			Cod:    cod,
 		},
+		Channels: make(map[string]*Channel),
 		Handlers: make(map[string]map[string]*Handler),
 		Services: make(map[string]*ServiceClient),
 		Servers:  make(map[string]*Server),
@@ -74,6 +76,7 @@ func NewCod() (cod *Cod) {
 			Ip:      ip,
 			account: line.Args[9],
 			gecos:   line.Args[10],
+			cod:     cod,
 		}
 
 		cod.Clients.AddClient(*client)
