@@ -30,11 +30,11 @@ func (cod *Cod) AddHandler(verb string, impl func(*r1459.RawLine)) (handler *Han
 }
 
 func (cod *Cod) DelHandler(verb string, uuid string) (err error) {
-	if _, present := cod.Handers[verb]; !present {
+	if _, present := cod.Handlers[verb]; !present {
 		return errors.New("No such verb to delete handler for " + verb)
 	}
 
-	delete(bot.Handlers[verb], uuid)
+	delete(cod.Handlers[verb], uuid)
 
 	return nil
 }
