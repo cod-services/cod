@@ -70,10 +70,14 @@ func (r ServiceClient) Gecos() string {
 	return r.gecos
 }
 
+func (r ServiceClient) Ts() int64 {
+	return r.ts
+}
+
 func (r ServiceClient) Join(name string) {
 	channel := r.cod.Channels[strings.ToLower(name)]
 
-	channel.AddChanUser(r.(Client))
+	channel.AddChanUser(Client(r))
 }
 
 func (r ServiceClient) Privmsg(source *Client, destination, message string) {}
@@ -97,6 +101,7 @@ type RemoteClient struct {
 	permissions int
 	umodes      int
 	cod         *Cod
+	ts          int64
 }
 
 func (r RemoteClient) Nick() string {
@@ -141,5 +146,16 @@ func (r RemoteClient) Privmsg(source *Client, destination, message string) {
 
 func (r RemoteClient) Notice(source *Client, destination, message string) {
 	r.message(*source, "NOTICE", destination, message)
+}
+
+func (r RemoteClient) Euid() string {
+	return fmt.Sprintf("EUID %s %d + %s %s %s %s %s %s :%s", r.nick, r.user,
+		r.VHost, r.host, r.uid, r.Ip, r.gecos)
+}
+
+func (r RemoteClient) Join(name string) { }
+
+func (r RemoteClient) Ts() (int64) {
+	return r.ts
 }
 
