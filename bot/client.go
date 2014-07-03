@@ -25,35 +25,35 @@ type ServiceClient struct {
 	Commands    map[string]*Command
 }
 
-func (r *ServiceClient) Nick() (string) {
+func (r *ServiceClient) Nick() string {
 	return r.nick
 }
 
-func (r *ServiceClient) User() (string) {
+func (r *ServiceClient) User() string {
 	return r.user
 }
 
-func (r *ServiceClient) Host() (string) {
+func (r *ServiceClient) Host() string {
 	return r.VHost
 }
 
-func (r *ServiceClient) Account() (string) {
+func (r *ServiceClient) Account() string {
 	return r.account
 }
 
-func (r *ServiceClient) Uid() (string) {
+func (r *ServiceClient) Uid() string {
 	return r.uid
 }
 
-func (r *ServiceClient) Permissions() (int) {
+func (r *ServiceClient) Permissions() int {
 	return r.permissions
 }
 
-func (r *ServiceClient) Umodes() (int) {
+func (r *ServiceClient) Umodes() int {
 	return r.umodes
 }
 
-func (r *ServiceClient) Gecos() (string) {
+func (r *ServiceClient) Gecos() string {
 	return r.gecos
 }
 
@@ -70,34 +70,34 @@ type RemoteClient struct {
 	umodes      int
 }
 
-func (r *RemoteClient) Nick() (string) {
+func (r *RemoteClient) Nick() string {
 	return r.nick
 }
 
-func (r *RemoteClient) User() (string) {
+func (r *RemoteClient) User() string {
 	return r.user
 }
 
-func (r *RemoteClient) Host() (string) {
+func (r *RemoteClient) Host() string {
 	return r.VHost
 }
 
-func (r *RemoteClient) Account() (string) {
+func (r *RemoteClient) Account() string {
 	return r.account
 }
 
-func (r *RemoteClient) Uid() (string) {
+func (r *RemoteClient) Uid() string {
 	return r.uid
 }
 
-func (r *RemoteClient) Permissions() (int) {
+func (r *RemoteClient) Permissions() int {
 	return r.permissions
 }
 
-func (r *RemoteClient) Umodes() (int) {
+func (r *RemoteClient) Umodes() int {
 	return r.umodes
 }
 
-func (r *RemoteClient) Gecos() (string) {
+func (r *RemoteClient) Gecos() string {
 	return r.gecos
 }

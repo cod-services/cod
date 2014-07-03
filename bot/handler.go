@@ -2,8 +2,8 @@ package cod
 
 import (
 	"code.google.com/p/go-uuid/uuid"
-	"github.com/cod-services/cod/1459"
 	"errors"
+	"github.com/cod-services/cod/1459"
 )
 
 type Handler struct {
@@ -14,7 +14,7 @@ type Handler struct {
 }
 
 func (cod *Cod) AddHandler(verb string, impl func(*r1459.RawLine)) (handler *Handler, err error) {
-	handler = &Handler {
+	handler = &Handler{
 		Verb: verb,
 		Impl: impl,
 		Uuid: uuid.New(),
@@ -38,4 +38,3 @@ func (cod *Cod) DelHandler(verb string, uuid string) (err error) {
 
 	return nil
 }
-
