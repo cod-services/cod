@@ -1,11 +1,11 @@
 package cod
 
 import (
-	"os"
-	"log"
 	"bufio"
+	"log"
 	"net"
 	"net/textproto"
+	"os"
 )
 
 type Clients struct {
@@ -23,7 +23,7 @@ type Cod struct {
 
 func NewCod() (cod *Cod) {
 	cod = &Cod{
-		Conn: &Connection {
+		Conn: &Connection{
 			Log: log.New(os.Stdout, "LINK ", log.LstdFlags),
 		},
 		Info: &Server{
