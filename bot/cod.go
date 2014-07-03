@@ -13,6 +13,7 @@ import (
 type Clients struct {
 	ByNick map[string]Client
 	ByUID  map[string]Client
+	Cod    *Cod
 }
 
 func (clients *Clients) AddClient(client Client) {
@@ -48,6 +49,7 @@ func NewCod() (cod *Cod) {
 		Clients: &Clients{
 			ByNick: make(map[string]Client),
 			ByUID:  make(map[string]Client),
+			Cod:    cod,
 		},
 		Handlers: make(map[string]map[string]*Handler),
 		Services: make(map[string]*ServiceClient),
