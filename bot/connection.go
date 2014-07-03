@@ -7,7 +7,7 @@ import (
 )
 
 type Connection struct {
-	Conn          *net.Conn
+	Conn          net.Conn
 	Log           *log.Logger
 	Link          *Server
 	ClientsByUID  map[string]*Client
