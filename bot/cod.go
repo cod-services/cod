@@ -1,7 +1,11 @@
 package cod
 
 import (
+	"os"
+	"log"
+	"bufio"
 	"net"
+	"net/textproto"
 )
 
 type Clients struct {
@@ -19,7 +23,9 @@ type Cod struct {
 
 func NewCod() (cod *Cod) {
 	cod = &Cod{
-		Conn: NewConnection(),
+		Conn: &Connection {
+			Log: log.New(os.Stdout, "LINK ", log.LstdFlags),
+		},
 		Info: &Server{
 			Name:  "cod.int",
 			Sid:   "420",
@@ -39,6 +45,9 @@ func (cod *Cod) Connect(host, port string) (err error) {
 	if err != nil {
 		panic(err)
 	}
+
+	cod.Conn.Reader = bufio.NewReader(cod.Conn.Conn)
+	cod.Conn.Tp = textproto.NewReader(cod.Conn.Reader)
 
 	return
 }

@@ -1,10 +1,7 @@
 package main
 
 import (
-	"bufio"
-	_ "fmt"
 	"github.com/cod-services/cod/bot"
-	"net/textproto"
 )
 
 func main() {
@@ -17,11 +14,8 @@ func main() {
 	cod.Conn.SendLine("CAPAB :QS EX IE KLN UNKLN ENCAP SERVICES EUID EOPMO")
 	cod.Conn.SendLine("SERVER cod.int 1 :Cod in Go!")
 
-	reader := bufio.NewReader(cod.Conn.Conn)
-	tp := textproto.NewReader(reader)
-
 	for {
-		line, err := tp.ReadLine()
+		line, err := cod.Conn.GetLine()
 		if err != nil {
 			panic(err)
 		}

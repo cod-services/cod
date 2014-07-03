@@ -1,26 +1,27 @@
 package cod
 
 import (
+	"bufio"
 	"fmt"
 	"log"
 	"net"
-	"os"
+	"net/textproto"
 )
 
 type Connection struct {
-	Conn net.Conn
-	Log  *log.Logger
-}
-
-func NewConnection() (c *Connection) {
-	c = &Connection{
-		Log: log.New(os.Stdout, "LINK ", log.LstdFlags),
-	}
-
-	return
+	Conn   net.Conn
+	Log    *log.Logger
+	Reader *bufio.Reader
+	Tp     *textproto.Reader
 }
 
 func (c *Connection) SendLine(line string, stuff ...interface{}) {
 	log.Printf(">>> "+line, stuff...)
 	fmt.Fprintf(c.Conn, line+"\r\n", stuff...)
+}
+
+func (c *Connection) GetLine() (line string, err error) {
+	line, err = c.Tp.ReadLine()
+
+	return
 }
