@@ -1,30 +1,23 @@
 package main
 
 import (
-	"github.com/cod-services/cod/bot"
-	"fmt"
 	"bufio"
-	"net"
+	"fmt"
+	"github.com/cod-services/cod/bot"
 	"net/textproto"
 )
 
 func main() {
-	var connection *cod.Connection
-	connection = new(cod.Connection)
+	cod := cod.NewCod()
 
-	var err error
-	connection.Conn, err = net.Dial("tcp", "127.0.0.1:6667")
-	if err != nil {
-		panic(err) // We should an hero here
-	}
+	cod.Connect("127.0.0.1", "6667")
+	defer cod.Conn.Conn.Close()
 
-	defer connection.Conn.Close()
+	fmt.Fprintln(cod.Conn.Conn, "PASS shameless TS 6 :420")
+	fmt.Fprintln(cod.Conn.Conn, "CAPAB :QS EX IE KLN UNKLN ENCAP SERVICES EUID EOPMO")
+	fmt.Fprintln(cod.Conn.Conn, "SERVER cod.int 1 :Cod in Go!")
 
-	fmt.Fprintln(connection.Conn, "PASS shameless TS 6 :420")
-	fmt.Fprintln(connection.Conn, "CAPAB :QS EX IE KLN UNKLN ENCAP SERVICES EUID EOPMO")
-	fmt.Fprintln(connection.Conn, "SERVER cod.int 1 :Cod in Go!")
-
-	reader := bufio.NewReader(connection.Conn)
+	reader := bufio.NewReader(cod.Conn.Conn)
 	tp := textproto.NewReader(reader)
 
 	for {
@@ -36,4 +29,3 @@ func main() {
 		fmt.Printf("%s\n", line)
 	}
 }
-
