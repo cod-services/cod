@@ -1,5 +1,10 @@
 package cod
 
+import (
+	"fmt"
+	"strings"
+)
+
 type Client interface {
 	Nick() string
 	User() string
@@ -8,7 +13,12 @@ type Client interface {
 	Uid() string
 	Permissions() int
 	Umodes() int
+	Ts() int64
 	Gecos() string
+	Privmsg(source *Client, destination, message string)
+	Notice(source *Client, destination, message string)
+	Join(name string)
+	Euid() string
 }
 
 type ServiceClient struct {
@@ -24,6 +34,8 @@ type ServiceClient struct {
 	umodes      int
 	Commands    map[string]*Command
 	Kind        string
+	cod         *Cod
+	ts          int64
 }
 
 func (r ServiceClient) Nick() string {
@@ -58,6 +70,21 @@ func (r ServiceClient) Gecos() string {
 	return r.gecos
 }
 
+func (r ServiceClient) Join(name string) {
+	channel := r.cod.Channels[strings.ToLower(name)]
+
+	channel.AddChanUser(r.(Client))
+}
+
+func (r ServiceClient) Privmsg(source *Client, destination, message string) {}
+
+func (r ServiceClient) Notice(source *Client, destination, message string) {}
+
+func (r ServiceClient) Euid() string {
+	return fmt.Sprintf("EUID %s %d + %s %s %s %s %s %s :%s", r.nick, r.user,
+		r.VHost, r.host, r.uid, r.Ip, r.gecos)
+}
+
 type RemoteClient struct {
 	nick        string
 	user        string
@@ -69,6 +96,7 @@ type RemoteClient struct {
 	gecos       string
 	permissions int
 	umodes      int
+	cod         *Cod
 }
 
 func (r RemoteClient) Nick() string {
@@ -102,3 +130,16 @@ func (r RemoteClient) Umodes() int {
 func (r RemoteClient) Gecos() string {
 	return r.gecos
 }
+
+func (r RemoteClient) message(source Client, kind, destination, message string) {
+	r.cod.Conn.SendLine(":%s %s %s :%s", source.Uid(), kind, destination, message)
+}
+
+func (r RemoteClient) Privmsg(source *Client, destination, message string) {
+	r.message(*source, "PRIVMSG", destination, message)
+}
+
+func (r RemoteClient) Notice(source *Client, destination, message string) {
+	r.message(*source, "NOTICE", destination, message)
+}
+
