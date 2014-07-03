@@ -2,11 +2,11 @@ package cod
 
 import (
 	"bufio"
+	"github.com/cod-services/cod/1459"
 	"log"
 	"net"
 	"net/textproto"
 	"os"
-	"github.com/cod-services/cod/1459"
 )
 
 type Clients struct {
@@ -15,11 +15,12 @@ type Clients struct {
 }
 
 type Cod struct {
-	Conn    *Connection
-	Info    *Server
-	Clients *Clients
-	Bursted bool
+	Conn     *Connection
+	Info     *Server
+	Clients  *Clients
+	Bursted  bool
 	Handlers map[string]func(*r1459.RawLine)
+	Services map[string]*ServiceClient
 	//Config *Config
 }
 
@@ -38,6 +39,8 @@ func NewCod() (cod *Cod) {
 			ByUID:  make(map[string]*Client),
 		},
 		Handlers: make(map[string]func(*r1459.RawLine)),
+		Services: make(map[string]*ServiceClient),
+		Bursted:  false,
 	}
 
 	return
