@@ -1,4 +1,4 @@
-package 1459
+package r1459
 
 import "strings"
 
@@ -10,8 +10,8 @@ type RawLine struct {
 }
 
 // Create a new line and split out an RFC 1459 frame to a Line
-func NewLine(input string) (line *Line) {
-	line = &Line{}
+func NewRawLine(input string) (line *RawLine) {
+	line = &RawLine{}
 
 	split := strings.Split(input, " ")
 
