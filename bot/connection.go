@@ -8,8 +8,8 @@ import (
 )
 
 type Connection struct {
-	Conn          net.Conn
-	Log           *log.Logger
+	Conn net.Conn
+	Log  *log.Logger
 }
 
 func NewConnection() (c *Connection) {
@@ -20,8 +20,7 @@ func NewConnection() (c *Connection) {
 	return
 }
 
-func (c *Connection) SendLine(line string, stuff... interface{}) {
-	log.Printf(">>> " + line, stuff...)
-	fmt.Fprintf(c.Conn, line + "\r\n", stuff...)
+func (c *Connection) SendLine(line string, stuff ...interface{}) {
+	log.Printf(">>> "+line, stuff...)
+	fmt.Fprintf(c.Conn, line+"\r\n", stuff...)
 }
-

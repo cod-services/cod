@@ -10,18 +10,19 @@ type Clients struct {
 }
 
 type Cod struct {
-	Conn *Connection
-	Info *Server
+	Conn    *Connection
+	Info    *Server
 	Clients *Clients
+	Bursted bool
 	//Config *Config
 }
 
 func NewCod() (cod *Cod) {
 	cod = &Cod{
 		Conn: NewConnection(),
-		Info: &Server {
-			Name: "cod.int",
-			Sid:  "420",
+		Info: &Server{
+			Name:  "cod.int",
+			Sid:   "420",
 			Gecos: "Cod in Go!",
 		},
 		Clients: &Clients{
@@ -34,7 +35,7 @@ func NewCod() (cod *Cod) {
 }
 
 func (cod *Cod) Connect(host, port string) (err error) {
-	cod.Conn.Conn, err = net.Dial("tcp", host + ":" + port)
+	cod.Conn.Conn, err = net.Dial("tcp", host+":"+port)
 	if err != nil {
 		panic(err)
 	}
@@ -42,7 +43,6 @@ func (cod *Cod) Connect(host, port string) (err error) {
 	return
 }
 
-func (cod *Cod) GetConn() (*net.Conn) {
+func (cod *Cod) GetConn() *net.Conn {
 	return &cod.Conn.Conn
 }
-

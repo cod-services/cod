@@ -1,17 +1,17 @@
 package cod
 
 type ChanUser struct {
-	Client *Client
+	Client  *Client
 	Channel *Channel
-	Prefix int
+	Prefix  int
 }
 
 type Channel struct {
-	Name string
-	Ts int64
-	Modes int
+	Name    string
+	Ts      int64
+	Modes   int
 	Clients map[string]*ChanUser
-	Lists map[string][]string
+	Lists   map[string][]string
 }
 
 func NewChannel(name string, ts int64) (c *Channel) {
@@ -23,4 +23,3 @@ func NewChannel(name string, ts int64) (c *Channel) {
 
 	return
 }
-
