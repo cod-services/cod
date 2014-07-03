@@ -2,6 +2,7 @@ package cod
 
 import (
 	"bufio"
+	"errors"
 	"github.com/cod-services/cod/1459"
 	"log"
 	"net"
@@ -12,6 +13,15 @@ import (
 type Clients struct {
 	ByNick map[string]Client
 	ByUID  map[string]Client
+}
+
+func (clients *Clients) AddClient(client Client) {
+	clients.ByNick[client.Nick()] = client
+	clients.ByUID[client.Uid()] = client
+}
+
+func (clients *Clients) DelClient(client Client) (err error) {
+	return
 }
 
 type Cod struct {
@@ -64,8 +74,7 @@ func NewCod() (cod *Cod) {
 			gecos:   line.Args[10],
 		}
 
-		cod.Clients.ByNick[nick] = Client(client)
-		cod.Clients.ByUID[uid] = Client(client)
+		cod.Clients.AddClient(*client)
 	})
 
 	return
@@ -79,6 +88,31 @@ func (cod *Cod) Connect(host, port string) (err error) {
 
 	cod.Conn.Reader = bufio.NewReader(cod.Conn.Conn)
 	cod.Conn.Tp = textproto.NewReader(cod.Conn.Reader)
+
+	return
+}
+
+func (cod *Cod) AddService(service, nick, user, host, gecos string) (cli *ServiceClient) {
+	cli = &ServiceClient{
+		nick:  nick,
+		user:  user,
+		host:  host,
+		gecos: gecos,
+	}
+
+	cod.Clients.AddClient(cli)
+
+	return
+}
+
+func (cod *Cod) DelService(service string) (err error) {
+	if _, ok := cod.Services[service]; !ok {
+		panic(errors.New("No such service " + service))
+	}
+
+	client := cod.Services[service]
+
+	cod.Clients.DelClient(client)
 
 	return
 }
