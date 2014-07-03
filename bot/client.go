@@ -36,11 +36,7 @@ func (r *ServiceClient) Host() (string) {
 }
 
 func (r *ServiceClient) Account() (string) {
-	if r.account = "" {
-		return "*"
-	} else {
-		return r.account
-	}
+	return r.account
 }
 
 func (r *ServiceClient) Uid() (string) {
@@ -80,11 +76,7 @@ func (r *RemoteClient) Host() (string) {
 }
 
 func (r *RemoteClient) Account() (string) {
-	if r.account = "" {
-		return "*"
-	} else {
-		return r.account
-	}
+	return r.account
 }
 
 func (r *RemoteClient) Uid() (string) {
