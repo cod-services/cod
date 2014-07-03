@@ -6,6 +6,7 @@ import (
 	"net"
 	"net/textproto"
 	"os"
+	"github.com/cod-services/cod/1459"
 )
 
 type Clients struct {
@@ -18,6 +19,7 @@ type Cod struct {
 	Info    *Server
 	Clients *Clients
 	Bursted bool
+	Handlers map[string]func(*r1459.RawLine)
 	//Config *Config
 }
 
@@ -35,6 +37,7 @@ func NewCod() (cod *Cod) {
 			ByNick: make(map[string]*Client),
 			ByUID:  make(map[string]*Client),
 		},
+		Handlers: make(map[string]func(*r1459.RawLine)),
 	}
 
 	return
