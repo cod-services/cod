@@ -8,6 +8,7 @@ type Client interface {
 	Uid() string
 	Permissions() int
 	Umodes() int
+	Gecos() string
 }
 
 type ServiceClient struct {
@@ -18,6 +19,7 @@ type ServiceClient struct {
 	Ip          string
 	account     string
 	uid         string
+	gecos       string
 	permissions int
 	umodes      int
 	Commands    map[string]*Command
@@ -51,6 +53,10 @@ func (r *ServiceClient) Umodes() (int) {
 	return r.umodes
 }
 
+func (r *ServiceClient) Gecos() (string) {
+	return u.gecos
+}
+
 type RemoteClient struct {
 	nick        string
 	user        string
@@ -59,6 +65,7 @@ type RemoteClient struct {
 	Ip          string
 	account     string
 	uid         string
+	gecos       string
 	permissions int
 	umodes      int
 }
@@ -89,4 +96,8 @@ func (r *RemoteClient) Permissions() (int) {
 
 func (r *RemoteClient) Umodes() (int) {
 	return r.umodes
+}
+
+func (r *RemoteClient) Gecos() (string) {
+	return r.gecos
 }
