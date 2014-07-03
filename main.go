@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"github.com/cod-services/cod/bot"
+	"github.com/cod-services/cod/1459"
 )
 
 func main() {
@@ -21,5 +23,11 @@ func main() {
 		}
 
 		cod.Conn.Log.Printf("<<< %s", line)
+
+		rawline := r1459.NewRawLine(line)
+
+		if rawline.Verb == "PING" {
+			cod.Conn.SendLine("PONG %s", rawline.Args[0])
+		}
 	}
 }

@@ -24,7 +24,7 @@ type Cod struct {
 func NewCod() (cod *Cod) {
 	cod = &Cod{
 		Conn: &Connection{
-			Log: log.New(os.Stdout, "LINK ", log.LstdFlags),
+			Log: log.New(os.Stdout, "", log.LstdFlags),
 		},
 		Info: &Server{
 			Name:  "cod.int",
