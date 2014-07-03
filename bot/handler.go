@@ -7,10 +7,10 @@ import (
 )
 
 type Handler struct {
-	Impl func(*r1459.RawLine)
-	Verb string
-	Uuid string
-	//Script Script
+	Impl   func(*r1459.RawLine)
+	Verb   string
+	Uuid   string
+	Script Script
 }
 
 func (cod *Cod) AddHandler(verb string, impl func(*r1459.RawLine)) (handler *Handler, err error) {
