@@ -1,10 +1,23 @@
 package cod
 
-type Script interface {
-	GetCommands() []*Command
-	AddCommand(verb string, perms int, help string, impl func (*Client, []string)) (error)
-	DelCommand(*Command) (error)
-	AddHandler(verb string) (error)
-	DelHandler(*Handler) (error)
+import (
+	lua "github.com/aarzilli/golua/lua"
+	"github.com/stevedonovan/luar"
+	"log"
+)
+
+type Script struct {
+	L        *lua.State
+	Cod      *Cod
+	Log      *log.Logger
+	Commands []*Command
+	Handlers []*Handler
+}
+
+func (s *Script) Register() {
+	luar.Register(s.L, "cod", luar.Map{
+		"script": s,
+		"log": s.Log,
+	})
 }
 
