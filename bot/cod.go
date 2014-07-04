@@ -89,13 +89,18 @@ func NewCod() (cod *Cod) {
 		// :47G SJOIN 1404424869 #test +nt :@47GAAAABL
 	})
 
+	cod.AddHandler("PRIVMSG", func(line *r1459.RawLine) {
+		client := cod.Clients.ByUID[line.Source]
+		cod.Conn.Log.Printf("-%s- <%s> %s", line.Args[0], client.Nick(), line.Args[1])
+	})
+
 	cod.AddService("cod", "Cod", "user", "yolo-swag.com", "Cod in Go!")
 
 	return
 }
 
 func (cod *Cod) NextUID() string {
-	cod.nextuid ++
+	cod.nextuid++
 	return cod.Info.Sid + strconv.Itoa(cod.nextuid)
 }
 
@@ -113,15 +118,15 @@ func (cod *Cod) Connect(host, port string) (err error) {
 
 func (cod *Cod) AddService(service, nick, user, host, gecos string) (cli *ServiceClient) {
 	cli = &ServiceClient{
-		nick:  nick,
-		user:  user,
-		host:  host,
-		VHost: host,
-		gecos: gecos,
+		nick:    nick,
+		user:    user,
+		host:    host,
+		VHost:   host,
+		gecos:   gecos,
 		account: "*",
-		Ip: "0",
-		ts: 0,
-		uid: cod.NextUID(),
+		Ip:      "0",
+		ts:      0,
+		uid:     cod.NextUID(),
 	}
 
 	cod.Services[service] = cli

@@ -17,7 +17,6 @@ type Script struct {
 func (s *Script) Register() {
 	luar.Register(s.L, "cod", luar.Map{
 		"script": s,
-		"log": s.Log,
+		"log":    s.Log,
 	})
 }
-

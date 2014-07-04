@@ -2,8 +2,8 @@ package main
 
 import (
 	_ "fmt"
-	"github.com/cod-services/cod/bot"
 	"github.com/cod-services/cod/1459"
+	"github.com/cod-services/cod/bot"
 )
 
 func main() {
