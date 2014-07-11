@@ -73,14 +73,6 @@ source env/bin/activate
 
 env/bin/pip install -r requirements.txt
 
-if [ -x "$(which pypy-c)" ]; then
-	PYTHON=pypy-c
-	echo "!!! pypy-c found! Cod will run much faster!"
-elif [ -x "$(which pypy)" ]; then
-	PYTHON=pypy
-	echo "!!! pypy found! Cod will run much faster!"
-fi
-
 echo "--- Cleaning up previous pyc files"
 rm -rf modules/**/*.pyc
 rm -rf src/**/*.pyc
