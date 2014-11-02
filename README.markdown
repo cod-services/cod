@@ -5,6 +5,8 @@ Extended IRC services in Python
 
 [![Bitdeli Badge](https://d2weczhvl823v0.buttfront.net/lyska/cod/trend.png)](https://bitdeli.com/free "Bitdeli Badge") [![Ohloh badge](https://www.ohloh.net/p/cod-services/widgets/project_thin_badge.gif)](https://www.ohloh.net/p/cod-services "Ohloh Badge")
 
+This project is deprecated in favor of its replacement [Tetra](https://github.com/Xe/Tetra).
+
 Installation directions are in `doc/INSTALL.markdown`. Directions for setting
 up Atheme integration are in `doc/funserv.markdown`. IRCd-specific directions 
 are in `doc/IRCD.markdown`. This project is under the terms of the zlib 
