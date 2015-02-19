@@ -25,7 +25,7 @@ CHFL_VOICE  = 0x0001 # Old +v, voiced user
 CHFL_HALFOP = 0x0002 # Old +h, half-operator
 CHFL_CHANOP = 0x0004 # Old +o, channel operator
 CHFL_ADMIN  = 0x0008 # Old +a, channel administrator
-CHFL_OWNER  = 0x0010 # Old +y, channel founder
+CHFL_OWNER  = 0x0010 # Old +q, channel founder
 
 PROP_NONE       = 0x00000000 # No properties
 PROP_MUTE       = 0x00000001 # Old +m, mute
@@ -86,7 +86,7 @@ UPROP_SSLCLIENT  = 0x002000 # Old +Z, client is connected over SSL
 
 CHANMODES = [
     {
-        "q": LIST_QUIET,
+        "y": LIST_QUIET,
         "b": LIST_BAN,
         "e": LIST_EXCEPT,
         "I": LIST_INVEX,
@@ -129,6 +129,8 @@ CHANMODES = [
         "h": CHFL_HALFOP,
         "o": CHFL_CHANOP,
         "v": CHFL_VOICE,
+        "a": CHFL_ADMIN,
+        "q": CHFL_OWNER,
     }
 ]
 
@@ -158,7 +160,7 @@ PREFIXES = {
     "+": CHFL_VOICE,
     "%": CHFL_HALFOP,
     "@": CHFL_CHANOP,
-    "!": CHFL_ADMIN,
+    "&": CHFL_ADMIN,
     "~": CHFL_OWNER,
 }
 

@@ -30,7 +30,7 @@ from utils import *
 NAME="elemental-ircd protocol module"
 DESC="Handles login and protocol commands for elemental-ircd"
 
-CHANMODES=["eIbq", "k" ,"flj" ,"CDEFGJKLMOPQTcdgimnpstz", "yaohv"]
+CHANMODES=["eIby", "k" ,"flj" ,"CDEFGJKLMOPQTcdgimnpstz", "qaohv"]
 
 def initModule(cod):
     cod.loginFunc = login
