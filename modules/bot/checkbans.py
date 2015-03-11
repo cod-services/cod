@@ -1,4 +1,4 @@
-# Copyright (C) 2014 Sam Dodrill <shadow.h511@gmail.com> All rights reserved.
+# Copyright (C) 2014 Christine Dodrill <shadow.h511@gmail.com> All rights reserved.
 #
 # This software is provided 'as-is', without any express or implied
 # warranty. In no event will the authors be held liable for any damages

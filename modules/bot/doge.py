@@ -1,5 +1,5 @@
 """
-Copyright (c) 2014, Sam Dodrill
+Copyright (c) 2014, Christine Dodrill
 All rights reserved.
 
 This software is provided 'as-is', without any express or implied

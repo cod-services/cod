@@ -4,7 +4,7 @@ DECLARE_MODULE_V1
 (
 	"contrib/ircd_funserv", false, _modinit, _moddeinit,
 	PACKAGE_STRING,
-	"Sam Dodrill <shadow.h511@gmail.com>"
+	"Christine Dodrill <shadow.h511@gmail.com>"
 );
 
 #define BOTNAME "ShadowNET"

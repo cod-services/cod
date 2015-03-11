@@ -2,7 +2,7 @@
 
 Please do not delete names from this list.
 
- - Sam Dodrill (lyska)
+ - Christine Dodrill (lyska)
  - Jessica Williams (Heartmender/Quora)
  - AppleDash
  - Purlox
